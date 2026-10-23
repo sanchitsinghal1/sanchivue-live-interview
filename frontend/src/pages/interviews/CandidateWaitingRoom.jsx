@@ -41,7 +41,12 @@ export default function CandidateWaitingRoom() {
     (async () => {
       try {
         const res = await interviewApi.validateInvitation(token);
-        if (active) setInterview(res?.data?.data || null);
+        // The public invitation endpoint returns { interview, invitation }.
+        // Older callers stored the whole payload — unwrap here so the rest
+        // of the component reads `interview.id`, `interview.title`, etc.
+        const data = res?.data?.data || {};
+        const interview = data.interview || data;
+        if (active) setInterview(interview);
       } catch (err) {
         if (active) {
           setError(

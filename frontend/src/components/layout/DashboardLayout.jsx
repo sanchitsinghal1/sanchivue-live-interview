@@ -13,6 +13,7 @@ import {
   X,
   Code2,
   Plus,
+  Layers,
 } from 'lucide-react';
 import BrandLogo from '../common/BrandLogo.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -24,6 +25,7 @@ import { getInitials, colorFromString } from '../../utils/formatters.js';
 const ORG_LINKS = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/interviews', label: 'Interviews', icon: Calendar },
+  { to: '/templates', label: 'Templates', icon: Layers },
   { to: '/questions', label: 'Question Bank', icon: HelpCircle },
   { to: '/candidates', label: 'Candidates', icon: Users },
   { to: '/reports', label: 'Reports', icon: FileBarChart },

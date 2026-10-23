@@ -16,7 +16,7 @@ import StatCard from '../../components/dashboard/StatCard.jsx';
 import UpcomingList from '../../components/dashboard/UpcomingList.jsx';
 import interviewApi from '../../api/interview.api.js';
 import submissionApi from '../../api/submission.api.js';
-import { INTERVIEW_STATUS, ROLES } from '../../constants/index.js';
+import { INTERVIEW_STATUS, ROLES, ACTIVE_STATUSES } from '../../constants/index.js';
 import { formatRelativeTime } from '../../utils/formatters.js';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -65,9 +65,10 @@ export default function DashboardPage() {
       return acc;
     }, {});
     return {
-      upcoming: (byStatus[INTERVIEW_STATUS.SCHEDULED] || 0) + (byStatus[INTERVIEW_STATUS.LIVE] || 0),
-      completed: byStatus[INTERVIEW_STATUS.ENDED] || 0,
-      inProgress: byStatus[INTERVIEW_STATUS.LIVE] || 0,
+      // Upcoming = scheduled + ready + in-progress (all active sessions).
+      upcoming: interviews.filter((i) => ACTIVE_STATUSES.includes(i.status)).length,
+      completed: byStatus[INTERVIEW_STATUS.COMPLETED] || 0,
+      inProgress: byStatus[INTERVIEW_STATUS.IN_PROGRESS] || 0,
       drafts: byStatus[INTERVIEW_STATUS.DRAFT] || 0,
       total: interviews.length,
     };
@@ -76,12 +77,8 @@ export default function DashboardPage() {
   const upcoming = useMemo(
     () =>
       interviews
-        .filter(
-          (i) =>
-            i.status === INTERVIEW_STATUS.SCHEDULED ||
-            i.status === INTERVIEW_STATUS.LIVE,
-        )
-        .sort((a, b) => new Date(a.scheduledAt) - new Date(b.scheduledAt))
+        .filter((i) => ACTIVE_STATUSES.includes(i.status))
+        .sort((a, b) => new Date(a.scheduledAt || a.createdAt) - new Date(b.scheduledAt || b.createdAt))
         .slice(0, 6),
     [interviews],
   );
@@ -89,7 +86,7 @@ export default function DashboardPage() {
   const pendingEvaluations = useMemo(
     () =>
       interviews
-        .filter((i) => i.status === INTERVIEW_STATUS.ENDED && !i.hasEvaluation)
+        .filter((i) => i.status === INTERVIEW_STATUS.COMPLETED && !i.hasEvaluation)
         .slice(0, 5),
     [interviews],
   );

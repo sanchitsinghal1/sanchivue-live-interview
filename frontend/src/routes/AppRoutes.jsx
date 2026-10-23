@@ -29,6 +29,8 @@ const LiveInterviewRoom = lazy(() => import('../pages/interviews/LiveInterviewRo
 const InterviewReportPage = lazy(() => import('../pages/interviews/InterviewReportPage.jsx'));
 const QuestionBankPage = lazy(() => import('../pages/questions/QuestionBankPage.jsx'));
 const QuestionEditorPage = lazy(() => import('../pages/questions/QuestionEditorPage.jsx'));
+const TemplatesListPage = lazy(() => import('../pages/templates/TemplatesListPage.jsx'));
+const TemplateEditorPage = lazy(() => import('../pages/templates/TemplateEditorPage.jsx'));
 const CandidatesListPage = lazy(() => import('../pages/candidates/CandidatesListPage.jsx'));
 const ReportsListPage = lazy(() => import('../pages/reports/ReportsListPage.jsx'));
 const ReportDetailPage = lazy(() => import('../pages/reports/ReportDetailPage.jsx'));
@@ -142,6 +144,32 @@ export default function AppRoutes() {
             element={
               <ProtectedRoute roles={['interviewer', 'admin']}>
                 <QuestionEditorPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Templates — reusable question sets + rubric */}
+          <Route
+            path="/templates"
+            element={
+              <ProtectedRoute roles={['interviewer', 'admin']}>
+                <TemplatesListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/templates/new"
+            element={
+              <ProtectedRoute roles={['interviewer', 'admin']}>
+                <TemplateEditorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/templates/:id/edit"
+            element={
+              <ProtectedRoute roles={['interviewer', 'admin']}>
+                <TemplateEditorPage />
               </ProtectedRoute>
             }
           />

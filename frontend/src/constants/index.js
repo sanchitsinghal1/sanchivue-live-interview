@@ -14,37 +14,47 @@ export const ROLE_LABELS = {
   [ROLES.CANDIDATE]: 'Candidate',
 };
 
-// --- Interview lifecycle status ---
+// --- Interview lifecycle status (MUST match backend src/config/constants.js) ---
 export const INTERVIEW_STATUS = {
-  DRAFT: 'draft',
-  SCHEDULED: 'scheduled',
-  LIVE: 'live',
-  ENDED: 'ended',
-  CANCELLED: 'cancelled',
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  READY: 'READY',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED',
 };
 
 export const INTERVIEW_STATUS_LABELS = {
   [INTERVIEW_STATUS.DRAFT]: 'Draft',
   [INTERVIEW_STATUS.SCHEDULED]: 'Scheduled',
-  [INTERVIEW_STATUS.LIVE]: 'Live',
-  [INTERVIEW_STATUS.ENDED]: 'Ended',
+  [INTERVIEW_STATUS.READY]: 'Ready',
+  [INTERVIEW_STATUS.IN_PROGRESS]: 'Live',
+  [INTERVIEW_STATUS.COMPLETED]: 'Completed',
   [INTERVIEW_STATUS.CANCELLED]: 'Cancelled',
+  [INTERVIEW_STATUS.EXPIRED]: 'Expired',
 };
 
 // Tailwind color tokens per status — used by InterviewCard + status badges.
 export const INTERVIEW_STATUS_COLORS = {
   [INTERVIEW_STATUS.DRAFT]: 'bg-slate-700 text-slate-200',
   [INTERVIEW_STATUS.SCHEDULED]: 'bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/30',
-  [INTERVIEW_STATUS.LIVE]: 'bg-brand-emerald/15 text-brand-emerald ring-1 ring-brand-emerald/30',
-  [INTERVIEW_STATUS.ENDED]: 'bg-slate-700 text-slate-300',
+  [INTERVIEW_STATUS.READY]: 'bg-brand-indigo/15 text-brand-indigo ring-1 ring-brand-indigo/30',
+  [INTERVIEW_STATUS.IN_PROGRESS]: 'bg-brand-emerald/15 text-brand-emerald ring-1 ring-brand-emerald/30',
+  [INTERVIEW_STATUS.COMPLETED]: 'bg-slate-700 text-slate-300',
   [INTERVIEW_STATUS.CANCELLED]: 'bg-rose-500/15 text-rose-300 ring-1 ring-rose-500/30',
+  [INTERVIEW_STATUS.EXPIRED]: 'bg-slate-700 text-slate-500',
 };
 
-// --- Question difficulty ---
+// Convenience: the "active/live" statuses that count as "upcoming or now".
+export const ACTIVE_STATUSES = [INTERVIEW_STATUS.SCHEDULED, INTERVIEW_STATUS.READY, INTERVIEW_STATUS.IN_PROGRESS];
+export const COMPLETED_STATUSES = [INTERVIEW_STATUS.COMPLETED, INTERVIEW_STATUS.CANCELLED, INTERVIEW_STATUS.EXPIRED];
+
+// --- Question difficulty (MUST match backend: capitalized) ---
 export const DIFFICULTY = {
-  EASY: 'easy',
-  MEDIUM: 'medium',
-  HARD: 'hard',
+  EASY: 'Easy',
+  MEDIUM: 'Medium',
+  HARD: 'Hard',
 };
 
 export const DIFFICULTY_LABELS = {

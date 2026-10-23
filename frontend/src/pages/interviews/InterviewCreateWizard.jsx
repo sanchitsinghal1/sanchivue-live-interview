@@ -8,12 +8,15 @@ import {
   Sparkles,
   Loader2,
   Copy,
+  Mail,
   Plus,
   X,
+  Layers,
 } from 'lucide-react';
 import interviewApi from '../../api/interview.api.js';
 import questionApi from '../../api/question.api.js';
 import aiApi from '../../api/ai.api.js';
+import templateApi from '../../api/template.api.js';
 import Input from '../../components/forms/Input.jsx';
 import Select from '../../components/forms/Select.jsx';
 import {
@@ -24,6 +27,7 @@ import {
   LANGUAGES,
   RUBRIC_CRITERIA,
 } from '../../constants/index.js';
+import { useOrganization } from '../../context/OrganizationContext.jsx';
 
 const STEPS = [
   { id: 'details', label: 'Details' },
@@ -56,6 +60,8 @@ const DEFAULT_STATE = {
 
 export default function InterviewCreateWizard() {
   const navigate = useNavigate();
+  const { activeOrg } = useOrganization();
+  const orgId = activeOrg?.id || activeOrg?._id;
   const [searchParams] = useSearchParams();
   const initialStep = searchParams.get('step') === 'jd' ? 'jd' : 'details';
   const [step, setStep] = useState(initialStep === 'jd' ? 'jd' : 'details');
@@ -68,6 +74,33 @@ export default function InterviewCreateWizard() {
   const [jdResult, setJdResult] = useState(null);
   const [saving, setSaving] = useState(false);
   const [invitation, setInvitation] = useState(null);
+  const [templates, setTemplates] = useState([]);
+  const [templateLoading, setTemplateLoading] = useState(false);
+
+  // Pick up a template seed (set by TemplatesListPage on "Apply") on mount.
+  useEffect(() => {
+    const seedRaw = sessionStorage.getItem('sanchivue:templateSeed');
+    if (!seedRaw) return;
+    try {
+      const seed = JSON.parse(seedRaw);
+      setForm((p) => ({
+        ...p,
+        title: seed.title || p.title,
+        jobRole: seed.jobRole || p.jobRole,
+        type: seed.type || p.type,
+        difficulty: seed.difficulty || p.difficulty,
+        durationMinutes: seed.durationMinutes || p.durationMinutes,
+        allowedLanguages: seed.allowedLanguages || p.allowedLanguages,
+        questionIds: seed.questionIds || p.questionIds,
+        rubric: { ...p.rubric, ...(seed.rubric || {}) },
+        templateId: seed.templateId || null,
+      }));
+      if (seed.templateId) toast.success('Loaded from template — review and adjust as needed.');
+    } catch {
+      // ignore parse errors
+    }
+    sessionStorage.removeItem('sanchivue:templateSeed');
+  }, []);
 
   // Lazy-load the question bank when the user reaches the questions step.
   const loadQuestions = async () => {
@@ -79,10 +112,51 @@ export default function InterviewCreateWizard() {
     }
   };
 
+  // Load saved templates so the user can pick one as a starting point.
+  const loadTemplates = async () => {
+    if (!orgId) return;
+    setTemplateLoading(true);
+    try {
+      const res = await templateApi.list({ orgId, limit: 25 });
+      const data = res?.data?.data || [];
+      setTemplates(Array.isArray(data) ? data : data?.items || []);
+    } catch {
+      // ignore — toast handled by interceptor
+    } finally {
+      setTemplateLoading(false);
+    }
+  };
+
   // Trigger the lazy load whenever the step becomes 'questions'.
   useEffect(() => {
     if (step === 'questions') loadQuestions();
   }, [step]);
+
+  // Load templates once on mount so the "Load from template" dropdown is ready.
+  useEffect(() => {
+    loadTemplates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgId]);
+
+  const applyTemplate = (tplId) => {
+    const tpl = templates.find((t) => (t.id || t._id) === tplId);
+    if (!tpl) return;
+    setForm((p) => ({
+      ...p,
+      title: p.title || tpl.name,
+      jobRole: tpl.jobRole || p.jobRole,
+      type: tpl.type || p.type,
+      difficulty: tpl.difficulty || p.difficulty,
+      durationMinutes: tpl.durationMin || p.durationMinutes,
+      allowedLanguages: tpl.allowedLanguages || p.allowedLanguages,
+      questionIds: (tpl.questionIds || []).map((q) =>
+        typeof q === 'string' ? q : q.id || q._id,
+      ),
+      rubric: { ...p.rubric, ...(tpl.rubric || {}) },
+      templateId: tpl.id || tpl._id,
+    }));
+    toast.success(`Loaded "${tpl.name}". Review and adjust as needed.`);
+  };
 
   const set = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
@@ -165,12 +239,32 @@ export default function InterviewCreateWizard() {
   const submit = async () => {
     setSaving(true);
     try {
-      const res = await interviewApi.create(form);
-      const data = res?.data?.data || {};
+      // Auto-attach the active org so the backend's requireOrgMember middleware
+      // has the context it needs.
+      const payload = { ...form, orgId };
+      const res = await interviewApi.create(payload);
+      const interview = res?.data?.data?.interview || res?.data?.data;
+      const interviewId = interview?.id || interview?._id;
+      let invitationData = null;
+      // If the interviewer entered a candidate email, auto-issue the secure
+      // invitation link so the "done" step has something to share.
+      if (interviewId && form.candidateEmail) {
+        try {
+          const invRes = await interviewApi.invite(interviewId, {
+            email: form.candidateEmail,
+          });
+          invitationData = invRes?.data?.data || null;
+        } catch {
+          // Non-fatal — the interviewer can share the roomCode-based link manually.
+        }
+      }
       setInvitation({
-        id: data.id,
-        token: data.invitationToken,
-        link: data.invitationLink || `${window.location.origin}/join/${data.invitationToken}`,
+        id: interviewId,
+        title: interview?.title || form.title,
+        candidateEmail: form.candidateEmail || '',
+        token: invitationData?.token || null,
+        link: invitationData?.inviteUrl || null,
+        emailSent: invitationData?.emailSent === true,
       });
       toast.success('Interview created!');
       setStep('done');
@@ -185,6 +279,40 @@ export default function InterviewCreateWizard() {
     if (invitation?.link) {
       navigator.clipboard.writeText(invitation.link);
       toast.success('Invitation link copied!');
+    }
+  };
+
+  const emailLink = () => {
+    if (!invitation?.link) return;
+    const subject = encodeURIComponent(
+      `Sanchivue interview invitation${invitation.title ? ` — ${invitation.title}` : ''}`,
+    );
+    const body = encodeURIComponent(
+      `Hi,\n\nYou've been invited to a live technical interview on Sanchivue.\n\nJoin here:\n${invitation.link}\n\nThis link expires in 7 days. Use a quiet, well-lit space and allow camera + microphone access.\n\nThanks,\n${invitation.title || 'Your interviewer'}`,
+    );
+    window.location.href = `mailto:${invitation.candidateEmail || ''}?subject=${subject}&body=${body}`;
+    toast.success('Opening your email client…');
+  };
+
+  const generateInvitation = async (email) => {
+    if (!invitation?.id) return;
+    try {
+      const res = await interviewApi.invite(invitation.id, { email });
+      const data = res?.data?.data || {};
+      setInvitation((prev) => ({
+        ...prev,
+        candidateEmail: email,
+        token: data.token,
+        link: data.inviteUrl,
+        emailSent: data.emailSent === true,
+      }));
+      toast.success(
+        data.emailSent
+          ? `Invitation sent to ${email}.`
+          : `Invitation link generated. SMTP not configured — copy the link to share.`,
+      );
+    } catch {
+      // toast handled by interceptor
     }
   };
 
@@ -293,20 +421,56 @@ export default function InterviewCreateWizard() {
           </div>
           <h1 className="mt-4 text-2xl font-bold text-slate-50">Interview created</h1>
           <p className="mt-2 text-sm text-slate-400">
-            Share this secure invitation link with your candidate.
+            Share this secure invitation link with your candidate. The link
+            expires in 7 days.
           </p>
-          <div className="mt-4 flex items-center gap-2">
-            <input
-              readOnly
-              value={invitation.link}
-              className="input-base flex-1 font-mono text-xs"
-              aria-label="Invitation link"
-            />
-            <button type="button" onClick={copyLink} className="btn-secondary text-sm">
-              <Copy className="h-4 w-4" /> Copy
-            </button>
-          </div>
-          <div className="mt-4 flex justify-center gap-2">
+
+          {invitation.link ? (
+            <>
+              <div className="mt-4 flex flex-col items-stretch gap-2 sm:flex-row">
+                <input
+                  readOnly
+                  value={invitation.link}
+                  className="input-base flex-1 font-mono text-xs"
+                  aria-label="Invitation link"
+                />
+                <div className="flex gap-2">
+                  <button type="button" onClick={copyLink} className="btn-secondary text-sm">
+                    <Copy className="h-4 w-4" /> Copy
+                  </button>
+                  <button type="button" onClick={emailLink} className="btn-secondary text-sm">
+                    <Mail className="h-4 w-4" /> Email
+                  </button>
+                </div>
+              </div>
+              {invitation.emailSent ? (
+                <p className="mt-2 text-xs text-brand-emerald">
+                  An invitation email was sent to {invitation.candidateEmail}.
+                </p>
+              ) : invitation.candidateEmail ? (
+                <p className="mt-2 text-xs text-amber-300">
+                  SMTP not configured — use the Email button to open your mail client.
+                </p>
+              ) : (
+                <p className="mt-2 text-xs text-slate-500">
+                  No candidate email was set — share the link manually.
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="mt-4 text-xs text-slate-500">
+              No candidate email was set on the interview. Add one below to
+              generate a shareable invitation link.
+            </p>
+          )}
+
+          {/* Generate / refresh invitation for an email */}
+          <GenerateInvitationRow
+            defaultEmail={invitation.candidateEmail}
+            onGenerate={generateInvitation}
+          />
+
+          <div className="mt-6 flex flex-col items-stretch justify-center gap-2 sm:flex-row">
             <button
               type="button"
               onClick={() => navigate(`/interviews/${invitation.id}`)}
@@ -373,6 +537,36 @@ export default function InterviewCreateWizard() {
       <div className="card p-5">
         {step === 'details' && (
           <div className="space-y-4">
+            {/* Load from template */}
+            {templates.length > 0 && (
+              <div className="rounded-md border border-slate-800 bg-slate-950 p-3">
+                <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+                  <Layers className="h-3.5 w-3.5 text-brand-indigo" /> Load from template
+                </p>
+                <p className="mt-0.5 text-[11px] text-slate-500">
+                  Apply a reusable question set + rubric in one click. You can still edit everything below.
+                </p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {templates.map((tpl) => (
+                    <button
+                      key={tpl.id || tpl._id}
+                      type="button"
+                      onClick={() => applyTemplate(tpl.id || tpl._id)}
+                      className="rounded border border-slate-700 bg-slate-900 px-2 py-1 text-[11px] text-slate-200 hover:border-brand-indigo hover:bg-slate-800"
+                    >
+                      {tpl.name}
+                    </button>
+                  ))}
+                  {templateLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-500" />}
+                </div>
+                <a
+                  href="/templates/new"
+                  className="mt-2 inline-block text-[11px] text-brand-indigo hover:underline"
+                >
+                  Manage templates →
+                </a>
+              </div>
+            )}
             <Input
               label="Title"
               value={form.title}
@@ -735,5 +929,50 @@ function Review({ label, value }) {
       <dt className="text-[10px] uppercase tracking-wider text-slate-500">{label}</dt>
       <dd className="mt-0.5 break-words text-slate-200">{value}</dd>
     </div>
+  );
+}
+
+// GenerateInvitationRow — lets the interviewer generate (or refresh) a secure
+// invitation link for an arbitrary candidate email after the interview is
+// created. Visible on the "done" step of the wizard.
+function GenerateInvitationRow({ defaultEmail, onGenerate }) {
+  const [email, setEmail] = useState(defaultEmail || '');
+  const [busy, setBusy] = useState(false);
+  const submit = async (e) => {
+    e?.preventDefault();
+    if (!email || !email.includes('@')) {
+      toast.error('Enter a valid candidate email.');
+      return;
+    }
+    setBusy(true);
+    try {
+      await onGenerate(email);
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <form onSubmit={submit} className="mt-5 rounded-md border border-slate-800 bg-slate-950 p-3 text-left">
+      <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+        <Mail className="h-3.5 w-3.5 text-brand-indigo" /> Generate a fresh invitation link
+      </p>
+      <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="candidate@email.com"
+          className="input-base flex-1 text-xs"
+          aria-label="Candidate email"
+        />
+        <button type="submit" disabled={busy} className="btn-secondary text-xs">
+          {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+          Generate link
+        </button>
+      </div>
+      <p className="mt-1.5 text-[10px] text-slate-500">
+        Each link is a high-entropy token scoped to this interview and expires in 7 days.
+      </p>
+    </form>
   );
 }

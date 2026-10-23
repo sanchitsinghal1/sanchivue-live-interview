@@ -1,12 +1,12 @@
 import { Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import BrandLogo from '../common/BrandLogo.jsx';
 import CreatorCredit from '../common/CreatorCredit.jsx';
-import { Link } from 'react-router-dom';
-import { BRAND } from '../../constants/index.js';
 
-// AuthLayout: a centered split — left side is a brand panel (hidden on small
-// screens), right side hosts the auth form (Outlet). No navbar so the form is
-// the sole focus.
+// AuthLayout — a centered split. Left side is a minimal branded panel
+// (hidden on small screens): the Sanchivue mark, a single confident tagline,
+// and the creator credit. Right side hosts the auth form (Outlet). The panel
+// is intentionally quiet so the form is the sole focus.
 export default function AuthLayout() {
   return (
     <div className="grid min-h-screen grid-cols-1 bg-slate-950 lg:grid-cols-2">
@@ -20,24 +20,30 @@ export default function AuthLayout() {
               'radial-gradient(60% 50% at 20% 20%, rgba(99,102,241,0.18) 0%, transparent 60%), radial-gradient(50% 40% at 80% 80%, rgba(16,185,129,0.16) 0%, transparent 60%)',
           }}
         />
+        {/* Subtle grid lines for the developer-IDE aesthetic */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
         <div className="relative">
           <BrandLogo className="h-9" />
-          <p className="mt-6 max-w-sm text-lg font-medium text-slate-200">
-            {BRAND.tagline}
-          </p>
+        </div>
+        <div className="relative">
+          <h2 className="max-w-sm text-2xl font-semibold leading-tight text-slate-100">
+            Run technical interviews that actually predict on-the-job performance.
+          </h2>
           <p className="mt-3 max-w-sm text-sm text-slate-400">
-            Run live coding rounds with a collaborative Monaco editor, AI
-            co-pilot, sandboxed execution, anti-cheat proctoring, and instant
-            rubric-scored reports.
+            A live workspace built around real code execution, structured
+            rubrics, and evidence-rich reports.
           </p>
         </div>
         <div className="relative">
-          <ul className="space-y-2 text-sm text-slate-400">
-            <li>• Live IDE with presence cursors</li>
-            <li>• AI co-pilot + JD-driven assessment</li>
-            <li>• Sandboxed code execution</li>
-            <li>• Anti-cheat proctoring + code replay</li>
-          </ul>
+          <CreatorCredit />
         </div>
       </aside>
 
@@ -52,7 +58,7 @@ export default function AuthLayout() {
         <div className="flex flex-1 items-center justify-center px-4 py-8">
           <div className="w-full max-w-md">
             <Outlet />
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center lg:hidden">
               <CreatorCredit />
             </div>
           </div>

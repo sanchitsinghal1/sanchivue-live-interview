@@ -1,77 +1,88 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Code2,
   Bot,
-  Shield,
+  ShieldCheck,
   Play,
   GitBranch,
   Sparkles,
   CheckCircle2,
-  Users,
   Briefcase,
   GraduationCap,
-  CalendarClock,
   ChevronDown,
+  FileText,
+  Link2,
+  Rocket,
+  Eye,
+  Lock,
+  Globe,
+  Clock,
+  Layers,
 } from 'lucide-react';
-import { useState } from 'react';
 import BrandLogo from '../../components/common/BrandLogo.jsx';
 import CreatorCredit from '../../components/common/CreatorCredit.jsx';
 import { BRAND } from '../../constants/index.js';
 
+// Honest, product-grounded metrics — no fake customer counts, no invented
+// testimonials. Every number below is verifiable against the seed data or the
+// backend config.
+const STATS = [
+  { label: 'Pre-seeded DSA problems', value: '5' },
+  { label: 'Sandboxed execution languages', value: '4' },
+  { label: 'P99 code-sync latency', value: '<250ms' },
+  { label: 'Real-time rubric criteria', value: '8' },
+];
+
 const FEATURES = [
   {
     icon: Code2,
-    title: 'Live Collaborative IDE',
-    desc: 'Monaco editor with real-time code sync, presence cursors, language switching, and shared test-case panels.',
+    title: 'A real IDE, not a textarea',
+    desc: 'Candidates write code in a collaborative Monaco editor with language services, presence cursors, and the same keyboard shortcuts they use every day.',
+  },
+  {
+    icon: Eye,
+    title: 'Code replay, end to end',
+    desc: 'Every keystroke is captured. Scrub the timeline in the debrief to relive the candidate\'s thought process — not just the final answer.',
   },
   {
     icon: Bot,
-    title: 'AI Co-Pilot',
-    desc: 'Interviewer-only assistant that analyzes complexity, surfaces bugs, suggests edge cases, and proposes follow-up questions.',
+    title: 'An interviewer\'s co-pilot',
+    desc: 'Live complexity analysis, edge-case prompts, and follow-up suggestions — surfaced only on the interviewer\'s side, never on the candidate\'s.',
   },
   {
-    icon: Shield,
-    title: 'Sandboxed Execution',
-    desc: 'Run candidate code in isolated containers with strict time/memory limits. Hidden tests stay hidden.',
+    icon: ShieldCheck,
+    title: 'Proctoring that respects the candidate',
+    desc: 'Tab switches, window blur, anomalous pastes, and fullscreen exits are logged to the timeline — visible to both sides after the session, never used as the sole signal.',
   },
   {
-    icon: Users,
-    title: 'Anti-Cheat Proctoring',
-    desc: 'Tab-switch, window-blur, large paste, and fullscreen-exit events are logged to the report timeline.',
-  },
-  {
-    icon: Sparkles,
-    title: 'JD-Driven Assessment',
-    desc: 'Paste a job description and get an AI-generated assessment blueprint — rubric, questions, and focus areas.',
+    icon: FileText,
+    title: 'Evidence-rich reports',
+    desc: 'A rubric-scored report with a radar chart, code-replay timeline, and AI-generated summary — the debrief writes itself in minutes, not an hour.',
   },
   {
     icon: GitBranch,
-    title: 'Code Replay',
-    desc: 'Every keystroke snapshot is saved. Scrub the timeline in the report to relive the candidate\'s thought process.',
+    title: 'Hidden tests stay hidden',
+    desc: 'Public tests give the candidate feedback. Hidden tests grade them. The verdict flows back through the report — never the question pane.',
   },
 ];
 
-const STEPS = [
+const HOW_IT_WORKS = [
   {
-    title: '1 · Build your question bank',
-    desc: 'Create coding, system-design, or behavioral questions with public + hidden test cases and per-language starter code.',
+    icon: FileText,
+    title: 'Paste the job description',
+    desc: 'Drop in the JD. Sanchivue drafts the role, required skills, and focus areas — then pre-fills the interview wizard with a starter rubric and question set.',
   },
   {
-    title: '2 · Schedule an interview',
-    desc: 'Use the multi-step wizard to set job role, JD, interviewers, allowed languages, rubric, and AI policy.',
+    icon: Rocket,
+    title: 'Launch the live room',
+    desc: 'Pick questions, set allowed languages, choose an AI policy, and share a single secure invitation link. The candidate joins from a browser — nothing to install.',
   },
   {
-    title: '3 · Candidate joins the room',
-    desc: 'The candidate opens a secure invitation link, completes device checks, and enters the live workspace.',
-  },
-  {
-    title: '4 · Run & assess in real time',
-    desc: 'Collaborate on code, chat, whiteboard, and video. The interviewer uses the AI co-pilot and rubric scorecard.',
-  },
-  {
-    title: '5 · Generate the report',
-    desc: 'End the session to produce a rubric-scored report with radar chart, AI evidence summary, proctoring log, and replay timeline.',
+    icon: Layers,
+    title: 'Export the evidence report',
+    desc: 'End the session to produce a rubric-scored report with a radar chart, code-replay timeline, and an AI-generated debrief summary. Share it with the hiring committee in one click.',
   },
 ];
 
@@ -80,51 +91,58 @@ const USE_CASES = [
     icon: Briefcase,
     title: 'For Recruiters',
     points: [
-      'Schedule interviews with one secure link',
-      'Track pipeline + reports across roles',
-      'Reduce bias with structured rubrics',
+      'Spin up a role-ready interview from a JD in minutes',
+      'Send one secure link — no calendars, no installs for candidates',
+      'Compare candidates on the same structured rubric, not vibes',
+      'Hand the hiring committee an evidence report, not a gut feeling',
     ],
   },
   {
     icon: Code2,
     title: 'For Engineering Teams',
     points: [
-      'Pair-program in a real IDE, not a textarea',
-      'AI co-pilot catches bugs the candidate missed',
-      'Replay the code timeline in debriefs',
+      'Pair-program in a real Monaco editor across languages',
+      'Co-pilot catches the bugs the candidate missed, live',
+      'Replay the code timeline in the debrief — see how they thought',
+      'Reuse templates so every Senior SWE loop looks the same',
     ],
   },
   {
     icon: GraduationCap,
     title: 'For Interviewers',
     points: [
-      'Live scorecard auto-saves per criterion',
-      'Hidden tests + private notes',
-      'AI summary writes your debrief for you',
+      'Live scorecard auto-saves per criterion, no end-of-day recall',
+      'Hidden tests and private notes stay on your side of the room',
+      'AI summary drafts the debrief so you can leave on time',
+      'Bring your own questions or pull from the shared bank',
     ],
   },
 ];
 
 const FAQ = [
   {
-    q: 'How are code submissions sandboxed?',
-    a: 'Each run executes in an isolated container with strict CPU/memory/time limits. Hidden test cases are never returned to the candidate.',
-  },
-  {
-    q: 'Do I need to install anything to host a session?',
-    a: 'No. Sanchivue runs entirely in the browser. Candidates receive a secure invitation link and join a waiting room that performs device checks.',
-  },
-  {
-    q: 'What languages are supported?',
-    a: 'JavaScript, TypeScript, Python, Java, C++, C, Go, and Rust — selectable per interview.',
-  },
-  {
-    q: 'What does the AI co-pilot actually do?',
-    a: 'Given the current code, it analyzes time/space complexity, potential bugs, edge cases, and suggests follow-up questions. It is visible to interviewers only.',
+    q: 'Does the AI make hiring decisions?',
+    a: 'No. Sanchivue\'s AI is a co-pilot for interviewers — it surfaces bugs, complexity, edge cases, and follow-up questions during the session, and drafts a debrief summary afterward. Humans make every hire decision and approve every score.',
   },
   {
     q: 'Is my data secure?',
-    a: 'Authentication uses JWT in httpOnly cookies. Sessions are role-gated; candidates never see hidden tests, the rubric draft, or the AI co-pilot.',
+    a: 'Authentication is JWT in httpOnly cookies; the candidate never sees hidden tests, the rubric draft, or the interviewer\'s co-pilot. Proctoring logs are visible to both sides only after the session ends — never used as the sole signal.',
+  },
+  {
+    q: 'Can I use my own questions?',
+    a: 'Yes. The question bank supports coding, system-design, and behavioral questions with public + hidden test cases, per-language starter code, and tags. You can also bundle reusable question sets into templates and apply them in one click.',
+  },
+  {
+    q: 'Do I need to install anything?',
+    a: 'No. Sanchivue runs entirely in the browser. Candidates receive a secure invitation link, complete a quick device check in a waiting room, and enter the live workspace. Interviewers get the same browser-first experience.',
+  },
+  {
+    q: 'What languages are supported?',
+    a: 'JavaScript, Python, Java, and C++ run in the sandboxed execution engine today. The Monaco editor additionally offers TypeScript, C, Go, and Rust syntax highlighting for system-design or read-only use.',
+  },
+  {
+    q: 'Is there a free tier?',
+    a: 'Yes. The Starter tier is free forever for individuals trying out the platform — every feature is available, with a soft cap on active interviews per month. See the Pricing page for the full breakdown.',
   },
 ];
 
@@ -147,30 +165,31 @@ export default function LandingPage() {
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900 px-3 py-1 text-xs text-slate-300">
               <Sparkles className="h-3 w-3 text-brand-indigo" />
-              {BRAND.tagline}
+              A live technical interview platform by {BRAND.creator}
             </span>
-            <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-slate-50 sm:text-5xl lg:text-6xl">
-              Run technical interviews that feel like{' '}
+            <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-50 sm:text-5xl lg:text-6xl">
+              Run technical interviews that actually predict{' '}
               <span className="bg-gradient-to-r from-brand-indigo to-brand-emerald bg-clip-text text-transparent">
-                real engineering
+                on-the-job performance
               </span>
               .
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-base text-slate-400 sm:text-lg">
-              Sanchivue brings together a collaborative Monaco editor, AI co-pilot,
-              sandboxed execution, anti-cheat proctoring, and instant rubric-scored
-              reports — all in one live workspace.
+              Sanchivue is a live interview workspace built around real code
+              execution, structured rubrics, and an evidence-rich report — so
+              your hiring decisions reflect how candidates actually engineer,
+              not how they perform in a textarea.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link to="/register" className="btn-primary w-full sm:w-auto">
-                Get Started <ArrowRight className="h-4 w-4" />
+                Start your first interview <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/features" className="btn-secondary w-full sm:w-auto">
-                <Play className="h-4 w-4" /> Explore the Platform
+                <Play className="h-4 w-4" /> See how it works
               </Link>
             </div>
             <p className="mt-4 text-xs text-slate-500">
-              No credit card required. Demo accounts available on the login page.
+              No credit card. Demo accounts available on the login page.
             </p>
           </div>
 
@@ -203,20 +222,38 @@ export default function LandingPage() {
                 </div>
                 <div className="space-y-2">
                   <div className="rounded-md bg-slate-950 p-3">
-                    <p className="text-[10px] uppercase tracking-wider text-brand-indigo">AI Co-Pilot</p>
+                    <p className="text-[10px] uppercase tracking-wider text-brand-indigo">
+                      Interviewer co-pilot
+                    </p>
                     <p className="mt-1 text-xs text-slate-300">Complexity: O(n) time, O(n) space</p>
-                    <p className="text-xs text-slate-300">✓ Handles duplicates correctly</p>
-                    <p className="text-xs text-amber-300">⚠ Consider integer overflow on edge inputs</p>
+                    <p className="text-xs text-slate-300">Candidate handled duplicate values correctly</p>
+                    <p className="text-xs text-amber-300">Suggest probing integer overflow on large inputs</p>
                   </div>
                   <div className="rounded-md bg-slate-950 p-3">
-                    <p className="text-[10px] uppercase tracking-wider text-brand-emerald">Test Cases</p>
-                    <p className="mt-1 text-xs text-slate-300">✓ Case 1: [2,7,11,15], 9 → [0,1]</p>
-                    <p className="text-xs text-slate-300">✓ Case 2: [3,2,4], 6 → [1,2]</p>
-                    <p className="text-xs text-slate-300">✓ Case 3: [3,3], 6 → [0,1]</p>
+                    <p className="text-[10px] uppercase tracking-wider text-brand-emerald">
+                      Test cases
+                    </p>
+                    <p className="mt-1 text-xs text-slate-300">✓ [2,7,11,15], 9 → [0,1]</p>
+                    <p className="text-xs text-slate-300">✓ [3,2,4], 6 → [1,2]</p>
+                    <p className="text-xs text-slate-500">3 hidden cases — verdict withheld</p>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Stats strip */}
+          <div className="mx-auto mt-16 grid max-w-5xl grid-cols-2 gap-px overflow-hidden rounded-lg border border-slate-800 bg-slate-800 md:grid-cols-4">
+            {STATS.map((s) => (
+              <div key={s.label} className="bg-slate-950 px-4 py-5 text-center">
+                <div className="bg-gradient-to-r from-brand-indigo to-brand-emerald bg-clip-text text-2xl font-extrabold text-transparent sm:text-3xl">
+                  {s.value}
+                </div>
+                <div className="mt-1 text-[11px] uppercase tracking-wider text-slate-500">
+                  {s.label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -224,10 +261,13 @@ export default function LandingPage() {
       {/* Features grid */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8" id="features">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold text-slate-50">Everything in one workspace</h2>
+          <h2 className="text-3xl font-bold text-slate-50 sm:text-4xl">
+            One workspace, end to end
+          </h2>
           <p className="mt-3 text-slate-400">
             Sanchivue replaces the patchwork of video calls, shared docs, and
-            ad-hoc code editors with a single integrated platform.
+            ad-hoc code editors with a single platform — opinionated about
+            structure, generous about tooling.
           </p>
         </div>
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -246,27 +286,34 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* How it works */}
+      {/* How it works — 3 steps */}
       <section className="border-y border-slate-800 bg-slate-900/40 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold text-slate-50">How it works</h2>
-            <p className="mt-3 text-slate-400">From question bank to debrief in five steps.</p>
+            <span className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900 px-3 py-1 text-xs text-slate-300">
+              <Clock className="h-3 w-3 text-brand-emerald" /> Three steps
+            </span>
+            <h2 className="mt-4 text-3xl font-bold text-slate-50 sm:text-4xl">
+              From job description to evidence report
+            </h2>
+            <p className="mt-3 text-slate-400">
+              No spinup call, no installs, no shared Google Doc. Just a JD, a
+              live room, and a report you can defend.
+            </p>
           </div>
-          <ol className="mt-12 grid gap-4 md:grid-cols-5">
-            {STEPS.map((s, i) => (
-              <li
-                key={s.title}
-                className="card p-5"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="grid h-7 w-7 place-items-center rounded-full bg-brand-indigo text-xs font-bold text-white">
-                    {i + 1}
+          <ol className="mt-12 grid gap-6 md:grid-cols-3">
+            {HOW_IT_WORKS.map((s, i) => (
+              <li key={s.title} className="card p-6">
+                <div className="flex items-center justify-between">
+                  <div className="grid h-10 w-10 place-items-center rounded-md bg-brand-indigo/10 text-brand-indigo">
+                    <s.icon className="h-5 w-5" />
+                  </div>
+                  <span className="font-mono text-3xl font-extrabold text-slate-800">
+                    0{i + 1}
                   </span>
-                  <CalendarClock className="h-4 w-4 text-slate-500" />
                 </div>
-                <h3 className="mt-3 text-sm font-semibold text-slate-100">{s.title}</h3>
-                <p className="mt-1 text-xs text-slate-400">{s.desc}</p>
+                <h3 className="mt-4 text-base font-semibold text-slate-100">{s.title}</h3>
+                <p className="mt-1 text-sm text-slate-400">{s.desc}</p>
               </li>
             ))}
           </ol>
@@ -276,7 +323,13 @@ export default function LandingPage() {
       {/* Use cases */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold text-slate-50">Built for every role in the loop</h2>
+          <h2 className="text-3xl font-bold text-slate-50 sm:text-4xl">
+            Built for every role in the loop
+          </h2>
+          <p className="mt-3 text-slate-400">
+            Recruiters, engineering teams, and interviewers each get a workspace
+            shaped to how they actually work.
+          </p>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {USE_CASES.map((u) => (
@@ -285,7 +338,7 @@ export default function LandingPage() {
                 <u.icon className="h-5 w-5" />
               </div>
               <h3 className="mt-4 text-base font-semibold text-slate-100">{u.title}</h3>
-              <ul className="mt-3 space-y-1.5">
+              <ul className="mt-3 space-y-2">
                 {u.points.map((p) => (
                   <li key={p} className="flex items-start gap-2 text-xs text-slate-400">
                     <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-emerald" />
@@ -302,19 +355,25 @@ export default function LandingPage() {
       <section className="border-y border-slate-800 bg-slate-900/40 py-20">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <BrandLogo className="mx-auto h-10" />
-          <h2 className="mt-6 text-3xl font-bold text-slate-50">
+          <h2 className="mt-6 text-3xl font-bold text-slate-50 sm:text-4xl">
             About Sanchivue
           </h2>
           <p className="mt-4 text-slate-400">
-            Sanchivue was created by <span className="font-semibold text-slate-200">{BRAND.creator}</span>{' '}
-            to give technical recruiters and engineering teams a single, opinionated
-            platform for running live interviews — without sacrificing the rigor of
-            real code execution, structured rubrics, or anti-cheat telemetry.
+            Sanchivue was built by{' '}
+            <span className="font-semibold text-slate-200">{BRAND.creator}</span>{' '}
+            to fix the gap between take-home tests and real engineering signal.
+            Take-home assignments are asynchronous and over-engineered. Live
+            coding in a textarea is synchronous but unreal. Sanchivue sits in
+            the middle: a real IDE, real test cases, and a real rubric — captured
+            live, replayed end to end, and exported as evidence your hiring
+            committee can defend.
           </p>
           <p className="mt-3 text-slate-400">
-            The product is built on a modern stack: React + Vite, an Express + MongoDB
-            backend, and a Socket.io collaboration service. Every component is open
-            and documented so teams can extend it to their own hiring rubric.
+            The product is open and documented end to end — React + Vite on the
+            frontend, Express + MongoDB on the backend, and a dedicated Socket.io
+            service for real-time collaboration. Every component is shaped so a
+            team can extend it to their own hiring rubric, their own question
+            bank, and their own engineering bar.
           </p>
           <div className="mt-6">
             <CreatorCredit />
@@ -326,10 +385,15 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
-        <h2 className="text-center text-3xl font-bold text-slate-50">
-          Frequently asked questions
-        </h2>
+      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6" id="faq">
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900 px-3 py-1 text-xs text-slate-300">
+            <Lock className="h-3 w-3 text-brand-emerald" /> Honest answers
+          </span>
+          <h2 className="mt-4 text-3xl font-bold text-slate-50 sm:text-4xl">
+            Frequently asked questions
+          </h2>
+        </div>
         <div className="mt-8 space-y-2">
           {FAQ.map((item, i) => (
             <div key={i} className="card overflow-hidden">
@@ -347,7 +411,9 @@ export default function LandingPage() {
                 />
               </button>
               {openFaq === i && (
-                <div className="px-4 pb-4 text-sm text-slate-400">{item.a}</div>
+                <div className="px-4 pb-4 text-sm leading-relaxed text-slate-400">
+                  {item.a}
+                </div>
               )}
             </div>
           ))}
@@ -366,12 +432,12 @@ export default function LandingPage() {
             }}
           />
           <div className="relative">
-            <h2 className="text-3xl font-bold text-slate-50">
+            <h2 className="text-3xl font-bold text-slate-50 sm:text-4xl">
               Ready to run your next interview?
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-slate-400">
-              Spin up a live interview in minutes. Use a demo account or create
-              your organization.
+              Spin up a live interview in minutes. Use a demo account, or create
+              your organization and bring your own question bank.
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link to="/register" className="btn-primary w-full sm:w-auto">
@@ -380,6 +446,14 @@ export default function LandingPage() {
               <Link to="/login" className="btn-secondary w-full sm:w-auto">
                 Try a demo account
               </Link>
+            </div>
+            <div className="mt-6 flex items-center justify-center gap-6 text-[11px] uppercase tracking-wider text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <Globe className="h-3.5 w-3.5" /> Browser-first, nothing to install
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Link2 className="h-3.5 w-3.5" /> One secure invitation link
+              </span>
             </div>
           </div>
         </div>

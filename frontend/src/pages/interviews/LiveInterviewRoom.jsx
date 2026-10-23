@@ -93,7 +93,7 @@ export default function LiveInterviewRoom() {
       interview.status === INTERVIEW_STATUS.SCHEDULED &&
       (isInterviewer || interview.candidateId === user.id)
     ) {
-      patch({ status: INTERVIEW_STATUS.LIVE, startedAt: new Date().toISOString() }).catch(
+      patch({ status: INTERVIEW_STATUS.IN_PROGRESS, startedAt: new Date().toISOString() }).catch(
         () => {},
       );
     }
@@ -159,7 +159,7 @@ export default function LiveInterviewRoom() {
   const handleEnd = async () => {
     try {
       await patch({
-        status: INTERVIEW_STATUS.ENDED,
+        status: INTERVIEW_STATUS.COMPLETED,
         endedAt: new Date().toISOString(),
       });
       toast.success('Interview ended.');
@@ -193,7 +193,7 @@ export default function LiveInterviewRoom() {
     );
   }
 
-  const ended = interview.status === INTERVIEW_STATUS.ENDED;
+  const ended = interview.status === INTERVIEW_STATUS.COMPLETED;
   const question = interview.question || interview.questions?.[0];
 
   return (

@@ -65,4 +65,27 @@ export async function sendPasswordResetEmail({ to, resetUrl }) {
   return sendEmail({ to, subject: 'Password reset', html });
 }
 
-export default { sendEmail, sendInvitationEmail, sendPasswordResetEmail };
+// Candidate interview invitation — sent by an interviewer from the wizard.
+// Falls back to a no-op (returns the link so the wizard can surface a
+// mailto: fallback to the user).
+export async function sendCandidateInterviewEmail({ to, inviteUrl, interviewTitle, invitedBy }) {
+  const html = `
+    <div style="font-family: -apple-system, sans-serif; max-width: 560px; margin: auto;">
+      <h2 style="color: #6366f1;">${APP_NAME} — Interview invitation</h2>
+      <p>You've been invited by <strong>${invitedBy || 'your interviewer'}</strong> to a live technical interview${
+        interviewTitle ? ` — <strong>${interviewTitle}</strong>` : ''
+      }.</p>
+      <p><a href="${inviteUrl}" style="background:#6366f1;color:#fff;padding:10px 16px;border-radius:6px;text-decoration:none;">Join the interview</a></p>
+      <p style="color:#666;font-size:12px;">If the button doesn't work, paste this URL into your browser: ${inviteUrl}</p>
+      <p style="color:#666;font-size:12px;">This link expires in 7 days.</p>
+    </div>
+  `;
+  return sendEmail({ to, subject: `Interview invitation${interviewTitle ? ` — ${interviewTitle}` : ''}`, html });
+}
+
+export default {
+  sendEmail,
+  sendInvitationEmail,
+  sendPasswordResetEmail,
+  sendCandidateInterviewEmail,
+};

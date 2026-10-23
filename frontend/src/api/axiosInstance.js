@@ -1,5 +1,6 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import storage from '../utils/storage.js';
 
 // We store the in-memory access token here so the request interceptor can
 // attach it as a Bearer header. The AuthContext calls setAuthToken() after
@@ -55,7 +56,8 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config || {};
 
-    // Network failure or server unreachable
+    // Network failure or server unreachable — toast only for genuine network
+    // errors (not for 401s on public pages, which are expected).
     if (!error.response) {
       toast.error('Network error — please check your connection.');
       return Promise.reject(error);
@@ -63,22 +65,35 @@ axiosInstance.interceptors.response.use(
 
     const { status, data } = error.response;
 
-    // Avoid infinite loops: if the failing request is itself a refresh, bail.
-    if (originalRequest._retry || originalRequest.url?.includes('/auth/refresh')) {
-      if (status === 401) {
-        clearAuthToken();
-        // Soft redirect to login so we don't break the back button history.
-        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
-          const from = encodeURIComponent(window.location.pathname + window.location.search);
-          window.location.href = `/login?from=${from}`;
-        }
+    // If the failing request IS the refresh endpoint itself, we know the
+    // session is truly gone. Clear silently — do NOT toast here (the caller
+    // decides whether to surface a message). This prevents new visitors from
+    // seeing "Refresh token required" the moment the site loads.
+    if (originalRequest.url?.includes('/auth/refresh')) {
+      clearAuthToken();
+      // Only redirect to login if the user was actually authenticated (had a
+      // token in memory). A brand-new visitor has no token, so we stay put.
+      if (getAuthToken() === null && storageHasToken()) {
+        redirectToLogin();
+        toast.error('Your session has expired. Please log in again.');
       }
-      const msg = data?.message || 'Request failed.';
-      toast.error(msg);
       return Promise.reject(error);
     }
 
     if (status === 401) {
+      // Avoid infinite loops: if we already retried this request, bail.
+      if (originalRequest._retry) {
+        clearAuthToken();
+        return Promise.reject(error);
+      }
+
+      // If there's no token at all, the user is simply not authenticated —
+      // don't attempt a refresh and don't toast. The caller (e.g. a
+      // ProtectedRoute or a data fetch) handles the redirect.
+      if (!getAuthToken() && !storageHasToken()) {
+        return Promise.reject(error);
+      }
+
       // Try ONE refresh; if it works, replay the queued requests.
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -108,11 +123,12 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         clearAuthToken();
-        if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
-          const from = encodeURIComponent(window.location.pathname + window.location.search);
-          window.location.href = `/login?from=${from}`;
+        // Only toast + redirect if the user WAS signed in. A first-time
+        // visitor triggering a 401 on a public endpoint should see nothing.
+        if (storageHasToken()) {
+          redirectToLogin();
+          toast.error('Your session has expired. Please log in again.');
         }
-        toast.error('Your session has expired. Please log in again.');
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -129,5 +145,19 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+// Helper: check if a token exists in localStorage (means the user was signed
+// in at some point). Uses the storage helper so the prefix stays consistent.
+function storageHasToken() {
+  return !!storage.get('token', null);
+}
+
+// Helper: soft redirect to login preserving the current path.
+function redirectToLogin() {
+  if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+    const from = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.href = `/login?from=${from}`;
+  }
+}
 
 export default axiosInstance;

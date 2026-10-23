@@ -18,7 +18,7 @@ export default function ReportsListPage() {
     try {
       const res = await interviewApi.list({
         limit: 100,
-        status: INTERVIEW_STATUS.ENDED,
+        status: INTERVIEW_STATUS.COMPLETED,
         search: search || undefined,
       });
       setItems(res?.data?.data || []);

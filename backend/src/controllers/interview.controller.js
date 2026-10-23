@@ -1,9 +1,10 @@
 // src/controllers/interview.controller.js
 // Interview CRUD + state transitions + participant joins + chat/proctoring/
-// snapshot appends + assign-question + end session.
+// snapshot appends + assign-question + end session + candidate invitations.
 import crypto from 'node:crypto';
 import Interview from '../models/interview.model.js';
 import InterviewTemplate from '../models/interviewTemplate.model.js';
+import Invitation from '../models/invitation.model.js';
 import CodeSnapshot from '../models/codeSnapshot.model.js';
 import User from '../models/user.model.js';
 import { ApiError } from '../utils/ApiError.js';
@@ -12,6 +13,8 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { aggregatePaginate } from '../utils/aggregationPagination.js';
 import { getPagination } from '../utils/pagination.js';
 import { AuditService } from '../services/audit.service.js';
+import { sendCandidateInterviewEmail } from '../services/email.service.js';
+import { env } from '../config/env.js';
 import { INTERVIEW_STATUS, USER_ROLES, SUPPORTED_LANGUAGES } from '../config/constants.js';
 
 // Generate a short, human-readable unique room code (e.g. "AB12CD34").
@@ -409,4 +412,153 @@ export const deleteInterview = asyncHandler(async (req, res) => {
     ip: req.ip,
   });
   return res.status(200).json(new ApiResponse(200, null, 'Interview deleted'));
+});
+
+// GET /api/v1/interviews/invitations/:token — PUBLIC (no auth).
+// Returns sanitized interview metadata so a candidate can enter the waiting
+// room before they have an account. NEVER returns hidden tests, rubric drafts,
+// interviewer identities, proctoring logs, or snapshots.
+export const getCandidateInvitation = asyncHandler(async (req, res) => {
+  const invitation = await Invitation.findOne({
+    token: req.params.token,
+    status: 'PENDING',
+  }).lean();
+  if (!invitation) throw new ApiError(404, 'Invitation not found or already used.');
+  if (invitation.expiresAt < new Date()) {
+    // Mark expired so future calls return 404 cleanly.
+    await Invitation.updateOne(
+      { _id: invitation._id },
+      { $set: { status: 'EXPIRED' } },
+    );
+    throw new ApiError(410, 'This invitation link has expired.');
+  }
+  if (!invitation.interviewId) {
+    throw new ApiError(400, 'This invitation is not linked to an interview.');
+  }
+  const interview = await Interview.findById(invitation.interviewId).lean();
+  if (!interview) throw new ApiError(404, 'Interview not found.');
+  // Build the candidate-safe view. NEVER leak interviewer ids, rubric drafts,
+  // proctoring logs, snapshots, chat, or hidden tests.
+  const safe = {
+    id: interview._id,
+    title: interview.title,
+    jobRole: interview.jobRole || '',
+    status: interview.status,
+    type: interview.type,
+    difficulty: interview.difficulty,
+    durationMin: interview.durationMin,
+    // Alias the wizard/waiting-room expects.
+    durationMinutes: interview.durationMin,
+    allowedLanguages: interview.allowedLanguages || [],
+    scheduledAt: interview.scheduledAt,
+    timezone: interview.timezone || 'UTC',
+    aiPolicy: interview.aiPolicy || 'allowed',
+    candidateInstructions: interview.instructions || '',
+    instructions: interview.instructions || '',
+    token: invitation.token,
+    invitationEmail: invitation.email,
+    expiresAt: invitation.expiresAt,
+  };
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { interview: safe, invitation }, 'Invitation valid'));
+});
+
+// POST /api/v1/interviews/:id/invite — interviewer creates a candidate
+// invitation linked to this interview. Returns the shareable URL.
+export const createInterviewInvitation = asyncHandler(async (req, res) => {
+  const interview = await Interview.findById(req.params.id);
+  if (!interview) throw new ApiError(404, 'Interview not found.');
+  // Authorization — must be an interviewer of this session, an org admin, or a platform admin.
+  const isInterviewer = interview.interviewerIds?.some(
+    (id) => String(id) === String(req.user._id),
+  );
+  const isPlatformAdmin = req.user.role === USER_ROLES.ADMIN;
+  if (!isInterviewer && !isPlatformAdmin) {
+    throw new ApiError(403, 'Only an assigned interviewer can invite candidates.');
+  }
+  const email = String(req.body?.email || '').toLowerCase().trim();
+  if (!email) throw new ApiError(400, 'Candidate email is required.');
+  // Optional: link the candidate user if one exists for this email.
+  const candidateUser = await User.findOne({ email });
+  const invitation = await Invitation.create({
+    orgId: interview.orgId,
+    interviewId: interview._id,
+    email,
+    role: 'candidate',
+    invitedBy: req.user._id,
+  });
+  // Build the shareable URL — origin from the request if available, else FRONTEND_URL.
+  const origin = req.get('origin') || env.FRONTEND_URL || `http://localhost:${env.PORT}`;
+  const inviteUrl = `${origin}/join/${invitation.token}`;
+  await AuditService.log({
+    action: 'INTERVIEW_INVITE',
+    actor: req.user,
+    target: { type: 'Interview', id: interview._id },
+    meta: { email, invitationId: invitation._id },
+    ip: req.ip,
+  });
+  // Try to email the candidate. If SMTP isn't configured, the caller falls
+  // back to surfacing a mailto: link in the wizard.
+  const emailResult = await sendCandidateInterviewEmail({
+    to: email,
+    inviteUrl,
+    interviewTitle: interview.title,
+    invitedBy: req.user.name,
+  });
+  // If the email maps to a registered candidate, auto-attach them.
+  if (candidateUser && !interview.candidateUserId) {
+    interview.candidateUserId = candidateUser._id;
+    interview.candidateEmail = email;
+    interview.candidateName = candidateUser.name;
+    await interview.save();
+  }
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        invitation,
+        inviteUrl,
+        token: invitation.token,
+        emailSent: emailResult?.ok === true,
+        emailReason: emailResult?.reason,
+      },
+      'Invitation created',
+    ),
+  );
+});
+
+// GET /api/v1/interviews/:id/invitations — list invitations for this interview
+// (interviewer-only). Useful to revoke or re-share a link from a future
+// InterviewManage page.
+export const listInterviewInvitations = asyncHandler(async (req, res) => {
+  const interview = await Interview.findById(req.params.id).lean();
+  if (!interview) throw new ApiError(404, 'Interview not found.');
+  const isInterviewer = interview.interviewerIds?.some(
+    (id) => String(id) === String(req.user._id),
+  );
+  const isPlatformAdmin = req.user.role === USER_ROLES.ADMIN;
+  if (!isInterviewer && !isPlatformAdmin) {
+    throw new ApiError(403, 'Only an assigned interviewer can list invitations.');
+  }
+  const pagination = getPagination(req);
+  const filter = { interviewId: interview._id };
+  // paginateQuery isn't imported here — use a manual limit/skip.
+  const page = pagination.page || 1;
+  const limit = pagination.limit || 20;
+  const items = await Invitation.find(filter)
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+  const total = await Invitation.countDocuments(filter);
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { items, pagination: { page, limit, total, totalPages: Math.ceil(total / limit) } },
+        'Invitations',
+      ),
+    );
 });

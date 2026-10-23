@@ -15,12 +15,18 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => storage.get('token', null));
   const [loading, setLoading] = useState(true);
 
-  // Hydrate: if we have a token, mirror it into the axios interceptor + fetch
-  // the freshest user record from `/auth/me` so role changes propagate.
+  // Hydrate: ONLY if we have a stored token do we call `/auth/me` to refresh
+  // the user record. A brand-new visitor with no token must NEVER trigger the
+  // auth/refresh chain — otherwise they see spurious "session expired" toasts
+  // the moment the site loads.
   const bootstrap = useCallback(async () => {
-    if (token) {
-      setAuthToken(token);
+    const storedToken = storage.get('token', null);
+    if (!storedToken) {
+      // No prior session — nothing to restore. Stay logged out silently.
+      setLoading(false);
+      return;
     }
+    setAuthToken(storedToken);
     try {
       const res = await authApi.me();
       const u = res?.data?.data;
@@ -28,12 +34,11 @@ export function AuthProvider({ children }) {
         setUser(u);
         storage.set('user', u);
       } else {
-        // No valid session — clear local state.
         clearAll();
       }
     } catch {
-      // `/auth/me` 401 → axios interceptor already handled refresh; if it
-      // still failed, treat as logged out.
+      // `/auth/me` failed even with a token (cookie expired, etc). Clear
+      // silently — the user will be prompted to log in by ProtectedRoute.
       clearAll();
     } finally {
       setLoading(false);

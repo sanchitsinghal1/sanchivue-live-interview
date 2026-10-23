@@ -16,7 +16,7 @@ import { formatDateTime, formatMinutes } from '../../utils/formatters.js';
 export default function InterviewCard({ interview, onDuplicate, onCancel }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const status = interview.status || INTERVIEW_STATUS.SCHEDULED;
-  const isEnded = status === INTERVIEW_STATUS.ENDED;
+  const isEnded = status === INTERVIEW_STATUS.COMPLETED;
 
   // Primary CTA destination — depends on status:
   //   • ended   → report
