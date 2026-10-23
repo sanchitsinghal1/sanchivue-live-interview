@@ -1,0 +1,119 @@
+// Prisma schema for the Live Technical Interview & AI Assessment Platform
+// Database: SQLite (local). String fields are used to store JSON-serialized
+// complex structures (test cases, starter code, snapshots, rubric) because
+// SQLite has no native array type. Helpers in src/lib/types.ts handle encode/decode.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("candidate") // interviewer | candidate | admin
+  avatarUrl String?
+  resumeUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  submissions      Submission[]
+  interviewsHost   InterviewSession[] @relation("InterviewerSessions")
+  interviewsJoined InterviewSession[] @relation("CandidateSessions")
+  evaluationsAuthored Evaluation[] @relation("AuthoredEvaluations")
+  evaluationsReceived Evaluation[] @relation("ReceivedEvaluations")
+}
+
+model Question {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  difficulty    String   @default("Medium") // Easy | Medium | Hard
+  tags          String   @default("[]")     // JSON: string[]
+  statement     String                       // Markdown
+  constraints   String   @default("")
+  examples      String   @default("[]")      // JSON: { input, output, explanation }[]
+  optimalTime   String   @default("O(N)")
+  optimalSpace  String   @default("O(1)")
+  starterCode   String   @default("{}")      // JSON: { javascript, python, java, cpp }
+  publicTests   String   @default("[]")      // JSON: { input, expectedOutput, explanation }[]
+  hiddenTests   String   @default("[]")      // JSON: { input, expectedOutput, weight }[]
+  timeLimitMs   Int      @default(2000)
+  memoryLimitMb Int      @default(256)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  submissions Submission[]
+  interviews  InterviewSession[]
+}
+
+model Submission {
+  id              String   @id @default(cuid())
+  userId          String
+  questionId      String
+  code            String
+  language        String   @default("javascript")
+  status          String   @default("PENDING") // ACCEPTED | WRONG_ANSWER | TLE | MLE | RUNTIME_ERROR | PENDING
+  passedCount     Int      @default(0)
+  totalCount      Int      @default(0)
+  score           Int      @default(0)
+  executionTimeMs Int      @default(0)
+  memoryKb        Int      @default(0)
+  stdin           String?
+  stdout          String?
+  stderr          String?
+  snapshots       String   @default("[]") // JSON: { timestamp, code, language, eventType }[]
+  createdAt       DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([questionId])
+}
+
+model InterviewSession {
+  id             String   @id @default(cuid())
+  roomCode       String   @unique
+  interviewerId  String
+  candidateId    String?
+  questionId     String?
+  status         String   @default("SCHEDULED") // SCHEDULED | LIVE | ENDED
+  proctoringLogs String   @default("[]") // JSON: { type, detail, severity, timestamp }[]
+  chatLog        String   @default("[]") // JSON: { userId, userName, content, timestamp }[]
+  snapshots      String   @default("[]") // JSON: { code, language, eventType, timestamp }[]
+  rubricDraft    String   @default("{}") // JSON: rubric state saved during the session
+  startedAt      DateTime?
+  endedAt        DateTime?
+  createdAt      DateTime @default(now())
+
+  interviewer User       @relation("InterviewerSessions", fields: [interviewerId], references: [id], onDelete: Cascade)
+  candidate    User?      @relation("CandidateSessions", fields: [candidateId], references: [id], onDelete: SetNull)
+  question     Question?  @relation(fields: [questionId], references: [id], onDelete: SetNull)
+  evaluation   Evaluation?
+
+  @@index([interviewerId])
+  @@index([candidateId])
+}
+
+model Evaluation {
+  id            String   @id @default(cuid())
+  interviewId   String   @unique
+  candidateId   String
+  interviewerId String
+  rubricScores  String   @default("{}") // JSON: { problemSolving, cleanCode, optimization, communication, edgeCases } (0-10)
+  aiSummary     String   @default("")
+  interviewerNotes String @default("")
+  recommendation String  @default("PENDING") // STRONG_HIRE | HIRE | LEAN_HIRE | NO_HIRE | PENDING
+  createdAt     DateTime @default(now())
+
+  candidate    User     @relation("ReceivedEvaluations", fields: [candidateId], references: [id], onDelete: Cascade)
+  interviewer  User     @relation("AuthoredEvaluations", fields: [interviewerId], references: [id], onDelete: Cascade)
+  interview    InterviewSession @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+}
