@@ -1,0 +1,32 @@
+# Node / Bun
+node_modules/
+bun.lock
+bun.lockb
+package-lock.json
+yarn.lock
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Build / cache
+dist/
+build/
+.cache/
+coverage/
+
+# Logs
+*.log
+dev.log
+server.log
+npm-debug.log*
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Test artifacts
+tests/tmp/

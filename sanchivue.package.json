@@ -1,0 +1,34 @@
+{
+  "name": "sanchivue",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sanchivue — Live Technical Interview & AI Assessment Platform. Pure JavaScript MERN stack (React + Vite + Express + MongoDB + Mongoose + Socket.io). Created by Sanchit Singhal.",
+  "scripts": {
+    "install:all": "cd backend && bun install && cd ../frontend && bun install",
+    "dev": "concurrently -n backend,frontend -c magenta,cyan \"cd backend && bun run dev\" \"cd frontend && bun run dev\"",
+    "dev:backend": "cd backend && bun run dev",
+    "dev:frontend": "cd frontend && bun run dev",
+    "build": "cd frontend && bun run build",
+    "lint": "concurrently -n backend,frontend \"cd backend && bun run lint\" \"cd frontend && bun run lint\"",
+    "format": "concurrently -n backend,frontend \"cd backend && bun run format\" \"cd frontend && bun run format\"",
+    "test": "cd backend && bun run test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "keywords": [
+    "sanchivue",
+    "sanchit-singhal",
+    "interview-platform",
+    "mern",
+    "react",
+    "vite",
+    "express",
+    "mongodb",
+    "socket-io",
+    "monaco",
+    "webrtc"
+  ],
+  "author": "Sanchit Singhal",
+  "license": "MIT"
+}

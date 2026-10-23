@@ -1,0 +1,1709 @@
+# MASTER AGENTIC AI BUILD PROMPT — SANCHIVUE
+## Build the complete Live Technical Interview Platform from scratch
+
+**Project / Brand Name:** Sanchivue  
+**Personal Brand / Creator:** Sanchit Singhal  
+**Product Category:** Live Technical Interviewing, Collaborative Coding, Technical Assessment and Interview Management SaaS
+
+---
+
+# 1. YOUR MISSION — BUILD THE ACTUAL PRODUCT
+
+Act as a principal full-stack engineer, software architect, UI/UX designer, database engineer, application-security engineer, real-time communication engineer, AI integration engineer, QA engineer and DevOps engineer.
+
+Your task is to **build Sanchivue as a complete, functional, professional, responsive and deployment-ready technical interview platform**.
+
+I do not want just an architecture proposal, tutorial, Figma-style mockup, list of files, isolated code snippets or a plan that expects me to do all the coding afterward.
+
+I want you to use your available agentic coding capabilities to:
+
+- Inspect the current workspace.
+- Research relevant technical interview platforms and current documentation.
+- Design and implement the application.
+- Create the actual frontend and backend files.
+- Create and connect the MongoDB database models.
+- Implement API routes, controllers, middleware, services and utilities.
+- Connect every implemented frontend feature to its correct backend functionality.
+- Implement authentication, authorization and session handling.
+- Build the live interview experience using WebRTC and real-time communication where appropriate.
+- Integrate a secure code-execution provider.
+- Integrate optional AI capabilities through a real backend service.
+- Create the Sanchivue brand identity and original logo assets.
+- Configure the project tooling, environment files, testing and documentation.
+- Run the available tests, lint checks, formatting checks and production builds.
+- Fix errors and verify the actual result.
+- Provide exact setup and deployment instructions.
+
+**Do not stop after presenting the plan. Execute the implementation.**
+
+First inspect the workspace and existing files. Preserve useful existing work, avoid destructive changes, and create the project in the appropriate location. Do not delete or overwrite useful files without inspecting them.
+
+Work in phases if necessary, but maintain a persistent checklist and continue from the actual files and test results. If an external service or credential prevents a real integration test, complete all possible work and identify the exact remaining blocker.
+
+Do not claim that something works unless you have verified it.
+
+# 2. NON-NEGOTIABLE TECHNOLOGY STACK
+
+These are mandatory requirements. Do not silently replace them with another stack.
+
+## Frontend
+
+- React.js.
+- Vite.
+- JavaScript and JSX only.
+- React Router DOM.
+- Tailwind CSS.
+- Axios for HTTP communication with the backend.
+- React Context API for authentication and genuinely global state.
+- Socket.IO Client for real-time events.
+- Monaco Editor for the coding workspace.
+- WebRTC for live audio/video communication.
+- A suitable JavaScript-compatible whiteboard or drawing library.
+- Lucide React or another consistent icon library.
+- React Hook Form where it improves form handling.
+- Zod or another suitable JavaScript-compatible validation library.
+- Reusable React components and custom hooks.
+- A consistent toast/notification system.
+
+## Backend
+
+- Node.js.
+- Express.js.
+- JavaScript using ES modules.
+- MongoDB.
+- Mongoose.
+- Socket.IO.
+- JWT authentication with secure HTTP-only cookies.
+- bcrypt for password hashing.
+- Cloudinary for supported image uploads.
+- Redis and BullMQ where genuine background-processing needs justify them.
+- A configurable AI provider accessed only through the backend.
+- A real sandboxed code-execution provider, such as a properly configured Judge0 integration, when code execution is enabled.
+- Nodemailer or another configurable email-delivery solution.
+- Helmet, rate limiting, request validation and centralized error handling.
+
+## Explicit prohibitions
+
+Do not use:
+
+- TypeScript or TSX.
+- Next.js.
+- NestJS.
+- Prisma.
+- TypeORM.
+- PostgreSQL as a replacement for MongoDB.
+- A Python backend.
+- Unnecessary microservices.
+- Hardcoded API keys, passwords or credentials.
+- Fake APIs presented as working integrations.
+- Fake success messages for actions that have not occurred.
+- Unnecessary complex architecture that makes the code difficult to understand.
+
+Use mutually compatible stable package versions. Check package documentation and compatibility before choosing versions.
+
+**Important language rule:** JavaScript/JSX is the required programming language for the Sanchivue application source. Do not add C, Java, Python or other languages as required application-development languages. The candidate coding editor must have a configurable language policy; use JavaScript as its initial/default language and do not make additional candidate execution languages mandatory unless I explicitly authorize them. If a future extension requires additional candidate languages, document the optional provider capability separately from Sanchivue's own technology stack.
+
+# 3. BRAND IDENTITY — SANCHIVUE BY SANCHIT SINGHAL
+
+The final product name is **Sanchivue**. Do not use the temporary name InterviewForge or invent a different product name.
+
+Sanchivue must feel like an original, memorable, premium technology brand.
+
+## Personal branding
+
+The creator's name is **Sanchit Singhal**.
+
+Integrate the personal brand prominently but tastefully throughout the product:
+
+- Landing-page hero or creator-brand section.
+- Landing-page footer.
+- About Sanchivue section.
+- Brand story.
+- A subtle “Created by Sanchit Singhal” or “Built by Sanchit Singhal” credit.
+- Relevant product, company or creator metadata.
+- Social sharing metadata where appropriate.
+- README and project documentation.
+- The product's About page.
+- A consistent brand signature in relevant public-facing pages.
+
+Make the branding distinctive and polished, not repetitive or distracting. The platform must still look like a serious product suitable for professional recruiters, engineering teams and candidates.
+
+Do not invent Sanchit Singhal's qualifications, customers, investors, awards, employment history or business achievements. Use only the supplied name and other facts that are actually provided.
+
+## Original Sanchivue logo
+
+Create a custom original logo for Sanchivue. Do not leave the logo as plain text or rely on an unrelated third-party logo.
+
+Design a distinctive visual identity that can work as:
+
+- A standalone symbol.
+- A horizontal logo with the Sanchivue wordmark.
+- A compact app icon.
+- A favicon.
+- A browser-tab icon.
+- A dashboard sidebar logo.
+- A light-background logo.
+- A dark-background logo.
+- A social/profile image where appropriate.
+
+The design direction should communicate technical collaboration, clarity, precision, trust and forward-looking software engineering. Explore an original abstract symbol or monogram that works with the wordmark. Keep it clean and recognizable at small sizes.
+
+Create genuine usable assets, preferably original SVG files, rather than merely describing a logo. Use SVG for crisp rendering when appropriate and create any additional required image assets yourself through the available tools.
+
+Include logo variants in the frontend assets directory, for example:
+
+- `frontend/src/assets/branding/sanchivue-logo.svg`
+- `frontend/src/assets/branding/sanchivue-mark.svg`
+- `frontend/public/favicon.svg`
+
+Adjust the filenames if necessary, but ensure every referenced asset actually exists.
+
+Create a small brand guide documenting the logo, typography, colors, usage and responsive variants.
+
+## Brand availability and originality checks
+
+Before declaring the brand unique, search the web for existing products, companies, trademarks and domains using the name Sanchivue and close variations. If access to official trademark databases or domain registrars is available, check those too.
+
+Do not claim guaranteed worldwide uniqueness merely because a web search returns no obvious match. Report what you actually checked, any conflicts discovered and what still needs a formal trademark or domain check.
+
+Do not copy another company's logo, trademark, brand identity, marketing copy or proprietary interface.
+
+# 4. RESEARCH BEFORE IMPLEMENTATION
+
+Use the available browser and research capabilities to investigate established technical interview platforms and relevant implementation documentation.
+
+Research products and resources such as:
+
+- HackerRank Interview.
+- CodeSignal Interview.
+- CoderPad.
+- Other relevant collaborative coding and interview-management platforms discovered during research.
+- Official React, Vite, Express, Mongoose, Socket.IO and WebRTC documentation.
+- Official code-execution-provider documentation.
+- Security guidance relevant to authentication, cookies, code execution and WebRTC.
+
+Do not claim to have searched millions of websites. Perform a focused, useful research process and report the actual sources reviewed.
+
+Study relevant feature workflows and determine which capabilities are suitable for Sanchivue.
+
+Consider:
+
+- Collaborative coding.
+- Live audio/video.
+- Interview waiting rooms.
+- Shared whiteboards.
+- Question libraries.
+- Interview templates.
+- Multi-file coding environments.
+- Test execution and output panels.
+- Interviewer notes.
+- Candidate scorecards.
+- Interview reports.
+- Scheduling and reminders.
+- Candidate invitations.
+- Organization management.
+- Assessment policies.
+- AI-assisted question preparation.
+- Secure code execution.
+- Accessibility and responsive design.
+- Interview-session reliability.
+
+Research is for product learning, not copying. Do not reproduce competitors' proprietary code, logo, exact page layouts, branding, marketing copy or protected assets.
+
+Use official documentation where possible. Add a short research summary and source links to `docs/RESEARCH.md`, explaining which useful patterns influenced Sanchivue and how the implementation remains original.
+
+# 5. PRODUCT VISION
+
+Sanchivue is a professional platform for conducting live technical interviews and collaborative coding sessions.
+
+It should offer three connected experiences:
+
+### A. Interviewer and recruiter workspace
+
+Recruiters and interviewers can create interviews, configure questions, invite candidates, conduct live sessions, collaborate in code, record private notes, evaluate skills and produce reports.
+
+### B. Candidate workspace
+
+Candidates can validate their invitation, join a scheduled interview, check their audio/video devices, read problem statements, write and run code when execution is configured, communicate with interviewers and participate in technical discussions.
+
+### C. Platform and organization administration
+
+Authorized administrators can manage organizations, users, permissions, question libraries, settings, audit records and platform operations.
+
+The application should be feature-rich, but not needlessly complicated. Prioritize a fully connected, working product over a large collection of disconnected screens.
+
+# 6. PUBLIC WEBSITE AND LANDING PAGE
+
+Create a polished, responsive marketing website for Sanchivue.
+
+Include:
+
+1. A memorable hero section with the Sanchivue brand and a clear product value proposition.
+2. Strong calls to action such as “Get Started” and “Explore the Platform”.
+3. A product preview or original interface mockup created using real frontend components.
+4. Live technical interview features.
+5. Collaborative coding features.
+6. Audio/video interview capabilities.
+7. Question and assessment management.
+8. AI interviewer assistance, clearly described as assistance rather than an automatic hiring authority.
+9. Interview scheduling and candidate workflows.
+10. Security and privacy overview.
+11. A “How It Works” section.
+12. Use-case sections for recruiters, engineering teams and interviewers.
+13. A creator-brand or About Sanchivue section featuring Sanchit Singhal.
+14. Frequently asked questions.
+15. A contact or feedback section.
+16. A clear footer with navigation, product links, privacy and terms pages.
+17. Responsive navigation and mobile menu.
+18. Proper loading, error and empty states where relevant.
+19. A polished login and registration journey.
+20. Search-engine-friendly page titles, descriptions, canonical configuration where appropriate, Open Graph metadata and favicon assets.
+
+Use original copy. Do not invent customers, testimonials, reviews, usage statistics, partnerships, security certifications or performance claims.
+
+If pricing is shown, clearly treat it as configurable proposed pricing until a real billing system exists. Do not imply payment processing works unless it is actually implemented.
+
+Use a distinctive, cohesive design system rather than a generic template. Keep the design clean, professional, premium and readable. Avoid excessive gradients, unnecessary animation and visual clutter.
+
+# 7. AUTHENTICATION AND ACCOUNT MANAGEMENT
+
+Implement complete authentication and account-management workflows.
+
+Include:
+
+- Registration.
+- Login.
+- Logout.
+- Current-user/session restoration.
+- Profile view and editing.
+- Password change.
+- Forgot-password flow.
+- Secure password-reset flow.
+- Email verification.
+- Profile image upload through Cloudinary.
+- Session expiration.
+- Refresh-token rotation and revocation where implemented.
+- Account activation, suspension and deletion rules where appropriate.
+- Role-based access control.
+- Invitation acceptance.
+- Proper frontend protected routes.
+- Backend authorization on every protected endpoint.
+
+Use bcrypt to hash passwords. Never store plain-text passwords.
+
+Use JWT appropriately with secure HTTP-only cookies. Use short-lived access tokens and securely managed refresh sessions when refresh tokens are implemented.
+
+Cookie settings must account for:
+
+- `httpOnly`.
+- `secure` in production.
+- Appropriate `sameSite` policy.
+- Domain configuration where required.
+- HTTPS in production.
+- Cross-origin deployment constraints.
+
+Do not store authentication tokens in localStorage.
+
+Do not put secrets in browser-visible variables. A `VITE_` variable is not secret.
+
+Protect cookie-authenticated state-changing operations against CSRF using a strategy appropriate to the deployment. CORS alone is not CSRF protection.
+
+Implement logout and session revocation correctly. Do not trust the user ID or role supplied by the browser.
+
+# 8. ORGANIZATIONS, WORKSPACES AND PERMISSIONS
+
+Build organization and team management.
+
+Include:
+
+- Organization creation.
+- Organization profile and settings.
+- Team member management.
+- Email invitations.
+- Invitation expiration and revocation.
+- Role assignment.
+- Interviewer assignment.
+- Organization-level question libraries.
+- Organization-level templates.
+- Organization-level reports.
+- Member removal.
+- Access revocation.
+- Activity history.
+- Organization-specific configuration.
+
+Support these roles where appropriate:
+
+- Platform administrator.
+- Organization owner.
+- Organization administrator.
+- Recruiter.
+- Interviewer.
+- Candidate.
+
+Use a clear permission model. Do not allow a user to access another organization's data by changing an ID in a request.
+
+Enforce organization isolation on the backend for interviews, candidates, questions, submissions, notes, evaluations and reports.
+
+Candidates may join through a secure invitation without creating a permanent account if the interview configuration permits it.
+
+# 9. DASHBOARD AND INTERVIEW MANAGEMENT
+
+Create a real dashboard backed by MongoDB.
+
+Show useful information such as:
+
+- Upcoming interviews.
+- Completed interviews.
+- Interviews in progress.
+- Draft interviews.
+- Cancelled interviews.
+- Pending evaluations.
+- Recent activity.
+- Candidate pipeline.
+- Interview schedule.
+- Quick actions.
+- Useful summary statistics.
+
+All statistics must be calculated from actual database records. Do not hardcode dashboard numbers.
+
+Implement search, filtering, sorting, pagination and appropriate empty states.
+
+## Interview creation wizard
+
+Allow authorized users to configure:
+
+- Interview title.
+- Job role.
+- Candidate details and email.
+- Job description.
+- Required skills.
+- Interview type.
+- Difficulty.
+- Date and time.
+- Time zone.
+- Duration.
+- Interviewers.
+- Interview template.
+- Questions.
+- Supported candidate coding-language configuration.
+- Public and hidden test cases.
+- Evaluation rubric.
+- Candidate instructions.
+- AI policy.
+- Access permissions.
+
+Support interview types such as:
+
+- Data structures and algorithms.
+- Frontend development.
+- Backend development.
+- Full-stack development.
+- Database concepts.
+- Debugging.
+- Code review.
+- System design.
+- Project-based coding.
+- Technical discussion.
+- Custom interview.
+
+Do not make additional candidate programming languages mandatory without my authorization. The platform's own implementation remains JavaScript/JSX.
+
+Support interview states such as draft, scheduled, ready, in progress, completed, cancelled and expired.
+
+Allow authorized users to reschedule, cancel, duplicate and reuse interview templates.
+
+Generate secure, high-entropy, expiring invitation tokens. Do not use guessable IDs as authorization secrets.
+
+# 10. CANDIDATE INVITATION AND WAITING ROOM
+
+Build a professional candidate onboarding flow.
+
+Include:
+
+- Secure invitation validation.
+- Candidate identity confirmation.
+- Interview instructions.
+- Interview date and duration.
+- Browser readiness checks.
+- Camera and microphone permissions.
+- Audio/video device selection.
+- Connection status.
+- Waiting room.
+- Join notifications.
+- Candidate-friendly errors.
+- Interview rules and AI-assistance policy disclosure.
+- Reconnection support.
+
+A candidate must not gain access simply by guessing a URL or interview identifier.
+
+Do not force permanent account creation when secure guest access is permitted.
+
+Provide a simple and respectful candidate experience with clear instructions and accessible controls.
+
+# 11. LIVE INTERVIEW WORKSPACE
+
+This is a core feature of Sanchivue.
+
+Build a real-time workspace containing:
+
+- Interview title and status.
+- Candidate and interviewer identities.
+- Participant list.
+- Interview timer.
+- Problem statement.
+- Collaborative code editor.
+- Live editor synchronization.
+- Presence indicators.
+- Audio call.
+- Video call.
+- Text chat.
+- Screen sharing with explicit browser permission.
+- Shared whiteboard.
+- Question navigation.
+- Run-code controls when configured.
+- Public test results.
+- Standard input/output panels.
+- Submission history.
+- Private interviewer notes.
+- Evaluation rubric.
+- Connection status.
+- Reconnection and retry controls.
+- End-interview confirmation.
+- Completion status.
+
+Use a practical split-pane layout so the code editor and problem statement remain readable. Make panels resizable where appropriate.
+
+Provide sensible keyboard-accessible controls and clear loading/error states.
+
+Private interviewer notes, hidden test cases and confidential AI analysis must never be broadcast to unauthorized participants.
+
+## WebRTC audio/video
+
+Use WebRTC for live audio/video.
+
+Use Socket.IO as the signaling and real-time event transport where appropriate. Implement the offer/answer and ICE-candidate exchange correctly.
+
+Include:
+
+- Camera/microphone permission handling.
+- Device selection where supported.
+- Mute/unmute.
+- Camera on/off.
+- Leave call.
+- Participant presence.
+- Connection-state indicators.
+- Retry and reconnection behavior.
+- Network and device failure messages.
+- Consent and clear screen-sharing indicators.
+
+Configure STUN/TURN values through environment variables. Document that production connectivity may require a properly configured TURN service.
+
+Do not pretend that WebRTC will work reliably on every network without suitable connectivity infrastructure.
+
+Use authenticated Socket.IO rooms and server-side authorization for joining, messaging, signaling and interview events.
+
+## Collaborative whiteboard
+
+Provide a shared whiteboard for system-design and architecture discussions.
+
+Where practical, support:
+
+- Drawing and freehand annotation.
+- Text.
+- Shapes.
+- Lines and arrows.
+- Moving and resizing objects.
+- Zoom and pan.
+- Clear/reset with confirmation.
+- Shared updates.
+- Saving and restoring board state.
+
+Use a suitable maintained library or implement a modest, reliable solution.
+
+Persist relevant whiteboard state when appropriate. Do not claim advanced real-time conflict-free collaboration unless the implementation actually provides it.
+
+## Chat and presence
+
+Implement:
+
+- Real-time text messages.
+- Sender identity.
+- Timestamps.
+- Message validation.
+- Interview-room authorization.
+- Join/leave events.
+- Reconnection handling.
+- Relevant persistence and retention rules.
+
+Do not expose chat from one interview to participants in another interview.
+
+# 12. CODE EDITOR AND CANDIDATE CODING WORKFLOW
+
+Integrate Monaco Editor into the live interview workspace.
+
+JavaScript is the default candidate coding language. Keep the list of execution languages configurable and consistent with the configured provider. Do not add other languages as mandatory features without my authorization.
+
+Provide:
+
+- Syntax highlighting for configured languages.
+- Theme selection.
+- Font-size controls.
+- Line numbers.
+- Keyboard shortcuts.
+- Formatting where supported.
+- Code reset with confirmation.
+- Custom input where applicable.
+- Standard output.
+- Standard error.
+- Compilation/runtime error display when returned by the provider.
+- Execution status.
+- Execution time and memory data when available.
+- Public test-case results.
+- Submission history.
+- Draft saving and restoration.
+- Code snapshots.
+- Multi-file support only when the selected execution environment actually supports it.
+- Resizable editor/output panels.
+- Accessible controls.
+
+Implement reliable collaborative editing. Do not repeatedly overwrite the whole editor in a way that destroys another participant's active typing.
+
+Choose a practical conflict-aware synchronization approach. For a first implementation, use Socket.IO-based synchronization and persisted snapshots where appropriate; if using an established collaboration protocol, document its setup and limitations.
+
+Never claim conflict-free editing unless the selected synchronization protocol actually guarantees it.
+
+# 13. SECURE CODE EXECUTION
+
+Treat all candidate-submitted code as untrusted.
+
+Never execute arbitrary code inside the Express API process, through browser `eval()`, through `new Function()`, or on the application host without suitable isolation.
+
+Implement a backend execution-provider adapter for a real sandboxed code-execution service, such as Judge0, if configured.
+
+Include:
+
+- Backend-only provider credentials.
+- Validated source-code size.
+- Validated input size.
+- Allowed-language validation.
+- Authentication and authorization.
+- Rate limits and execution quotas.
+- Submission status handling.
+- Compilation and runtime results.
+- Timeout/error handling.
+- Execution metadata.
+- Safe output-size limits.
+- Submission history.
+- Public test-case execution.
+- Hidden test-case evaluation on the trusted server side.
+- Provider error normalization.
+- Ownership checks.
+- Optional asynchronous queues where needed.
+
+Never send hidden test inputs, expected outputs or private reference solutions to the candidate's browser.
+
+Do not allow submitted code to read application secrets, the primary database, backend environment variables or infrastructure credentials.
+
+For self-hosted execution, document resource limits, isolation, network restrictions, worker recycling and infrastructure hardening. A basic container is not automatically a sufficient security boundary for hostile code.
+
+If a provider requires credentials, complete the integration and clearly document where the user must configure them. If it is unavailable, show a real configuration error rather than fabricating successful execution results.
+
+Do not claim that a candidate's code passed tests unless the configured execution provider returned the relevant results.
+
+# 14. QUESTION BANK AND INTERVIEW TEMPLATES
+
+Build a reusable question library.
+
+Each question may contain:
+
+- Title.
+- Problem statement.
+- Difficulty.
+- Category.
+- Topics.
+- Supported candidate-language configuration.
+- Constraints.
+- Examples.
+- Input/output format.
+- Public test cases.
+- Hidden test cases.
+- Reference solutions with restricted access.
+- Time and memory limits where supported.
+- Expected complexity.
+- Evaluation criteria.
+- Hints.
+- Follow-up questions.
+- Tags.
+- Organization ownership.
+- Creation and update metadata.
+
+Allow authorized users to create, edit, duplicate, archive, search, filter and reuse questions.
+
+Build interview templates containing reusable questions, instructions, durations and evaluation rubrics.
+
+Validate question and test-case data before saving. Restrict access to hidden tests and reference solutions.
+
+# 15. SUBMISSIONS, EVALUATION AND SCORECARDS
+
+Persist relevant submission information, including:
+
+- Candidate.
+- Interview.
+- Question.
+- Configured language.
+- Source snapshot or controlled source reference.
+- Submission timestamp.
+- Execution status.
+- Passed/failed test counts.
+- Runtime and memory data where available.
+- Compiler/runtime errors.
+- Relevant evaluation metadata.
+
+Support multiple submissions per question.
+
+Allow authorized interviewers to review code snapshots and compare relevant changes between submissions.
+
+Implement editable evaluation rubrics covering:
+
+- Problem-solving approach.
+- Correctness.
+- Code quality.
+- Technical communication.
+- Debugging ability.
+- Testing discipline.
+- Design decisions.
+- Complexity analysis where applicable.
+- Role-specific skills.
+
+Support:
+
+- Skill ratings.
+- Written feedback.
+- Interviewer comments.
+- Evidence references.
+- Overall assessment.
+- Private scorecards.
+- Evaluation completion status.
+- Report generation.
+
+Save scorecards safely and prevent unauthorized users from reading private feedback.
+
+Candidate comparison must use consistent, role-relevant criteria and support human review. Do not automatically rank candidates using unsupported or biased assumptions.
+
+# 16. AI INTERVIEWER COPILOT
+
+Implement optional AI features through a real backend service layer.
+
+The AI copilot may help interviewers:
+
+1. Generate draft questions from a job description.
+2. Suggest relevant question difficulty.
+3. Propose follow-up questions.
+4. Explain expected problem-solving approaches to the interviewer.
+5. Suggest useful edge cases.
+6. Help prepare evaluation rubrics.
+7. Summarize observable coding progress.
+8. Reference relevant code snapshots and submission results.
+9. Draft interview notes.
+10. Summarize strengths and areas for further assessment.
+11. Highlight incomplete evaluation criteria.
+12. Draft structured post-interview reports.
+
+Keep AI output editable and distinguish observed facts from uncertain inferences.
+
+AI must not fabricate execution results, candidate actions, code evidence or interview events.
+
+**AI is an interviewer copilot, not an autonomous hiring authority.** It must not independently make final hiring or rejection decisions.
+
+Keep API keys on the backend. Add validation, timeouts, rate limits, error handling and configurable provider/model settings.
+
+If no AI credentials are configured, show a clear setup message and keep the rest of the platform usable. Never fake AI output while claiming it came from a live model.
+
+Implement separate visibility rules for interviewer-only AI analysis and any candidate-facing AI assistance.
+
+# 17. AI POLICY, INTEGRITY AND PRIVACY
+
+Make AI assistance configurable for each interview.
+
+Support:
+
+- AI assistance enabled/disabled.
+- Candidate-visible policy disclosure.
+- Interviewer-controlled settings.
+- A clear distinction between AI assistance and candidate work.
+- Appropriate AI request history.
+- Audit records for relevant AI actions.
+- Configurable retention rules.
+
+Do not secretly monitor a candidate outside the application.
+
+Do not claim reliable cheating detection through unsupported AI inference. Any integrity indicators must be disclosed where appropriate, explainable and subject to human review.
+
+Do not collect or retain unnecessary personal information.
+
+# 18. INTERVIEW NOTES, REPORTS AND EXPORTS
+
+Implement:
+
+- Private interviewer notes.
+- Notes associated with specific questions.
+- Timestamped observations.
+- Links to relevant code snapshots or submissions.
+- Skill-based scorecards.
+- Written feedback.
+- Structured evaluation summaries.
+- Interview completion reports.
+- Authorized report sharing.
+- Printable reports.
+- PDF export when practical.
+- Post-interview review.
+
+Reports must be generated from actual database records. Use clear permissions to control who can view, download or share them.
+
+Never expose private interviewer notes to candidates unless an explicit, authorized sharing workflow permits it.
+
+# 19. NOTIFICATIONS AND SCHEDULING
+
+Implement:
+
+- In-app notifications.
+- Interview invitations.
+- Upcoming-interview reminders.
+- Rescheduling notifications.
+- Cancellation notifications.
+- Interview completion notifications.
+- Pending-evaluation reminders.
+- Read/unread state.
+- Notification preferences.
+- Email delivery through a configurable provider.
+- Background processing for suitable tasks.
+
+Use Redis/BullMQ only where it solves a real queue or retry requirement.
+
+If email credentials are missing, document the required configuration and show the actual delivery status. Do not claim an email was sent if it was not.
+
+Handle time zones carefully. Store timestamps consistently and display the appropriate interview-local time.
+
+# 20. MONGODB AND MONGOOSE DATABASE DESIGN
+
+Use MongoDB and Mongoose for all application-owned persistent data.
+
+Create separate, clearly named model files with sensible schemas.
+
+At minimum, evaluate the need for these models:
+
+- `user.model.js`
+- `organization.model.js`
+- `organizationMember.model.js`
+- `invitation.model.js`
+- `session.model.js` or `refreshSession.model.js`
+- `interview.model.js`
+- `interviewTemplate.model.js`
+- `question.model.js`
+- `interviewQuestion.model.js`
+- `testCase.model.js`
+- `submission.model.js`
+- `codeSnapshot.model.js`
+- `interviewNote.model.js`
+- `evaluation.model.js`
+- `notification.model.js`
+- `auditLog.model.js`
+- `aiInteraction.model.js`
+
+Add other models only when the architecture genuinely needs them.
+
+Requirements:
+
+- Mongoose schemas and models.
+- Appropriate field types and validation.
+- Timestamps.
+- Required fields and sensible enums.
+- Unique constraints where appropriate.
+- Indexes for frequently queried fields.
+- Compound indexes for organization-scoped queries.
+- Appropriate references and population.
+- Data ownership checks.
+- Prevention of duplicate memberships.
+- Valid interview state transitions.
+- TTL indexes for eligible expiring records.
+- Controlled retention of sensitive records.
+- Safe schema validation and update handling.
+- Mongoose hooks only when genuinely useful.
+- No hidden, complicated business logic buried in hooks.
+- Transactions where multi-document consistency requires them and the MongoDB deployment supports them.
+
+Create a dedicated database connection module at `backend/src/db/index.js`.
+
+Use `DB_NAME` or the documented MongoDB URI configuration to select the database correctly.
+
+## Pagination and aggregation
+
+Create reusable utilities:
+
+- `pagination.js`
+- `aggregationPagination.js`
+
+Use database-side filtering, sorting and pagination.
+
+Use Mongoose aggregation pipelines for genuine use cases such as dashboard statistics, grouped submission results and report summaries.
+
+Use aggregation pagination where aggregation results require pagination. Do not add complex database abstractions without a real need.
+
+Keep the database name configurable through `constants.js` or validated environment configuration, with a clear and documented source of truth.
+
+# 21. REQUIRED PROJECT STRUCTURE
+
+Keep frontend and backend in separate folders. The following is the expected direction; extend it only when needed.
+
+```text
+sanchivue/
+├── frontend/
+│   ├── public/
+│   │   └── favicon.svg
+│   ├── src/
+│   │   ├── assets/
+│   │   │   └── branding/
+│   │   ├── components/
+│   │   │   ├── common/
+│   │   │   ├── layout/
+│   │   │   ├── forms/
+│   │   │   ├── interview/
+│   │   │   ├── editor/
+│   │   │   ├── whiteboard/
+│   │   │   └── dashboard/
+│   │   ├── pages/
+│   │   │   ├── public/
+│   │   │   ├── auth/
+│   │   │   ├── dashboard/
+│   │   │   ├── interviews/
+│   │   │   ├── candidates/
+│   │   │   ├── questions/
+│   │   │   ├── reports/
+│   │   │   └── settings/
+│   │   ├── layouts/
+│   │   ├── routes/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── api/
+│   │   ├── utils/
+│   │   ├── constants/
+│   │   ├── validations/
+│   │   ├── styles/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── .prettierrc
+│   ├── .prettierignore
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   └── README.md
+├── backend/
+│   ├── public/
+│   │   └── temp/
+│   │       └── .gitkeep
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── env.js
+│   │   │   ├── constants.js
+│   │   │   ├── corsOptions.js
+│   │   │   └── cookieOptions.js
+│   │   ├── db/
+│   │   │   └── index.js
+│   │   ├── models/
+│   │   ├── controllers/
+│   │   ├── routes/
+│   │   │   └── index.routes.js
+│   │   ├── middlewares/
+│   │   ├── services/
+│   │   ├── sockets/
+│   │   ├── queues/
+│   │   ├── workers/
+│   │   ├── utils/
+│   │   │   ├── ApiError.js
+│   │   │   ├── ApiResponse.js
+│   │   │   ├── asyncHandler.js
+│   │   │   ├── generateTokens.js
+│   │   │   ├── pagination.js
+│   │   │   ├── aggregationPagination.js
+│   │   │   ├── cloudinary.js
+│   │   │   └── auditLogger.js
+│   │   ├── validators/
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── tests/
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── .prettierrc
+│   ├── .prettierignore
+│   ├── eslint.config.js
+│   ├── package.json
+│   └── README.md
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── API.md
+│   ├── DATABASE.md
+│   ├── SECURITY.md
+│   ├── DEPLOYMENT.md
+│   ├── TROUBLESHOOTING.md
+│   ├── RESEARCH.md
+│   └── BRAND_GUIDE.md
+├── .gitignore
+├── .prettierrc
+├── .prettierignore
+├── package.json
+└── README.md
+```
+
+Use these naming conventions consistently:
+
+- Models: `.model.js`
+- Controllers: `.controller.js`
+- Middleware: `.middleware.js`
+- Routes: `.routes.js`
+- Services: `.service.js`
+
+Create real, functional modules. Do not create empty files merely to match the tree.
+
+## Required backend utilities
+
+Implement and actually use:
+
+- `ApiError.js`
+- `ApiResponse.js`
+- `asyncHandler.js`
+- `cloudinary.js`
+- `pagination.js`
+- `aggregationPagination.js`
+- `generateTokens.js`
+
+Keep `app.js` responsible for Express application configuration. Keep `server.js` responsible for startup, database connection, HTTP server creation, Socket.IO setup and graceful shutdown.
+
+Keep the database connection in `db/index.js`.
+
+Create `backend/public/temp/.gitkeep` exactly as requested. Ensure temporary files are cleaned up and private files are not accidentally exposed through public static hosting.
+
+# 22. EXPRESS BACKEND, API ROUTES AND MIDDLEWARE
+
+Configure:
+
+- Environment validation.
+- JSON and URL-encoded body parsing with suitable limits.
+- Cookie parsing.
+- CORS.
+- Helmet security headers.
+- Rate limiting.
+- Request logging.
+- API versioning such as `/api/v1`.
+- Request validation.
+- Authentication middleware.
+- Role-based authorization.
+- Organization-access middleware.
+- Centralized error handling.
+- Consistent response structures.
+- A 404 handler.
+- Health and readiness endpoints.
+- Graceful shutdown.
+
+Organize route registration through `index.routes.js` and mount individual route files under the API prefix.
+
+Every route must connect to the correct controller and apply the required authentication, authorization, organization access, validation and rate limiting.
+
+Keep controllers readable. Use service modules for reusable business logic where this makes the code clearer.
+
+Do not trust frontend-only route protection.
+
+# 23. AXIOS, VITE PROXY AND CORS
+
+Create a centralized Axios instance.
+
+Configure:
+
+- A configurable API base URL.
+- `withCredentials: true` for cookie-authenticated requests.
+- Sensible timeouts.
+- Request/response interceptors where appropriate.
+- Consistent error handling.
+- Safe authentication refresh behavior if refresh tokens are used.
+- Prevention of infinite refresh loops.
+- Appropriate handling of concurrent failed requests.
+- No logging of credentials or secrets.
+
+Configure the Vite development proxy if it simplifies local development.
+
+Remember that a Vite proxy is a development convenience, not a replacement for production CORS.
+
+Document production frontend origins, backend URLs, HTTPS, cookie settings, `sameSite`, domain settings and reverse-proxy considerations.
+
+Make sure the frontend and backend use exactly matching endpoint names, request fields and response structures.
+
+# 24. CLOUDINARY AND IMAGE UPLOADS
+
+Use Cloudinary for supported profile pictures and image attachments.
+
+Implement:
+
+- Backend-only Cloudinary credentials.
+- Validated file types.
+- File-size limits.
+- Upload authorization.
+- Ownership checks.
+- Upload failure handling.
+- Appropriate cleanup or deletion behavior.
+- Safe image URL handling.
+
+Never use Cloudinary for code execution or as a substitute for the database.
+
+# 25. ENVIRONMENT FILES AND CONFIGURATION
+
+Create complete `.env.example` files containing every variable that the implemented application actually reads.
+
+Backend configuration may include:
+
+```text
+NODE_ENV=development
+PORT=5000
+FRONTEND_URL=http://localhost:5173
+BACKEND_URL=http://localhost:5000
+MONGODB_URI=
+DB_NAME=sanchivue
+JWT_ACCESS_SECRET=
+JWT_REFRESH_SECRET=
+ACCESS_TOKEN_EXPIRY=
+REFRESH_TOKEN_EXPIRY=
+COOKIE_DOMAIN=
+COOKIE_SAME_SITE=lax
+REDIS_URL=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+AI_PROVIDER=
+AI_API_KEY=
+AI_MODEL=
+JUDGE0_BASE_URL=
+JUDGE0_API_KEY=
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+TURN_URL=
+TURN_USERNAME=
+TURN_CREDENTIAL=
+```
+
+Adjust the variables to the actual integrations. Do not include unused configuration just to make the example appear comprehensive.
+
+Frontend configuration may include:
+
+```text
+VITE_API_URL=http://localhost:5000/api/v1
+```
+
+Add other non-secret frontend variables only when required.
+
+Never place backend secrets in `VITE_` variables.
+
+Validate required configuration during startup and provide useful errors identifying missing variable names without printing secret values.
+
+Use safe development defaults only when they do not weaken production security.
+
+Create comments in English at the relevant configuration points explaining exactly what must be pasted, where to obtain it and whether it is required for local development or production.
+
+Do not generate fake production credentials.
+
+# 26. EASY-TO-UNDERSTAND JAVASCRIPT
+
+This is one of my most important requirements.
+
+I want the code to be so readable that a student or junior developer can open a file and understand what it does without decoding unnecessarily complicated syntax.
+
+Write straightforward JavaScript and JSX.
+
+Use:
+
+- Clear variable names.
+- Small, focused functions.
+- Simple conditionals.
+- Readable async/await flows.
+- Early returns where helpful.
+- Consistent naming.
+- Predictable file organization.
+- Useful English comments.
+- Simple data transformations.
+- Explicit error handling.
+
+Avoid:
+
+- Overly clever one-liners.
+- Deeply nested ternary operators.
+- Unnecessary abstractions.
+- Giant React components.
+- Giant controllers.
+- Circular dependencies.
+- Unnecessary design patterns.
+- Dense, unreadable expressions.
+- Comments that merely repeat obvious code.
+
+Write English comments explaining why important code exists and how authentication, database queries, API communication, WebRTC, Socket.IO, code execution, AI validation and deployment configuration work.
+
+Do not add a comment to every obvious line. Focus on the logic that needs explanation.
+
+Do not silently remove useful existing code during refactoring.
+
+Use Mongoose validation and ordinary JavaScript validation instead of introducing TypeScript.
+
+# 27. PRETTIER, ESLINT, GIT AND PACKAGE SCRIPTS
+
+Configure compatible Prettier and ESLint versions for the JavaScript/JSX project.
+
+Create:
+
+- `.prettierrc`
+- `.prettierignore`
+- `eslint.config.js`
+- `.gitignore`
+
+Create appropriate root scripts for:
+
+- Running the frontend.
+- Running the backend.
+- Running both concurrently.
+- Formatting files.
+- Checking formatting.
+- Running lint.
+- Running tests.
+- Building the frontend.
+
+Make sure the commands actually work with the installed package versions.
+
+The Git ignore configuration must exclude:
+
+- `node_modules/`
+- Build output.
+- Real `.env` files.
+- Logs.
+- Coverage reports.
+- Temporary files.
+- Private generated uploads.
+- Relevant local IDE files.
+
+Keep `.env.example` files in version control. Never commit real secrets.
+
+Include `backend/public/temp/.gitkeep`.
+
+# 28. TESTING AND REAL VERIFICATION
+
+Do not declare the application complete merely because files exist.
+
+Use appropriate JavaScript testing tools, such as Vitest for the frontend and a suitable backend test runner with Supertest.
+
+Test at least the following.
+
+## Authentication
+
+- Registration.
+- Duplicate account prevention.
+- Login.
+- Invalid credentials.
+- Logout.
+- Invalid and expired tokens.
+- Password reset.
+- Protected API routes.
+- Cookie behavior.
+
+## Authorization
+
+- Role restrictions.
+- Organization isolation.
+- Candidate access to only authorized interviews.
+- Protection of private notes and reports.
+- Protection of hidden test cases.
+- Protection against changing IDs to access another user's data.
+
+## Interviews
+
+- Interview creation.
+- Validation.
+- Invitations.
+- Interview state transitions.
+- Candidate joining.
+- Unauthorized room access.
+- Rescheduling and cancellation.
+
+## Questions and submissions
+
+- Question creation and validation.
+- Submission ownership.
+- Hidden-test access restrictions.
+- Provider failure handling.
+- Timeout handling.
+- Pagination.
+- Aggregation results.
+
+## Real-time features
+
+- Socket.IO room authorization.
+- Event membership checks.
+- Unauthorized event rejection.
+- Connection/disconnection handling.
+- WebRTC signaling flows where testable.
+
+## Frontend
+
+- Main routes render.
+- Authentication state is restored correctly.
+- Forms validate.
+- API errors are displayed.
+- Loading states work.
+- Protected pages do not leak private information.
+- Primary actions work.
+
+## Integration
+
+- MongoDB connectivity.
+- Frontend/backend API communication.
+- Cookie authentication.
+- CORS.
+- Health endpoints.
+- Configured external-provider integrations.
+
+Run tests, lint, formatting checks and production builds.
+
+Fix errors and rerun the relevant checks.
+
+Never report a test as passed unless it was actually executed and the result observed. If external services are unavailable, distinguish unit-test results from unverified end-to-end behavior.
+
+# 29. SECURITY REQUIREMENTS
+
+Implement appropriate safeguards throughout the application:
+
+- bcrypt password hashing.
+- Secure HTTP-only cookies.
+- Authentication and authorization checks.
+- Organization-level data isolation.
+- Request validation.
+- Rate limiting.
+- Appropriate CORS.
+- Security headers.
+- Request body-size limits.
+- Secure invitation tokens.
+- Token expiration and revocation.
+- Protection against IDOR and broken access control.
+- Protection against mass assignment.
+- Safe MongoDB query construction.
+- Safe file uploads.
+- Secrets management.
+- Sensitive-data redaction in logs.
+- Safe error responses.
+- CSRF protection appropriate for cookie authentication.
+- Hidden-test and reference-solution protection.
+- External-provider error handling.
+- Audit logging.
+- Controlled data retention.
+
+Never treat CORS as authorization.
+
+Never expose production stack traces, passwords, tokens, provider keys, hidden tests or internal infrastructure details to ordinary clients.
+
+Do not allow candidate-submitted code to access application secrets or the primary database.
+
+Do not trust client-provided roles, scores, execution results or interview completion states.
+
+Document any limitations that require additional production infrastructure.
+
+# 30. PERFORMANCE AND SCALABILITY
+
+Implement sensible engineering practices:
+
+- Database indexes.
+- Efficient queries.
+- Database-side pagination.
+- Aggregation pipelines.
+- Socket.IO room isolation.
+- Request timeouts.
+- Rate limiting.
+- Execution quotas.
+- Background queues when justified.
+- Queue retries and failure handling.
+- Structured logs.
+- Graceful shutdown.
+- Cleanup of expired records.
+- Appropriate caching where useful.
+- Safe handling of concurrent requests.
+
+Use Redis for actual shared-state or queue needs, not just because it is available.
+
+If multiple backend instances are deployed, document the Socket.IO adapter and infrastructure requirements.
+
+Do not claim a particular number of concurrent users or submissions unless representative load tests support that claim.
+
+Provide a load-test plan covering API latency, WebSocket connections, submission throughput, queue delays, worker time and failure rate. Report measured results separately from targets.
+
+# 31. ACCESSIBILITY AND RESPONSIVE DESIGN
+
+Ensure the product works on desktop, tablet and mobile.
+
+Implement:
+
+- Semantic HTML.
+- Keyboard navigation.
+- Visible focus states.
+- Accessible labels.
+- Suitable contrast.
+- Responsive navigation.
+- Responsive forms.
+- Useful loading indicators.
+- Empty states.
+- Clear error messages.
+- Confirmation dialogs for destructive actions.
+- Reduced-motion support where appropriate.
+
+The live interview workspace should be optimized for desktop but remain usable on smaller screens. Do not make critical controls inaccessible on mobile.
+
+Keep visual consistency across public pages, dashboards, forms, interview rooms and reports.
+
+# 32. DEPLOYMENT AND LOCAL DEVELOPMENT
+
+Prepare actual deployment configuration and documentation for the completed stack.
+
+## Frontend deployment
+
+Explain:
+
+- Suitable static hosting options.
+- Build command.
+- Output directory.
+- Environment variables.
+- SPA routing fallback.
+- API URL configuration.
+- HTTPS.
+- Asset handling.
+
+## Backend deployment
+
+Explain:
+
+- Suitable Node.js hosting options.
+- Start command.
+- Environment variables.
+- Database connectivity.
+- CORS.
+- Cookie settings.
+- HTTPS and reverse proxy.
+- Health checks.
+- Logs.
+- Graceful shutdown.
+- Background workers.
+- Socket.IO requirements.
+
+## MongoDB Atlas
+
+Give exact steps to:
+
+1. Create a cluster.
+2. Create a database user.
+3. Configure network access.
+4. Obtain the connection URI.
+5. Configure the database name.
+6. Paste the URI into the backend `.env` file.
+7. Verify the database connection.
+
+Never ask me to expose the connection URI in chat or commit it to Git.
+
+## Redis
+
+Explain local development and managed Redis configuration if the implemented queues require it.
+
+## External integrations
+
+Provide exact setup instructions for:
+
+- Cloudinary.
+- AI provider.
+- Code-execution provider.
+- Email provider.
+- STUN/TURN infrastructure.
+
+Explain which services are required for core functionality and which are optional.
+
+## Local development
+
+Provide Windows-friendly commands for installing dependencies, creating environment files, starting the frontend/backend, running tests and verifying the application.
+
+If Docker Compose is helpful, create a valid local-development configuration for the required supporting services with persistent data volumes and safe settings. Do not unnecessarily expose sensitive services.
+
+Do not claim that environment-variable placeholders automatically deploy or configure external services.
+
+# 33. DOCUMENTATION
+
+Create a complete root `README.md` covering:
+
+1. Sanchivue overview.
+2. Features.
+3. Technology stack.
+4. Folder structure.
+5. Architecture.
+6. Prerequisites.
+7. Installation.
+8. Environment configuration.
+9. Local development commands.
+10. MongoDB setup.
+11. Authentication architecture.
+12. API overview.
+13. Real-time communication.
+14. WebRTC configuration.
+15. Code execution integration.
+16. AI integration.
+17. Testing.
+18. Lint and formatting.
+19. Production build.
+20. Deployment.
+21. Security.
+22. Troubleshooting.
+23. Known limitations.
+24. Future improvements.
+25. Brand and logo assets.
+
+Also create:
+
+- `docs/ARCHITECTURE.md`
+- `docs/API.md`
+- `docs/DATABASE.md`
+- `docs/SECURITY.md`
+- `docs/DEPLOYMENT.md`
+- `docs/TROUBLESHOOTING.md`
+- `docs/RESEARCH.md`
+- `docs/BRAND_GUIDE.md`
+
+Document API endpoints with HTTP methods, parameters, request bodies, response structures and required permissions.
+
+Explain exactly where each required environment variable belongs and where it can be obtained.
+
+# 34. API CONTRACTS AND FRONTEND/BACKEND CONNECTIONS
+
+Use consistent API responses. For example:
+
+```json
+{
+  "success": true,
+  "message": "Operation completed successfully",
+  "data": {},
+  "pagination": null
+}
+```
+
+Use an appropriate consistent error format.
+
+Use correct HTTP status codes for validation failures, authentication failures, authorization failures, missing resources, rate limits and server errors.
+
+Ensure that every frontend API call matches the actual backend route, HTTP method, field names and response format.
+
+Do not leave disconnected forms, placeholder buttons, empty controllers, unused models or fake database operations.
+
+Every primary action must either work or be clearly disabled with an explanation of the missing integration.
+
+# 35. IMPLEMENTATION PHASES
+
+Follow this sequence while continuing to work through all feasible phases.
+
+### Phase 1 — Inspect and research
+
+- Inspect the workspace.
+- Review relevant official documentation.
+- Check installed tools and environment.
+- Record research findings.
+- Design the data model and API contracts.
+- Create a task checklist.
+
+### Phase 2 — Project foundation
+
+- Create root, frontend and backend folders.
+- Configure JavaScript modules.
+- Install compatible dependencies.
+- Configure Vite, React and Tailwind.
+- Configure Prettier, ESLint and Git.
+- Implement environment validation.
+- Implement MongoDB connection.
+- Implement Express setup and centralized errors.
+
+### Phase 3 — Branding and public pages
+
+- Create the Sanchivue logo and branding assets.
+- Implement the design system.
+- Build the landing page.
+- Add Sanchit Singhal's personal branding.
+- Build login, registration and public pages.
+
+### Phase 4 — Authentication and organizations
+
+- Implement authentication.
+- Implement secure sessions.
+- Implement roles and permissions.
+- Implement organization management.
+- Implement invitations.
+- Add tests.
+
+### Phase 5 — Interview management
+
+- Implement interviews.
+- Implement scheduling and invitations.
+- Implement the question bank.
+- Implement templates.
+- Implement dashboards and aggregation queries.
+- Implement pagination.
+
+### Phase 6 — Frontend product
+
+- Build dashboards.
+- Build interview-management screens.
+- Build candidate workflows.
+- Build question management.
+- Build settings.
+- Build reports.
+- Connect every screen to the backend.
+
+### Phase 7 — Live interview room
+
+- Integrate Monaco.
+- Implement authorized Socket.IO rooms.
+- Implement collaboration and presence.
+- Implement chat and timer.
+- Implement the whiteboard.
+- Implement WebRTC audio/video.
+- Add connection recovery.
+- Test with multiple clients where possible.
+
+### Phase 8 — Code execution
+
+- Implement the provider adapter.
+- Validate submissions.
+- Integrate sandboxed execution.
+- Implement public and hidden test evaluation.
+- Implement submission history.
+- Add queues when justified.
+- Verify that hidden tests remain private.
+
+### Phase 9 — AI, notes and reports
+
+- Implement the configurable AI provider.
+- Implement question-generation assistance.
+- Implement follow-up suggestions.
+- Implement evidence-grounded summaries.
+- Implement scorecards.
+- Implement reports and exports.
+- Verify visibility permissions.
+
+### Phase 10 — Final engineering
+
+- Complete notifications.
+- Finish security checks.
+- Run tests.
+- Run lint and formatting checks.
+- Run production builds.
+- Fix errors.
+- Verify major workflows.
+- Complete documentation.
+- Prepare deployment configuration.
+- Report the actual final status.
+
+Do not stop at a phase boundary merely to report progress. Continue implementing whenever the available environment allows it.
+
+# 36. ACCEPTANCE CRITERIA
+
+Before declaring completion, verify the following:
+
+1. The frontend uses React, Vite and JavaScript/JSX.
+2. No TypeScript or Next.js has been introduced.
+3. The backend uses Node.js and Express.
+4. MongoDB connectivity works with valid configuration.
+5. Mongoose models and indexes are implemented.
+6. Authentication works as documented.
+7. Passwords are hashed using bcrypt.
+8. Cookie authentication and logout work.
+9. Authorization is enforced by the backend.
+10. Organization data is isolated.
+11. Authorized users can create interviews.
+12. Candidates can securely join invitations.
+13. Questions can be created and assigned.
+14. Interview dashboards use actual database data.
+15. Frontend/backend API calls are connected.
+16. Socket.IO events enforce room authorization.
+17. WebRTC is implemented and tested to the extent supported by the environment.
+18. Code synchronization is implemented and its limitations documented.
+19. Code execution uses a configured isolated provider.
+20. Hidden test cases remain private.
+21. Submission history is persisted.
+22. Scorecards and reports use actual records.
+23. AI assistance works when valid credentials are configured.
+24. AI is not treated as an autonomous hiring decision-maker.
+25. Cloudinary integration is implemented where configured.
+26. Pagination and aggregation utilities work.
+27. Centralized error handling works.
+28. Environment variables are documented.
+29. Prettier, ESLint and Git configuration exist.
+30. The required `backend/public/temp/.gitkeep` exists.
+31. The Sanchivue logo assets exist and are used by the frontend.
+32. Sanchit Singhal's personal branding is included appropriately.
+33. The landing page is responsive.
+34. Primary buttons and forms work.
+35. Tests have been run and results recorded.
+36. Production builds have been run and results recorded.
+37. No critical feature is disguised by a fake success response.
+38. No required source file is an empty placeholder.
+39. Deployment documentation is complete.
+40. Remaining external configuration steps are listed explicitly.
+
+# 37. FINAL EXECUTION RULES
+
+- Do the actual coding, not just planning.
+- Use the exact Sanchivue brand name.
+- Include Sanchit Singhal's personal branding throughout the appropriate public-facing experience.
+- Create the actual original logo assets.
+- Use JavaScript/JSX for the application.
+- Use React with Vite, not Next.js.
+- Use Node.js, Express, MongoDB and Mongoose.
+- Use Tailwind CSS and Axios.
+- Use JWT, bcrypt and secure cookies.
+- Use WebRTC and Socket.IO for the appropriate live features.
+- Use Cloudinary for supported image uploads.
+- Use the required utility modules and naming conventions.
+- Keep code readable and add useful English comments.
+- Create the actual frontend and backend files.
+- Connect the implemented frontend and backend features.
+- Configure MongoDB and all required environment variables.
+- Do not ask me to create project files manually.
+- Do not make me manually connect each API endpoint.
+- Do not silently remove useful existing code.
+- Do not leave fake integrations or fake success responses.
+- Never claim untested functionality works.
+- Never commit credentials.
+- If an external credential is needed, implement the integration and explain exactly where to paste it.
+- If an external service is unavailable, finish all possible work and report the precise blocker.
+- If an error occurs, investigate it, fix the cause and rerun the relevant checks.
+- If the task exceeds one execution window, persist the checklist and continue from the real project state.
+- Do not claim the product is fully production-ready if critical infrastructure or security verification is still outstanding.
+
+# 38. FINAL DELIVERABLES
+
+At the end, provide:
+
+1. A summary of what was actually implemented.
+2. The final folder structure.
+3. The technology stack and architecture.
+4. The commands to run frontend and backend.
+5. The exact environment variables that need configuration.
+6. MongoDB setup instructions.
+7. Cloudinary, Redis, AI, email, code-execution and TURN/STUN setup instructions as applicable.
+8. The tests actually executed and their results.
+9. The lint, formatting and build results.
+10. The implemented Sanchivue logo and branding assets.
+11. The location of the completed project files in the workspace.
+12. Production deployment instructions.
+13. Known limitations and unverified integrations.
+14. Every genuinely remaining manual step.
+15. A short summary of the research sources consulted and any brand-availability checks actually performed.
+
+**Start by inspecting the workspace. Then research, design, implement, connect, test, fix and document the complete Sanchivue application. Do not return only a plan. Build the product.**

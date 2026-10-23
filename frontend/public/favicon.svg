@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Sanchivue mark: interlocking chevrons forming an abstract "S".
+       The two overlapping chevrons evoke two collaborators (recruiter & candidate)
+       working on the same problem. Designed to be readable at 16px and to work on
+       both dark and light backgrounds. -->
+  <defs>
+    <linearGradient id="sv-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#020617"/>
+  <!-- Outer chevron (top-left → bottom-right, indigo→emerald gradient) -->
+  <path d="M8 21.5 L16 14 L24 21.5 L24 26 L16 19 L8 26 Z" fill="url(#sv-grad)"/>
+  <!-- Inner chevron (offset, lighter, creates interlock) -->
+  <path d="M8 12.5 L16 5 L24 12.5 L24 17 L16 10 L8 17 Z" fill="#10b981" opacity="0.85"/>
+  <!-- Center accent dot -->
+  <circle cx="16" cy="15.5" r="1.4" fill="#020617"/>
+</svg>

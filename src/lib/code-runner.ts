@@ -49,6 +49,12 @@ function runJavaScriptOnce(
   const logs: string[] = [];
   let stdoutTruncated = false;
 
+  // Measure the heap delta (before vs after) as a meaningful per-execution
+  // memory metric. Using process.memoryUsage().rss would report the entire
+  // Node process RSS (hundreds of MB) which is useless for judging a single
+  // candidate solution.
+  const heapBefore = process.memoryUsage().heapUsed;
+
   // Minimal console object that captures output without leaking host globals.
   const sandboxConsole = {
     log: (...args: unknown[]) => {
@@ -111,7 +117,9 @@ function runJavaScriptOnce(
       filename: "candidate.js",
     });
     const durationMs = Date.now() - start;
-    const memoryKb = Math.round(process.memoryUsage().rss / 1024);
+    // Heap delta = how much extra heap the candidate code allocated.
+    const heapAfter = process.memoryUsage().heapUsed;
+    const memoryKb = Math.max(0, Math.round((heapAfter - heapBefore) / 1024));
     return {
       ok: true,
       result: sandbox.__result,
@@ -122,7 +130,8 @@ function runJavaScriptOnce(
     };
   } catch (err) {
     const durationMs = Date.now() - start;
-    const memoryKb = Math.round(process.memoryUsage().rss / 1024);
+    const heapAfter = process.memoryUsage().heapUsed;
+    const memoryKb = Math.max(0, Math.round((heapAfter - heapBefore) / 1024));
     const message = err instanceof Error ? err.message : String(err);
     // Distinguish timeout from generic runtime errors
     const isTimeout =

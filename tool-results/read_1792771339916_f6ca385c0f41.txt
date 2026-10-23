@@ -1,0 +1,1709 @@
+     1→# MASTER AGENTIC AI BUILD PROMPT — SANCHIVUE
+     2→## Build the complete Live Technical Interview Platform from scratch
+     3→
+     4→**Project / Brand Name:** Sanchivue  
+     5→**Personal Brand / Creator:** Sanchit Singhal  
+     6→**Product Category:** Live Technical Interviewing, Collaborative Coding, Technical Assessment and Interview Management SaaS
+     7→
+     8→---
+     9→
+    10→# 1. YOUR MISSION — BUILD THE ACTUAL PRODUCT
+    11→
+    12→Act as a principal full-stack engineer, software architect, UI/UX designer, database engineer, application-security engineer, real-time communication engineer, AI integration engineer, QA engineer and DevOps engineer.
+    13→
+    14→Your task is to **build Sanchivue as a complete, functional, professional, responsive and deployment-ready technical interview platform**.
+    15→
+    16→I do not want just an architecture proposal, tutorial, Figma-style mockup, list of files, isolated code snippets or a plan that expects me to do all the coding afterward.
+    17→
+    18→I want you to use your available agentic coding capabilities to:
+    19→
+    20→- Inspect the current workspace.
+    21→- Research relevant technical interview platforms and current documentation.
+    22→- Design and implement the application.
+    23→- Create the actual frontend and backend files.
+    24→- Create and connect the MongoDB database models.
+    25→- Implement API routes, controllers, middleware, services and utilities.
+    26→- Connect every implemented frontend feature to its correct backend functionality.
+    27→- Implement authentication, authorization and session handling.
+    28→- Build the live interview experience using WebRTC and real-time communication where appropriate.
+    29→- Integrate a secure code-execution provider.
+    30→- Integrate optional AI capabilities through a real backend service.
+    31→- Create the Sanchivue brand identity and original logo assets.
+    32→- Configure the project tooling, environment files, testing and documentation.
+    33→- Run the available tests, lint checks, formatting checks and production builds.
+    34→- Fix errors and verify the actual result.
+    35→- Provide exact setup and deployment instructions.
+    36→
+    37→**Do not stop after presenting the plan. Execute the implementation.**
+    38→
+    39→First inspect the workspace and existing files. Preserve useful existing work, avoid destructive changes, and create the project in the appropriate location. Do not delete or overwrite useful files without inspecting them.
+    40→
+    41→Work in phases if necessary, but maintain a persistent checklist and continue from the actual files and test results. If an external service or credential prevents a real integration test, complete all possible work and identify the exact remaining blocker.
+    42→
+    43→Do not claim that something works unless you have verified it.
+    44→
+    45→# 2. NON-NEGOTIABLE TECHNOLOGY STACK
+    46→
+    47→These are mandatory requirements. Do not silently replace them with another stack.
+    48→
+    49→## Frontend
+    50→
+    51→- React.js.
+    52→- Vite.
+    53→- JavaScript and JSX only.
+    54→- React Router DOM.
+    55→- Tailwind CSS.
+    56→- Axios for HTTP communication with the backend.
+    57→- React Context API for authentication and genuinely global state.
+    58→- Socket.IO Client for real-time events.
+    59→- Monaco Editor for the coding workspace.
+    60→- WebRTC for live audio/video communication.
+    61→- A suitable JavaScript-compatible whiteboard or drawing library.
+    62→- Lucide React or another consistent icon library.
+    63→- React Hook Form where it improves form handling.
+    64→- Zod or another suitable JavaScript-compatible validation library.
+    65→- Reusable React components and custom hooks.
+    66→- A consistent toast/notification system.
+    67→
+    68→## Backend
+    69→
+    70→- Node.js.
+    71→- Express.js.
+    72→- JavaScript using ES modules.
+    73→- MongoDB.
+    74→- Mongoose.
+    75→- Socket.IO.
+    76→- JWT authentication with secure HTTP-only cookies.
+    77→- bcrypt for password hashing.
+    78→- Cloudinary for supported image uploads.
+    79→- Redis and BullMQ where genuine background-processing needs justify them.
+    80→- A configurable AI provider accessed only through the backend.
+    81→- A real sandboxed code-execution provider, such as a properly configured Judge0 integration, when code execution is enabled.
+    82→- Nodemailer or another configurable email-delivery solution.
+    83→- Helmet, rate limiting, request validation and centralized error handling.
+    84→
+    85→## Explicit prohibitions
+    86→
+    87→Do not use:
+    88→
+    89→- TypeScript or TSX.
+    90→- Next.js.
+    91→- NestJS.
+    92→- Prisma.
+    93→- TypeORM.
+    94→- PostgreSQL as a replacement for MongoDB.
+    95→- A Python backend.
+    96→- Unnecessary microservices.
+    97→- Hardcoded API keys, passwords or credentials.
+    98→- Fake APIs presented as working integrations.
+    99→- Fake success messages for actions that have not occurred.
+   100→- Unnecessary complex architecture that makes the code difficult to understand.
+   101→
+   102→Use mutually compatible stable package versions. Check package documentation and compatibility before choosing versions.
+   103→
+   104→**Important language rule:** JavaScript/JSX is the required programming language for the Sanchivue application source. Do not add C, Java, Python or other languages as required application-development languages. The candidate coding editor must have a configurable language policy; use JavaScript as its initial/default language and do not make additional candidate execution languages mandatory unless I explicitly authorize them. If a future extension requires additional candidate languages, document the optional provider capability separately from Sanchivue's own technology stack.
+   105→
+   106→# 3. BRAND IDENTITY — SANCHIVUE BY SANCHIT SINGHAL
+   107→
+   108→The final product name is **Sanchivue**. Do not use the temporary name InterviewForge or invent a different product name.
+   109→
+   110→Sanchivue must feel like an original, memorable, premium technology brand.
+   111→
+   112→## Personal branding
+   113→
+   114→The creator's name is **Sanchit Singhal**.
+   115→
+   116→Integrate the personal brand prominently but tastefully throughout the product:
+   117→
+   118→- Landing-page hero or creator-brand section.
+   119→- Landing-page footer.
+   120→- About Sanchivue section.
+   121→- Brand story.
+   122→- A subtle “Created by Sanchit Singhal” or “Built by Sanchit Singhal” credit.
+   123→- Relevant product, company or creator metadata.
+   124→- Social sharing metadata where appropriate.
+   125→- README and project documentation.
+   126→- The product's About page.
+   127→- A consistent brand signature in relevant public-facing pages.
+   128→
+   129→Make the branding distinctive and polished, not repetitive or distracting. The platform must still look like a serious product suitable for professional recruiters, engineering teams and candidates.
+   130→
+   131→Do not invent Sanchit Singhal's qualifications, customers, investors, awards, employment history or business achievements. Use only the supplied name and other facts that are actually provided.
+   132→
+   133→## Original Sanchivue logo
+   134→
+   135→Create a custom original logo for Sanchivue. Do not leave the logo as plain text or rely on an unrelated third-party logo.
+   136→
+   137→Design a distinctive visual identity that can work as:
+   138→
+   139→- A standalone symbol.
+   140→- A horizontal logo with the Sanchivue wordmark.
+   141→- A compact app icon.
+   142→- A favicon.
+   143→- A browser-tab icon.
+   144→- A dashboard sidebar logo.
+   145→- A light-background logo.
+   146→- A dark-background logo.
+   147→- A social/profile image where appropriate.
+   148→
+   149→The design direction should communicate technical collaboration, clarity, precision, trust and forward-looking software engineering. Explore an original abstract symbol or monogram that works with the wordmark. Keep it clean and recognizable at small sizes.
+   150→
+   151→Create genuine usable assets, preferably original SVG files, rather than merely describing a logo. Use SVG for crisp rendering when appropriate and create any additional required image assets yourself through the available tools.
+   152→
+   153→Include logo variants in the frontend assets directory, for example:
+   154→
+   155→- `frontend/src/assets/branding/sanchivue-logo.svg`
+   156→- `frontend/src/assets/branding/sanchivue-mark.svg`
+   157→- `frontend/public/favicon.svg`
+   158→
+   159→Adjust the filenames if necessary, but ensure every referenced asset actually exists.
+   160→
+   161→Create a small brand guide documenting the logo, typography, colors, usage and responsive variants.
+   162→
+   163→## Brand availability and originality checks
+   164→
+   165→Before declaring the brand unique, search the web for existing products, companies, trademarks and domains using the name Sanchivue and close variations. If access to official trademark databases or domain registrars is available, check those too.
+   166→
+   167→Do not claim guaranteed worldwide uniqueness merely because a web search returns no obvious match. Report what you actually checked, any conflicts discovered and what still needs a formal trademark or domain check.
+   168→
+   169→Do not copy another company's logo, trademark, brand identity, marketing copy or proprietary interface.
+   170→
+   171→# 4. RESEARCH BEFORE IMPLEMENTATION
+   172→
+   173→Use the available browser and research capabilities to investigate established technical interview platforms and relevant implementation documentation.
+   174→
+   175→Research products and resources such as:
+   176→
+   177→- HackerRank Interview.
+   178→- CodeSignal Interview.
+   179→- CoderPad.
+   180→- Other relevant collaborative coding and interview-management platforms discovered during research.
+   181→- Official React, Vite, Express, Mongoose, Socket.IO and WebRTC documentation.
+   182→- Official code-execution-provider documentation.
+   183→- Security guidance relevant to authentication, cookies, code execution and WebRTC.
+   184→
+   185→Do not claim to have searched millions of websites. Perform a focused, useful research process and report the actual sources reviewed.
+   186→
+   187→Study relevant feature workflows and determine which capabilities are suitable for Sanchivue.
+   188→
+   189→Consider:
+   190→
+   191→- Collaborative coding.
+   192→- Live audio/video.
+   193→- Interview waiting rooms.
+   194→- Shared whiteboards.
+   195→- Question libraries.
+   196→- Interview templates.
+   197→- Multi-file coding environments.
+   198→- Test execution and output panels.
+   199→- Interviewer notes.
+   200→- Candidate scorecards.
+   201→- Interview reports.
+   202→- Scheduling and reminders.
+   203→- Candidate invitations.
+   204→- Organization management.
+   205→- Assessment policies.
+   206→- AI-assisted question preparation.
+   207→- Secure code execution.
+   208→- Accessibility and responsive design.
+   209→- Interview-session reliability.
+   210→
+   211→Research is for product learning, not copying. Do not reproduce competitors' proprietary code, logo, exact page layouts, branding, marketing copy or protected assets.
+   212→
+   213→Use official documentation where possible. Add a short research summary and source links to `docs/RESEARCH.md`, explaining which useful patterns influenced Sanchivue and how the implementation remains original.
+   214→
+   215→# 5. PRODUCT VISION
+   216→
+   217→Sanchivue is a professional platform for conducting live technical interviews and collaborative coding sessions.
+   218→
+   219→It should offer three connected experiences:
+   220→
+   221→### A. Interviewer and recruiter workspace
+   222→
+   223→Recruiters and interviewers can create interviews, configure questions, invite candidates, conduct live sessions, collaborate in code, record private notes, evaluate skills and produce reports.
+   224→
+   225→### B. Candidate workspace
+   226→
+   227→Candidates can validate their invitation, join a scheduled interview, check their audio/video devices, read problem statements, write and run code when execution is configured, communicate with interviewers and participate in technical discussions.
+   228→
+   229→### C. Platform and organization administration
+   230→
+   231→Authorized administrators can manage organizations, users, permissions, question libraries, settings, audit records and platform operations.
+   232→
+   233→The application should be feature-rich, but not needlessly complicated. Prioritize a fully connected, working product over a large collection of disconnected screens.
+   234→
+   235→# 6. PUBLIC WEBSITE AND LANDING PAGE
+   236→
+   237→Create a polished, responsive marketing website for Sanchivue.
+   238→
+   239→Include:
+   240→
+   241→1. A memorable hero section with the Sanchivue brand and a clear product value proposition.
+   242→2. Strong calls to action such as “Get Started” and “Explore the Platform”.
+   243→3. A product preview or original interface mockup created using real frontend components.
+   244→4. Live technical interview features.
+   245→5. Collaborative coding features.
+   246→6. Audio/video interview capabilities.
+   247→7. Question and assessment management.
+   248→8. AI interviewer assistance, clearly described as assistance rather than an automatic hiring authority.
+   249→9. Interview scheduling and candidate workflows.
+   250→10. Security and privacy overview.
+   251→11. A “How It Works” section.
+   252→12. Use-case sections for recruiters, engineering teams and interviewers.
+   253→13. A creator-brand or About Sanchivue section featuring Sanchit Singhal.
+   254→14. Frequently asked questions.
+   255→15. A contact or feedback section.
+   256→16. A clear footer with navigation, product links, privacy and terms pages.
+   257→17. Responsive navigation and mobile menu.
+   258→18. Proper loading, error and empty states where relevant.
+   259→19. A polished login and registration journey.
+   260→20. Search-engine-friendly page titles, descriptions, canonical configuration where appropriate, Open Graph metadata and favicon assets.
+   261→
+   262→Use original copy. Do not invent customers, testimonials, reviews, usage statistics, partnerships, security certifications or performance claims.
+   263→
+   264→If pricing is shown, clearly treat it as configurable proposed pricing until a real billing system exists. Do not imply payment processing works unless it is actually implemented.
+   265→
+   266→Use a distinctive, cohesive design system rather than a generic template. Keep the design clean, professional, premium and readable. Avoid excessive gradients, unnecessary animation and visual clutter.
+   267→
+   268→# 7. AUTHENTICATION AND ACCOUNT MANAGEMENT
+   269→
+   270→Implement complete authentication and account-management workflows.
+   271→
+   272→Include:
+   273→
+   274→- Registration.
+   275→- Login.
+   276→- Logout.
+   277→- Current-user/session restoration.
+   278→- Profile view and editing.
+   279→- Password change.
+   280→- Forgot-password flow.
+   281→- Secure password-reset flow.
+   282→- Email verification.
+   283→- Profile image upload through Cloudinary.
+   284→- Session expiration.
+   285→- Refresh-token rotation and revocation where implemented.
+   286→- Account activation, suspension and deletion rules where appropriate.
+   287→- Role-based access control.
+   288→- Invitation acceptance.
+   289→- Proper frontend protected routes.
+   290→- Backend authorization on every protected endpoint.
+   291→
+   292→Use bcrypt to hash passwords. Never store plain-text passwords.
+   293→
+   294→Use JWT appropriately with secure HTTP-only cookies. Use short-lived access tokens and securely managed refresh sessions when refresh tokens are implemented.
+   295→
+   296→Cookie settings must account for:
+   297→
+   298→- `httpOnly`.
+   299→- `secure` in production.
+   300→- Appropriate `sameSite` policy.
+   301→- Domain configuration where required.
+   302→- HTTPS in production.
+   303→- Cross-origin deployment constraints.
+   304→
+   305→Do not store authentication tokens in localStorage.
+   306→
+   307→Do not put secrets in browser-visible variables. A `VITE_` variable is not secret.
+   308→
+   309→Protect cookie-authenticated state-changing operations against CSRF using a strategy appropriate to the deployment. CORS alone is not CSRF protection.
+   310→
+   311→Implement logout and session revocation correctly. Do not trust the user ID or role supplied by the browser.
+   312→
+   313→# 8. ORGANIZATIONS, WORKSPACES AND PERMISSIONS
+   314→
+   315→Build organization and team management.
+   316→
+   317→Include:
+   318→
+   319→- Organization creation.
+   320→- Organization profile and settings.
+   321→- Team member management.
+   322→- Email invitations.
+   323→- Invitation expiration and revocation.
+   324→- Role assignment.
+   325→- Interviewer assignment.
+   326→- Organization-level question libraries.
+   327→- Organization-level templates.
+   328→- Organization-level reports.
+   329→- Member removal.
+   330→- Access revocation.
+   331→- Activity history.
+   332→- Organization-specific configuration.
+   333→
+   334→Support these roles where appropriate:
+   335→
+   336→- Platform administrator.
+   337→- Organization owner.
+   338→- Organization administrator.
+   339→- Recruiter.
+   340→- Interviewer.
+   341→- Candidate.
+   342→
+   343→Use a clear permission model. Do not allow a user to access another organization's data by changing an ID in a request.
+   344→
+   345→Enforce organization isolation on the backend for interviews, candidates, questions, submissions, notes, evaluations and reports.
+   346→
+   347→Candidates may join through a secure invitation without creating a permanent account if the interview configuration permits it.
+   348→
+   349→# 9. DASHBOARD AND INTERVIEW MANAGEMENT
+   350→
+   351→Create a real dashboard backed by MongoDB.
+   352→
+   353→Show useful information such as:
+   354→
+   355→- Upcoming interviews.
+   356→- Completed interviews.
+   357→- Interviews in progress.
+   358→- Draft interviews.
+   359→- Cancelled interviews.
+   360→- Pending evaluations.
+   361→- Recent activity.
+   362→- Candidate pipeline.
+   363→- Interview schedule.
+   364→- Quick actions.
+   365→- Useful summary statistics.
+   366→
+   367→All statistics must be calculated from actual database records. Do not hardcode dashboard numbers.
+   368→
+   369→Implement search, filtering, sorting, pagination and appropriate empty states.
+   370→
+   371→## Interview creation wizard
+   372→
+   373→Allow authorized users to configure:
+   374→
+   375→- Interview title.
+   376→- Job role.
+   377→- Candidate details and email.
+   378→- Job description.
+   379→- Required skills.
+   380→- Interview type.
+   381→- Difficulty.
+   382→- Date and time.
+   383→- Time zone.
+   384→- Duration.
+   385→- Interviewers.
+   386→- Interview template.
+   387→- Questions.
+   388→- Supported candidate coding-language configuration.
+   389→- Public and hidden test cases.
+   390→- Evaluation rubric.
+   391→- Candidate instructions.
+   392→- AI policy.
+   393→- Access permissions.
+   394→
+   395→Support interview types such as:
+   396→
+   397→- Data structures and algorithms.
+   398→- Frontend development.
+   399→- Backend development.
+   400→- Full-stack development.
+   401→- Database concepts.
+   402→- Debugging.
+   403→- Code review.
+   404→- System design.
+   405→- Project-based coding.
+   406→- Technical discussion.
+   407→- Custom interview.
+   408→
+   409→Do not make additional candidate programming languages mandatory without my authorization. The platform's own implementation remains JavaScript/JSX.
+   410→
+   411→Support interview states such as draft, scheduled, ready, in progress, completed, cancelled and expired.
+   412→
+   413→Allow authorized users to reschedule, cancel, duplicate and reuse interview templates.
+   414→
+   415→Generate secure, high-entropy, expiring invitation tokens. Do not use guessable IDs as authorization secrets.
+   416→
+   417→# 10. CANDIDATE INVITATION AND WAITING ROOM
+   418→
+   419→Build a professional candidate onboarding flow.
+   420→
+   421→Include:
+   422→
+   423→- Secure invitation validation.
+   424→- Candidate identity confirmation.
+   425→- Interview instructions.
+   426→- Interview date and duration.
+   427→- Browser readiness checks.
+   428→- Camera and microphone permissions.
+   429→- Audio/video device selection.
+   430→- Connection status.
+   431→- Waiting room.
+   432→- Join notifications.
+   433→- Candidate-friendly errors.
+   434→- Interview rules and AI-assistance policy disclosure.
+   435→- Reconnection support.
+   436→
+   437→A candidate must not gain access simply by guessing a URL or interview identifier.
+   438→
+   439→Do not force permanent account creation when secure guest access is permitted.
+   440→
+   441→Provide a simple and respectful candidate experience with clear instructions and accessible controls.
+   442→
+   443→# 11. LIVE INTERVIEW WORKSPACE
+   444→
+   445→This is a core feature of Sanchivue.
+   446→
+   447→Build a real-time workspace containing:
+   448→
+   449→- Interview title and status.
+   450→- Candidate and interviewer identities.
+   451→- Participant list.
+   452→- Interview timer.
+   453→- Problem statement.
+   454→- Collaborative code editor.
+   455→- Live editor synchronization.
+   456→- Presence indicators.
+   457→- Audio call.
+   458→- Video call.
+   459→- Text chat.
+   460→- Screen sharing with explicit browser permission.
+   461→- Shared whiteboard.
+   462→- Question navigation.
+   463→- Run-code controls when configured.
+   464→- Public test results.
+   465→- Standard input/output panels.
+   466→- Submission history.
+   467→- Private interviewer notes.
+   468→- Evaluation rubric.
+   469→- Connection status.
+   470→- Reconnection and retry controls.
+   471→- End-interview confirmation.
+   472→- Completion status.
+   473→
+   474→Use a practical split-pane layout so the code editor and problem statement remain readable. Make panels resizable where appropriate.
+   475→
+   476→Provide sensible keyboard-accessible controls and clear loading/error states.
+   477→
+   478→Private interviewer notes, hidden test cases and confidential AI analysis must never be broadcast to unauthorized participants.
+   479→
+   480→## WebRTC audio/video
+   481→
+   482→Use WebRTC for live audio/video.
+   483→
+   484→Use Socket.IO as the signaling and real-time event transport where appropriate. Implement the offer/answer and ICE-candidate exchange correctly.
+   485→
+   486→Include:
+   487→
+   488→- Camera/microphone permission handling.
+   489→- Device selection where supported.
+   490→- Mute/unmute.
+   491→- Camera on/off.
+   492→- Leave call.
+   493→- Participant presence.
+   494→- Connection-state indicators.
+   495→- Retry and reconnection behavior.
+   496→- Network and device failure messages.
+   497→- Consent and clear screen-sharing indicators.
+   498→
+   499→Configure STUN/TURN values through environment variables. Document that production connectivity may require a properly configured TURN service.
+   500→
+   501→Do not pretend that WebRTC will work reliably on every network without suitable connectivity infrastructure.
+   502→
+   503→Use authenticated Socket.IO rooms and server-side authorization for joining, messaging, signaling and interview events.
+   504→
+   505→## Collaborative whiteboard
+   506→
+   507→Provide a shared whiteboard for system-design and architecture discussions.
+   508→
+   509→Where practical, support:
+   510→
+   511→- Drawing and freehand annotation.
+   512→- Text.
+   513→- Shapes.
+   514→- Lines and arrows.
+   515→- Moving and resizing objects.
+   516→- Zoom and pan.
+   517→- Clear/reset with confirmation.
+   518→- Shared updates.
+   519→- Saving and restoring board state.
+   520→
+   521→Use a suitable maintained library or implement a modest, reliable solution.
+   522→
+   523→Persist relevant whiteboard state when appropriate. Do not claim advanced real-time conflict-free collaboration unless the implementation actually provides it.
+   524→
+   525→## Chat and presence
+   526→
+   527→Implement:
+   528→
+   529→- Real-time text messages.
+   530→- Sender identity.
+   531→- Timestamps.
+   532→- Message validation.
+   533→- Interview-room authorization.
+   534→- Join/leave events.
+   535→- Reconnection handling.
+   536→- Relevant persistence and retention rules.
+   537→
+   538→Do not expose chat from one interview to participants in another interview.
+   539→
+   540→# 12. CODE EDITOR AND CANDIDATE CODING WORKFLOW
+   541→
+   542→Integrate Monaco Editor into the live interview workspace.
+   543→
+   544→JavaScript is the default candidate coding language. Keep the list of execution languages configurable and consistent with the configured provider. Do not add other languages as mandatory features without my authorization.
+   545→
+   546→Provide:
+   547→
+   548→- Syntax highlighting for configured languages.
+   549→- Theme selection.
+   550→- Font-size controls.
+   551→- Line numbers.
+   552→- Keyboard shortcuts.
+   553→- Formatting where supported.
+   554→- Code reset with confirmation.
+   555→- Custom input where applicable.
+   556→- Standard output.
+   557→- Standard error.
+   558→- Compilation/runtime error display when returned by the provider.
+   559→- Execution status.
+   560→- Execution time and memory data when available.
+   561→- Public test-case results.
+   562→- Submission history.
+   563→- Draft saving and restoration.
+   564→- Code snapshots.
+   565→- Multi-file support only when the selected execution environment actually supports it.
+   566→- Resizable editor/output panels.
+   567→- Accessible controls.
+   568→
+   569→Implement reliable collaborative editing. Do not repeatedly overwrite the whole editor in a way that destroys another participant's active typing.
+   570→
+   571→Choose a practical conflict-aware synchronization approach. For a first implementation, use Socket.IO-based synchronization and persisted snapshots where appropriate; if using an established collaboration protocol, document its setup and limitations.
+   572→
+   573→Never claim conflict-free editing unless the selected synchronization protocol actually guarantees it.
+   574→
+   575→# 13. SECURE CODE EXECUTION
+   576→
+   577→Treat all candidate-submitted code as untrusted.
+   578→
+   579→Never execute arbitrary code inside the Express API process, through browser `eval()`, through `new Function()`, or on the application host without suitable isolation.
+   580→
+   581→Implement a backend execution-provider adapter for a real sandboxed code-execution service, such as Judge0, if configured.
+   582→
+   583→Include:
+   584→
+   585→- Backend-only provider credentials.
+   586→- Validated source-code size.
+   587→- Validated input size.
+   588→- Allowed-language validation.
+   589→- Authentication and authorization.
+   590→- Rate limits and execution quotas.
+   591→- Submission status handling.
+   592→- Compilation and runtime results.
+   593→- Timeout/error handling.
+   594→- Execution metadata.
+   595→- Safe output-size limits.
+   596→- Submission history.
+   597→- Public test-case execution.
+   598→- Hidden test-case evaluation on the trusted server side.
+   599→- Provider error normalization.
+   600→- Ownership checks.
+   601→- Optional asynchronous queues where needed.
+   602→
+   603→Never send hidden test inputs, expected outputs or private reference solutions to the candidate's browser.
+   604→
+   605→Do not allow submitted code to read application secrets, the primary database, backend environment variables or infrastructure credentials.
+   606→
+   607→For self-hosted execution, document resource limits, isolation, network restrictions, worker recycling and infrastructure hardening. A basic container is not automatically a sufficient security boundary for hostile code.
+   608→
+   609→If a provider requires credentials, complete the integration and clearly document where the user must configure them. If it is unavailable, show a real configuration error rather than fabricating successful execution results.
+   610→
+   611→Do not claim that a candidate's code passed tests unless the configured execution provider returned the relevant results.
+   612→
+   613→# 14. QUESTION BANK AND INTERVIEW TEMPLATES
+   614→
+   615→Build a reusable question library.
+   616→
+   617→Each question may contain:
+   618→
+   619→- Title.
+   620→- Problem statement.
+   621→- Difficulty.
+   622→- Category.
+   623→- Topics.
+   624→- Supported candidate-language configuration.
+   625→- Constraints.
+   626→- Examples.
+   627→- Input/output format.
+   628→- Public test cases.
+   629→- Hidden test cases.
+   630→- Reference solutions with restricted access.
+   631→- Time and memory limits where supported.
+   632→- Expected complexity.
+   633→- Evaluation criteria.
+   634→- Hints.
+   635→- Follow-up questions.
+   636→- Tags.
+   637→- Organization ownership.
+   638→- Creation and update metadata.
+   639→
+   640→Allow authorized users to create, edit, duplicate, archive, search, filter and reuse questions.
+   641→
+   642→Build interview templates containing reusable questions, instructions, durations and evaluation rubrics.
+   643→
+   644→Validate question and test-case data before saving. Restrict access to hidden tests and reference solutions.
+   645→
+   646→# 15. SUBMISSIONS, EVALUATION AND SCORECARDS
+   647→
+   648→Persist relevant submission information, including:
+   649→
+   650→- Candidate.
+   651→- Interview.
+   652→- Question.
+   653→- Configured language.
+   654→- Source snapshot or controlled source reference.
+   655→- Submission timestamp.
+   656→- Execution status.
+   657→- Passed/failed test counts.
+   658→- Runtime and memory data where available.
+   659→- Compiler/runtime errors.
+   660→- Relevant evaluation metadata.
+   661→
+   662→Support multiple submissions per question.
+   663→
+   664→Allow authorized interviewers to review code snapshots and compare relevant changes between submissions.
+   665→
+   666→Implement editable evaluation rubrics covering:
+   667→
+   668→- Problem-solving approach.
+   669→- Correctness.
+   670→- Code quality.
+   671→- Technical communication.
+   672→- Debugging ability.
+   673→- Testing discipline.
+   674→- Design decisions.
+   675→- Complexity analysis where applicable.
+   676→- Role-specific skills.
+   677→
+   678→Support:
+   679→
+   680→- Skill ratings.
+   681→- Written feedback.
+   682→- Interviewer comments.
+   683→- Evidence references.
+   684→- Overall assessment.
+   685→- Private scorecards.
+   686→- Evaluation completion status.
+   687→- Report generation.
+   688→
+   689→Save scorecards safely and prevent unauthorized users from reading private feedback.
+   690→
+   691→Candidate comparison must use consistent, role-relevant criteria and support human review. Do not automatically rank candidates using unsupported or biased assumptions.
+   692→
+   693→# 16. AI INTERVIEWER COPILOT
+   694→
+   695→Implement optional AI features through a real backend service layer.
+   696→
+   697→The AI copilot may help interviewers:
+   698→
+   699→1. Generate draft questions from a job description.
+   700→2. Suggest relevant question difficulty.
+   701→3. Propose follow-up questions.
+   702→4. Explain expected problem-solving approaches to the interviewer.
+   703→5. Suggest useful edge cases.
+   704→6. Help prepare evaluation rubrics.
+   705→7. Summarize observable coding progress.
+   706→8. Reference relevant code snapshots and submission results.
+   707→9. Draft interview notes.
+   708→10. Summarize strengths and areas for further assessment.
+   709→11. Highlight incomplete evaluation criteria.
+   710→12. Draft structured post-interview reports.
+   711→
+   712→Keep AI output editable and distinguish observed facts from uncertain inferences.
+   713→
+   714→AI must not fabricate execution results, candidate actions, code evidence or interview events.
+   715→
+   716→**AI is an interviewer copilot, not an autonomous hiring authority.** It must not independently make final hiring or rejection decisions.
+   717→
+   718→Keep API keys on the backend. Add validation, timeouts, rate limits, error handling and configurable provider/model settings.
+   719→
+   720→If no AI credentials are configured, show a clear setup message and keep the rest of the platform usable. Never fake AI output while claiming it came from a live model.
+   721→
+   722→Implement separate visibility rules for interviewer-only AI analysis and any candidate-facing AI assistance.
+   723→
+   724→# 17. AI POLICY, INTEGRITY AND PRIVACY
+   725→
+   726→Make AI assistance configurable for each interview.
+   727→
+   728→Support:
+   729→
+   730→- AI assistance enabled/disabled.
+   731→- Candidate-visible policy disclosure.
+   732→- Interviewer-controlled settings.
+   733→- A clear distinction between AI assistance and candidate work.
+   734→- Appropriate AI request history.
+   735→- Audit records for relevant AI actions.
+   736→- Configurable retention rules.
+   737→
+   738→Do not secretly monitor a candidate outside the application.
+   739→
+   740→Do not claim reliable cheating detection through unsupported AI inference. Any integrity indicators must be disclosed where appropriate, explainable and subject to human review.
+   741→
+   742→Do not collect or retain unnecessary personal information.
+   743→
+   744→# 18. INTERVIEW NOTES, REPORTS AND EXPORTS
+   745→
+   746→Implement:
+   747→
+   748→- Private interviewer notes.
+   749→- Notes associated with specific questions.
+   750→- Timestamped observations.
+   751→- Links to relevant code snapshots or submissions.
+   752→- Skill-based scorecards.
+   753→- Written feedback.
+   754→- Structured evaluation summaries.
+   755→- Interview completion reports.
+   756→- Authorized report sharing.
+   757→- Printable reports.
+   758→- PDF export when practical.
+   759→- Post-interview review.
+   760→
+   761→Reports must be generated from actual database records. Use clear permissions to control who can view, download or share them.
+   762→
+   763→Never expose private interviewer notes to candidates unless an explicit, authorized sharing workflow permits it.
+   764→
+   765→# 19. NOTIFICATIONS AND SCHEDULING
+   766→
+   767→Implement:
+   768→
+   769→- In-app notifications.
+   770→- Interview invitations.
+   771→- Upcoming-interview reminders.
+   772→- Rescheduling notifications.
+   773→- Cancellation notifications.
+   774→- Interview completion notifications.
+   775→- Pending-evaluation reminders.
+   776→- Read/unread state.
+   777→- Notification preferences.
+   778→- Email delivery through a configurable provider.
+   779→- Background processing for suitable tasks.
+   780→
+   781→Use Redis/BullMQ only where it solves a real queue or retry requirement.
+   782→
+   783→If email credentials are missing, document the required configuration and show the actual delivery status. Do not claim an email was sent if it was not.
+   784→
+   785→Handle time zones carefully. Store timestamps consistently and display the appropriate interview-local time.
+   786→
+   787→# 20. MONGODB AND MONGOOSE DATABASE DESIGN
+   788→
+   789→Use MongoDB and Mongoose for all application-owned persistent data.
+   790→
+   791→Create separate, clearly named model files with sensible schemas.
+   792→
+   793→At minimum, evaluate the need for these models:
+   794→
+   795→- `user.model.js`
+   796→- `organization.model.js`
+   797→- `organizationMember.model.js`
+   798→- `invitation.model.js`
+   799→- `session.model.js` or `refreshSession.model.js`
+   800→- `interview.model.js`
+   801→- `interviewTemplate.model.js`
+   802→- `question.model.js`
+   803→- `interviewQuestion.model.js`
+   804→- `testCase.model.js`
+   805→- `submission.model.js`
+   806→- `codeSnapshot.model.js`
+   807→- `interviewNote.model.js`
+   808→- `evaluation.model.js`
+   809→- `notification.model.js`
+   810→- `auditLog.model.js`
+   811→- `aiInteraction.model.js`
+   812→
+   813→Add other models only when the architecture genuinely needs them.
+   814→
+   815→Requirements:
+   816→
+   817→- Mongoose schemas and models.
+   818→- Appropriate field types and validation.
+   819→- Timestamps.
+   820→- Required fields and sensible enums.
+   821→- Unique constraints where appropriate.
+   822→- Indexes for frequently queried fields.
+   823→- Compound indexes for organization-scoped queries.
+   824→- Appropriate references and population.
+   825→- Data ownership checks.
+   826→- Prevention of duplicate memberships.
+   827→- Valid interview state transitions.
+   828→- TTL indexes for eligible expiring records.
+   829→- Controlled retention of sensitive records.
+   830→- Safe schema validation and update handling.
+   831→- Mongoose hooks only when genuinely useful.
+   832→- No hidden, complicated business logic buried in hooks.
+   833→- Transactions where multi-document consistency requires them and the MongoDB deployment supports them.
+   834→
+   835→Create a dedicated database connection module at `backend/src/db/index.js`.
+   836→
+   837→Use `DB_NAME` or the documented MongoDB URI configuration to select the database correctly.
+   838→
+   839→## Pagination and aggregation
+   840→
+   841→Create reusable utilities:
+   842→
+   843→- `pagination.js`
+   844→- `aggregationPagination.js`
+   845→
+   846→Use database-side filtering, sorting and pagination.
+   847→
+   848→Use Mongoose aggregation pipelines for genuine use cases such as dashboard statistics, grouped submission results and report summaries.
+   849→
+   850→Use aggregation pagination where aggregation results require pagination. Do not add complex database abstractions without a real need.
+   851→
+   852→Keep the database name configurable through `constants.js` or validated environment configuration, with a clear and documented source of truth.
+   853→
+   854→# 21. REQUIRED PROJECT STRUCTURE
+   855→
+   856→Keep frontend and backend in separate folders. The following is the expected direction; extend it only when needed.
+   857→
+   858→```text
+   859→sanchivue/
+   860→├── frontend/
+   861→│   ├── public/
+   862→│   │   └── favicon.svg
+   863→│   ├── src/
+   864→│   │   ├── assets/
+   865→│   │   │   └── branding/
+   866→│   │   ├── components/
+   867→│   │   │   ├── common/
+   868→│   │   │   ├── layout/
+   869→│   │   │   ├── forms/
+   870→│   │   │   ├── interview/
+   871→│   │   │   ├── editor/
+   872→│   │   │   ├── whiteboard/
+   873→│   │   │   └── dashboard/
+   874→│   │   ├── pages/
+   875→│   │   │   ├── public/
+   876→│   │   │   ├── auth/
+   877→│   │   │   ├── dashboard/
+   878→│   │   │   ├── interviews/
+   879→│   │   │   ├── candidates/
+   880→│   │   │   ├── questions/
+   881→│   │   │   ├── reports/
+   882→│   │   │   └── settings/
+   883→│   │   ├── layouts/
+   884→│   │   ├── routes/
+   885→│   │   ├── context/
+   886→│   │   ├── hooks/
+   887→│   │   ├── services/
+   888→│   │   ├── api/
+   889→│   │   ├── utils/
+   890→│   │   ├── constants/
+   891→│   │   ├── validations/
+   892→│   │   ├── styles/
+   893→│   │   ├── App.jsx
+   894→│   │   └── main.jsx
+   895→│   ├── .env.example
+   896→│   ├── .gitignore
+   897→│   ├── .prettierrc
+   898→│   ├── .prettierignore
+   899→│   ├── eslint.config.js
+   900→│   ├── index.html
+   901→│   ├── package.json
+   902→│   ├── vite.config.js
+   903→│   └── README.md
+   904→├── backend/
+   905→│   ├── public/
+   906→│   │   └── temp/
+   907→│   │       └── .gitkeep
+   908→│   ├── src/
+   909→│   │   ├── config/
+   910→│   │   │   ├── env.js
+   911→│   │   │   ├── constants.js
+   912→│   │   │   ├── corsOptions.js
+   913→│   │   │   └── cookieOptions.js
+   914→│   │   ├── db/
+   915→│   │   │   └── index.js
+   916→│   │   ├── models/
+   917→│   │   ├── controllers/
+   918→│   │   ├── routes/
+   919→│   │   │   └── index.routes.js
+   920→│   │   ├── middlewares/
+   921→│   │   ├── services/
+   922→│   │   ├── sockets/
+   923→│   │   ├── queues/
+   924→│   │   ├── workers/
+   925→│   │   ├── utils/
+   926→│   │   │   ├── ApiError.js
+   927→│   │   │   ├── ApiResponse.js
+   928→│   │   │   ├── asyncHandler.js
+   929→│   │   │   ├── generateTokens.js
+   930→│   │   │   ├── pagination.js
+   931→│   │   │   ├── aggregationPagination.js
+   932→│   │   │   ├── cloudinary.js
+   933→│   │   │   └── auditLogger.js
+   934→│   │   ├── validators/
+   935→│   │   ├── app.js
+   936→│   │   └── server.js
+   937→│   ├── tests/
+   938→│   ├── .env.example
+   939→│   ├── .gitignore
+   940→│   ├── .prettierrc
+   941→│   ├── .prettierignore
+   942→│   ├── eslint.config.js
+   943→│   ├── package.json
+   944→│   └── README.md
+   945→├── docs/
+   946→│   ├── ARCHITECTURE.md
+   947→│   ├── API.md
+   948→│   ├── DATABASE.md
+   949→│   ├── SECURITY.md
+   950→│   ├── DEPLOYMENT.md
+   951→│   ├── TROUBLESHOOTING.md
+   952→│   ├── RESEARCH.md
+   953→│   └── BRAND_GUIDE.md
+   954→├── .gitignore
+   955→├── .prettierrc
+   956→├── .prettierignore
+   957→├── package.json
+   958→└── README.md
+   959→```
+   960→
+   961→Use these naming conventions consistently:
+   962→
+   963→- Models: `.model.js`
+   964→- Controllers: `.controller.js`
+   965→- Middleware: `.middleware.js`
+   966→- Routes: `.routes.js`
+   967→- Services: `.service.js`
+   968→
+   969→Create real, functional modules. Do not create empty files merely to match the tree.
+   970→
+   971→## Required backend utilities
+   972→
+   973→Implement and actually use:
+   974→
+   975→- `ApiError.js`
+   976→- `ApiResponse.js`
+   977→- `asyncHandler.js`
+   978→- `cloudinary.js`
+   979→- `pagination.js`
+   980→- `aggregationPagination.js`
+   981→- `generateTokens.js`
+   982→
+   983→Keep `app.js` responsible for Express application configuration. Keep `server.js` responsible for startup, database connection, HTTP server creation, Socket.IO setup and graceful shutdown.
+   984→
+   985→Keep the database connection in `db/index.js`.
+   986→
+   987→Create `backend/public/temp/.gitkeep` exactly as requested. Ensure temporary files are cleaned up and private files are not accidentally exposed through public static hosting.
+   988→
+   989→# 22. EXPRESS BACKEND, API ROUTES AND MIDDLEWARE
+   990→
+   991→Configure:
+   992→
+   993→- Environment validation.
+   994→- JSON and URL-encoded body parsing with suitable limits.
+   995→- Cookie parsing.
+   996→- CORS.
+   997→- Helmet security headers.
+   998→- Rate limiting.
+   999→- Request logging.
+  1000→- API versioning such as `/api/v1`.
+  1001→- Request validation.
+  1002→- Authentication middleware.
+  1003→- Role-based authorization.
+  1004→- Organization-access middleware.
+  1005→- Centralized error handling.
+  1006→- Consistent response structures.
+  1007→- A 404 handler.
+  1008→- Health and readiness endpoints.
+  1009→- Graceful shutdown.
+  1010→
+  1011→Organize route registration through `index.routes.js` and mount individual route files under the API prefix.
+  1012→
+  1013→Every route must connect to the correct controller and apply the required authentication, authorization, organization access, validation and rate limiting.
+  1014→
+  1015→Keep controllers readable. Use service modules for reusable business logic where this makes the code clearer.
+  1016→
+  1017→Do not trust frontend-only route protection.
+  1018→
+  1019→# 23. AXIOS, VITE PROXY AND CORS
+  1020→
+  1021→Create a centralized Axios instance.
+  1022→
+  1023→Configure:
+  1024→
+  1025→- A configurable API base URL.
+  1026→- `withCredentials: true` for cookie-authenticated requests.
+  1027→- Sensible timeouts.
+  1028→- Request/response interceptors where appropriate.
+  1029→- Consistent error handling.
+  1030→- Safe authentication refresh behavior if refresh tokens are used.
+  1031→- Prevention of infinite refresh loops.
+  1032→- Appropriate handling of concurrent failed requests.
+  1033→- No logging of credentials or secrets.
+  1034→
+  1035→Configure the Vite development proxy if it simplifies local development.
+  1036→
+  1037→Remember that a Vite proxy is a development convenience, not a replacement for production CORS.
+  1038→
+  1039→Document production frontend origins, backend URLs, HTTPS, cookie settings, `sameSite`, domain settings and reverse-proxy considerations.
+  1040→
+  1041→Make sure the frontend and backend use exactly matching endpoint names, request fields and response structures.
+  1042→
+  1043→# 24. CLOUDINARY AND IMAGE UPLOADS
+  1044→
+  1045→Use Cloudinary for supported profile pictures and image attachments.
+  1046→
+  1047→Implement:
+  1048→
+  1049→- Backend-only Cloudinary credentials.
+  1050→- Validated file types.
+  1051→- File-size limits.
+  1052→- Upload authorization.
+  1053→- Ownership checks.
+  1054→- Upload failure handling.
+  1055→- Appropriate cleanup or deletion behavior.
+  1056→- Safe image URL handling.
+  1057→
+  1058→Never use Cloudinary for code execution or as a substitute for the database.
+  1059→
+  1060→# 25. ENVIRONMENT FILES AND CONFIGURATION
+  1061→
+  1062→Create complete `.env.example` files containing every variable that the implemented application actually reads.
+  1063→
+  1064→Backend configuration may include:
+  1065→
+  1066→```text
+  1067→NODE_ENV=development
+  1068→PORT=5000
+  1069→FRONTEND_URL=http://localhost:5173
+  1070→BACKEND_URL=http://localhost:5000
+  1071→MONGODB_URI=
+  1072→DB_NAME=sanchivue
+  1073→JWT_ACCESS_SECRET=
+  1074→JWT_REFRESH_SECRET=
+  1075→ACCESS_TOKEN_EXPIRY=
+  1076→REFRESH_TOKEN_EXPIRY=
+  1077→COOKIE_DOMAIN=
+  1078→COOKIE_SAME_SITE=lax
+  1079→REDIS_URL=
+  1080→CLOUDINARY_CLOUD_NAME=
+  1081→CLOUDINARY_API_KEY=
+  1082→CLOUDINARY_API_SECRET=
+  1083→AI_PROVIDER=
+  1084→AI_API_KEY=
+  1085→AI_MODEL=
+  1086→JUDGE0_BASE_URL=
+  1087→JUDGE0_API_KEY=
+  1088→SMTP_HOST=
+  1089→SMTP_PORT=
+  1090→SMTP_USER=
+  1091→SMTP_PASS=
+  1092→TURN_URL=
+  1093→TURN_USERNAME=
+  1094→TURN_CREDENTIAL=
+  1095→```
+  1096→
+  1097→Adjust the variables to the actual integrations. Do not include unused configuration just to make the example appear comprehensive.
+  1098→
+  1099→Frontend configuration may include:
+  1100→
+  1101→```text
+  1102→VITE_API_URL=http://localhost:5000/api/v1
+  1103→```
+  1104→
+  1105→Add other non-secret frontend variables only when required.
+  1106→
+  1107→Never place backend secrets in `VITE_` variables.
+  1108→
+  1109→Validate required configuration during startup and provide useful errors identifying missing variable names without printing secret values.
+  1110→
+  1111→Use safe development defaults only when they do not weaken production security.
+  1112→
+  1113→Create comments in English at the relevant configuration points explaining exactly what must be pasted, where to obtain it and whether it is required for local development or production.
+  1114→
+  1115→Do not generate fake production credentials.
+  1116→
+  1117→# 26. EASY-TO-UNDERSTAND JAVASCRIPT
+  1118→
+  1119→This is one of my most important requirements.
+  1120→
+  1121→I want the code to be so readable that a student or junior developer can open a file and understand what it does without decoding unnecessarily complicated syntax.
+  1122→
+  1123→Write straightforward JavaScript and JSX.
+  1124→
+  1125→Use:
+  1126→
+  1127→- Clear variable names.
+  1128→- Small, focused functions.
+  1129→- Simple conditionals.
+  1130→- Readable async/await flows.
+  1131→- Early returns where helpful.
+  1132→- Consistent naming.
+  1133→- Predictable file organization.
+  1134→- Useful English comments.
+  1135→- Simple data transformations.
+  1136→- Explicit error handling.
+  1137→
+  1138→Avoid:
+  1139→
+  1140→- Overly clever one-liners.
+  1141→- Deeply nested ternary operators.
+  1142→- Unnecessary abstractions.
+  1143→- Giant React components.
+  1144→- Giant controllers.
+  1145→- Circular dependencies.
+  1146→- Unnecessary design patterns.
+  1147→- Dense, unreadable expressions.
+  1148→- Comments that merely repeat obvious code.
+  1149→
+  1150→Write English comments explaining why important code exists and how authentication, database queries, API communication, WebRTC, Socket.IO, code execution, AI validation and deployment configuration work.
+  1151→
+  1152→Do not add a comment to every obvious line. Focus on the logic that needs explanation.
+  1153→
+  1154→Do not silently remove useful existing code during refactoring.
+  1155→
+  1156→Use Mongoose validation and ordinary JavaScript validation instead of introducing TypeScript.
+  1157→
+  1158→# 27. PRETTIER, ESLINT, GIT AND PACKAGE SCRIPTS
+  1159→
+  1160→Configure compatible Prettier and ESLint versions for the JavaScript/JSX project.
+  1161→
+  1162→Create:
+  1163→
+  1164→- `.prettierrc`
+  1165→- `.prettierignore`
+  1166→- `eslint.config.js`
+  1167→- `.gitignore`
+  1168→
+  1169→Create appropriate root scripts for:
+  1170→
+  1171→- Running the frontend.
+  1172→- Running the backend.
+  1173→- Running both concurrently.
+  1174→- Formatting files.
+  1175→- Checking formatting.
+  1176→- Running lint.
+  1177→- Running tests.
+  1178→- Building the frontend.
+  1179→
+  1180→Make sure the commands actually work with the installed package versions.
+  1181→
+  1182→The Git ignore configuration must exclude:
+  1183→
+  1184→- `node_modules/`
+  1185→- Build output.
+  1186→- Real `.env` files.
+  1187→- Logs.
+  1188→- Coverage reports.
+  1189→- Temporary files.
+  1190→- Private generated uploads.
+  1191→- Relevant local IDE files.
+  1192→
+  1193→Keep `.env.example` files in version control. Never commit real secrets.
+  1194→
+  1195→Include `backend/public/temp/.gitkeep`.
+  1196→
+  1197→# 28. TESTING AND REAL VERIFICATION
+  1198→
+  1199→Do not declare the application complete merely because files exist.
+  1200→
+  1201→Use appropriate JavaScript testing tools, such as Vitest for the frontend and a suitable backend test runner with Supertest.
+  1202→
+  1203→Test at least the following.
+  1204→
+  1205→## Authentication
+  1206→
+  1207→- Registration.
+  1208→- Duplicate account prevention.
+  1209→- Login.
+  1210→- Invalid credentials.
+  1211→- Logout.
+  1212→- Invalid and expired tokens.
+  1213→- Password reset.
+  1214→- Protected API routes.
+  1215→- Cookie behavior.
+  1216→
+  1217→## Authorization
+  1218→
+  1219→- Role restrictions.
+  1220→- Organization isolation.
+  1221→- Candidate access to only authorized interviews.
+  1222→- Protection of private notes and reports.
+  1223→- Protection of hidden test cases.
+  1224→- Protection against changing IDs to access another user's data.
+  1225→
+  1226→## Interviews
+  1227→
+  1228→- Interview creation.
+  1229→- Validation.
+  1230→- Invitations.
+  1231→- Interview state transitions.
+  1232→- Candidate joining.
+  1233→- Unauthorized room access.
+  1234→- Rescheduling and cancellation.
+  1235→
+  1236→## Questions and submissions
+  1237→
+  1238→- Question creation and validation.
+  1239→- Submission ownership.
+  1240→- Hidden-test access restrictions.
+  1241→- Provider failure handling.
+  1242→- Timeout handling.
+  1243→- Pagination.
+  1244→- Aggregation results.
+  1245→
+  1246→## Real-time features
+  1247→
+  1248→- Socket.IO room authorization.
+  1249→- Event membership checks.
+  1250→- Unauthorized event rejection.
+  1251→- Connection/disconnection handling.
+  1252→- WebRTC signaling flows where testable.
+  1253→
+  1254→## Frontend
+  1255→
+  1256→- Main routes render.
+  1257→- Authentication state is restored correctly.
+  1258→- Forms validate.
+  1259→- API errors are displayed.
+  1260→- Loading states work.
+  1261→- Protected pages do not leak private information.
+  1262→- Primary actions work.
+  1263→
+  1264→## Integration
+  1265→
+  1266→- MongoDB connectivity.
+  1267→- Frontend/backend API communication.
+  1268→- Cookie authentication.
+  1269→- CORS.
+  1270→- Health endpoints.
+  1271→- Configured external-provider integrations.
+  1272→
+  1273→Run tests, lint, formatting checks and production builds.
+  1274→
+  1275→Fix errors and rerun the relevant checks.
+  1276→
+  1277→Never report a test as passed unless it was actually executed and the result observed. If external services are unavailable, distinguish unit-test results from unverified end-to-end behavior.
+  1278→
+  1279→# 29. SECURITY REQUIREMENTS
+  1280→
+  1281→Implement appropriate safeguards throughout the application:
+  1282→
+  1283→- bcrypt password hashing.
+  1284→- Secure HTTP-only cookies.
+  1285→- Authentication and authorization checks.
+  1286→- Organization-level data isolation.
+  1287→- Request validation.
+  1288→- Rate limiting.
+  1289→- Appropriate CORS.
+  1290→- Security headers.
+  1291→- Request body-size limits.
+  1292→- Secure invitation tokens.
+  1293→- Token expiration and revocation.
+  1294→- Protection against IDOR and broken access control.
+  1295→- Protection against mass assignment.
+  1296→- Safe MongoDB query construction.
+  1297→- Safe file uploads.
+  1298→- Secrets management.
+  1299→- Sensitive-data redaction in logs.
+  1300→- Safe error responses.
+  1301→- CSRF protection appropriate for cookie authentication.
+  1302→- Hidden-test and reference-solution protection.
+  1303→- External-provider error handling.
+  1304→- Audit logging.
+  1305→- Controlled data retention.
+  1306→
+  1307→Never treat CORS as authorization.
+  1308→
+  1309→Never expose production stack traces, passwords, tokens, provider keys, hidden tests or internal infrastructure details to ordinary clients.
+  1310→
+  1311→Do not allow candidate-submitted code to access application secrets or the primary database.
+  1312→
+  1313→Do not trust client-provided roles, scores, execution results or interview completion states.
+  1314→
+  1315→Document any limitations that require additional production infrastructure.
+  1316→
+  1317→# 30. PERFORMANCE AND SCALABILITY
+  1318→
+  1319→Implement sensible engineering practices:
+  1320→
+  1321→- Database indexes.
+  1322→- Efficient queries.
+  1323→- Database-side pagination.
+  1324→- Aggregation pipelines.
+  1325→- Socket.IO room isolation.
+  1326→- Request timeouts.
+  1327→- Rate limiting.
+  1328→- Execution quotas.
+  1329→- Background queues when justified.
+  1330→- Queue retries and failure handling.
+  1331→- Structured logs.
+  1332→- Graceful shutdown.
+  1333→- Cleanup of expired records.
+  1334→- Appropriate caching where useful.
+  1335→- Safe handling of concurrent requests.
+  1336→
+  1337→Use Redis for actual shared-state or queue needs, not just because it is available.
+  1338→
+  1339→If multiple backend instances are deployed, document the Socket.IO adapter and infrastructure requirements.
+  1340→
+  1341→Do not claim a particular number of concurrent users or submissions unless representative load tests support that claim.
+  1342→
+  1343→Provide a load-test plan covering API latency, WebSocket connections, submission throughput, queue delays, worker time and failure rate. Report measured results separately from targets.
+  1344→
+  1345→# 31. ACCESSIBILITY AND RESPONSIVE DESIGN
+  1346→
+  1347→Ensure the product works on desktop, tablet and mobile.
+  1348→
+  1349→Implement:
+  1350→
+  1351→- Semantic HTML.
+  1352→- Keyboard navigation.
+  1353→- Visible focus states.
+  1354→- Accessible labels.
+  1355→- Suitable contrast.
+  1356→- Responsive navigation.
+  1357→- Responsive forms.
+  1358→- Useful loading indicators.
+  1359→- Empty states.
+  1360→- Clear error messages.
+  1361→- Confirmation dialogs for destructive actions.
+  1362→- Reduced-motion support where appropriate.
+  1363→
+  1364→The live interview workspace should be optimized for desktop but remain usable on smaller screens. Do not make critical controls inaccessible on mobile.
+  1365→
+  1366→Keep visual consistency across public pages, dashboards, forms, interview rooms and reports.
+  1367→
+  1368→# 32. DEPLOYMENT AND LOCAL DEVELOPMENT
+  1369→
+  1370→Prepare actual deployment configuration and documentation for the completed stack.
+  1371→
+  1372→## Frontend deployment
+  1373→
+  1374→Explain:
+  1375→
+  1376→- Suitable static hosting options.
+  1377→- Build command.
+  1378→- Output directory.
+  1379→- Environment variables.
+  1380→- SPA routing fallback.
+  1381→- API URL configuration.
+  1382→- HTTPS.
+  1383→- Asset handling.
+  1384→
+  1385→## Backend deployment
+  1386→
+  1387→Explain:
+  1388→
+  1389→- Suitable Node.js hosting options.
+  1390→- Start command.
+  1391→- Environment variables.
+  1392→- Database connectivity.
+  1393→- CORS.
+  1394→- Cookie settings.
+  1395→- HTTPS and reverse proxy.
+  1396→- Health checks.
+  1397→- Logs.
+  1398→- Graceful shutdown.
+  1399→- Background workers.
+  1400→- Socket.IO requirements.
+  1401→
+  1402→## MongoDB Atlas
+  1403→
+  1404→Give exact steps to:
+  1405→
+  1406→1. Create a cluster.
+  1407→2. Create a database user.
+  1408→3. Configure network access.
+  1409→4. Obtain the connection URI.
+  1410→5. Configure the database name.
+  1411→6. Paste the URI into the backend `.env` file.
+  1412→7. Verify the database connection.
+  1413→
+  1414→Never ask me to expose the connection URI in chat or commit it to Git.
+  1415→
+  1416→## Redis
+  1417→
+  1418→Explain local development and managed Redis configuration if the implemented queues require it.
+  1419→
+  1420→## External integrations
+  1421→
+  1422→Provide exact setup instructions for:
+  1423→
+  1424→- Cloudinary.
+  1425→- AI provider.
+  1426→- Code-execution provider.
+  1427→- Email provider.
+  1428→- STUN/TURN infrastructure.
+  1429→
+  1430→Explain which services are required for core functionality and which are optional.
+  1431→
+  1432→## Local development
+  1433→
+  1434→Provide Windows-friendly commands for installing dependencies, creating environment files, starting the frontend/backend, running tests and verifying the application.
+  1435→
+  1436→If Docker Compose is helpful, create a valid local-development configuration for the required supporting services with persistent data volumes and safe settings. Do not unnecessarily expose sensitive services.
+  1437→
+  1438→Do not claim that environment-variable placeholders automatically deploy or configure external services.
+  1439→
+  1440→# 33. DOCUMENTATION
+  1441→
+  1442→Create a complete root `README.md` covering:
+  1443→
+  1444→1. Sanchivue overview.
+  1445→2. Features.
+  1446→3. Technology stack.
+  1447→4. Folder structure.
+  1448→5. Architecture.
+  1449→6. Prerequisites.
+  1450→7. Installation.
+  1451→8. Environment configuration.
+  1452→9. Local development commands.
+  1453→10. MongoDB setup.
+  1454→11. Authentication architecture.
+  1455→12. API overview.
+  1456→13. Real-time communication.
+  1457→14. WebRTC configuration.
+  1458→15. Code execution integration.
+  1459→16. AI integration.
+  1460→17. Testing.
+  1461→18. Lint and formatting.
+  1462→19. Production build.
+  1463→20. Deployment.
+  1464→21. Security.
+  1465→22. Troubleshooting.
+  1466→23. Known limitations.
+  1467→24. Future improvements.
+  1468→25. Brand and logo assets.
+  1469→
+  1470→Also create:
+  1471→
+  1472→- `docs/ARCHITECTURE.md`
+  1473→- `docs/API.md`
+  1474→- `docs/DATABASE.md`
+  1475→- `docs/SECURITY.md`
+  1476→- `docs/DEPLOYMENT.md`
+  1477→- `docs/TROUBLESHOOTING.md`
+  1478→- `docs/RESEARCH.md`
+  1479→- `docs/BRAND_GUIDE.md`
+  1480→
+  1481→Document API endpoints with HTTP methods, parameters, request bodies, response structures and required permissions.
+  1482→
+  1483→Explain exactly where each required environment variable belongs and where it can be obtained.
+  1484→
+  1485→# 34. API CONTRACTS AND FRONTEND/BACKEND CONNECTIONS
+  1486→
+  1487→Use consistent API responses. For example:
+  1488→
+  1489→```json
+  1490→{
+  1491→  "success": true,
+  1492→  "message": "Operation completed successfully",
+  1493→  "data": {},
+  1494→  "pagination": null
+  1495→}
+  1496→```
+  1497→
+  1498→Use an appropriate consistent error format.
+  1499→
+  1500→Use correct HTTP status codes for validation failures, authentication failures, authorization failures, missing resources, rate limits and server errors.
+  1501→
+  1502→Ensure that every frontend API call matches the actual backend route, HTTP method, field names and response format.
+  1503→
+  1504→Do not leave disconnected forms, placeholder buttons, empty controllers, unused models or fake database operations.
+  1505→
+  1506→Every primary action must either work or be clearly disabled with an explanation of the missing integration.
+  1507→
+  1508→# 35. IMPLEMENTATION PHASES
+  1509→
+  1510→Follow this sequence while continuing to work through all feasible phases.
+  1511→
+  1512→### Phase 1 — Inspect and research
+  1513→
+  1514→- Inspect the workspace.
+  1515→- Review relevant official documentation.
+  1516→- Check installed tools and environment.
+  1517→- Record research findings.
+  1518→- Design the data model and API contracts.
+  1519→- Create a task checklist.
+  1520→
+  1521→### Phase 2 — Project foundation
+  1522→
+  1523→- Create root, frontend and backend folders.
+  1524→- Configure JavaScript modules.
+  1525→- Install compatible dependencies.
+  1526→- Configure Vite, React and Tailwind.
+  1527→- Configure Prettier, ESLint and Git.
+  1528→- Implement environment validation.
+  1529→- Implement MongoDB connection.
+  1530→- Implement Express setup and centralized errors.
+  1531→
+  1532→### Phase 3 — Branding and public pages
+  1533→
+  1534→- Create the Sanchivue logo and branding assets.
+  1535→- Implement the design system.
+  1536→- Build the landing page.
+  1537→- Add Sanchit Singhal's personal branding.
+  1538→- Build login, registration and public pages.
+  1539→
+  1540→### Phase 4 — Authentication and organizations
+  1541→
+  1542→- Implement authentication.
+  1543→- Implement secure sessions.
+  1544→- Implement roles and permissions.
+  1545→- Implement organization management.
+  1546→- Implement invitations.
+  1547→- Add tests.
+  1548→
+  1549→### Phase 5 — Interview management
+  1550→
+  1551→- Implement interviews.
+  1552→- Implement scheduling and invitations.
+  1553→- Implement the question bank.
+  1554→- Implement templates.
+  1555→- Implement dashboards and aggregation queries.
+  1556→- Implement pagination.
+  1557→
+  1558→### Phase 6 — Frontend product
+  1559→
+  1560→- Build dashboards.
+  1561→- Build interview-management screens.
+  1562→- Build candidate workflows.
+  1563→- Build question management.
+  1564→- Build settings.
+  1565→- Build reports.
+  1566→- Connect every screen to the backend.
+  1567→
+  1568→### Phase 7 — Live interview room
+  1569→
+  1570→- Integrate Monaco.
+  1571→- Implement authorized Socket.IO rooms.
+  1572→- Implement collaboration and presence.
+  1573→- Implement chat and timer.
+  1574→- Implement the whiteboard.
+  1575→- Implement WebRTC audio/video.
+  1576→- Add connection recovery.
+  1577→- Test with multiple clients where possible.
+  1578→
+  1579→### Phase 8 — Code execution
+  1580→
+  1581→- Implement the provider adapter.
+  1582→- Validate submissions.
+  1583→- Integrate sandboxed execution.
+  1584→- Implement public and hidden test evaluation.
+  1585→- Implement submission history.
+  1586→- Add queues when justified.
+  1587→- Verify that hidden tests remain private.
+  1588→
+  1589→### Phase 9 — AI, notes and reports
+  1590→
+  1591→- Implement the configurable AI provider.
+  1592→- Implement question-generation assistance.
+  1593→- Implement follow-up suggestions.
+  1594→- Implement evidence-grounded summaries.
+  1595→- Implement scorecards.
+  1596→- Implement reports and exports.
+  1597→- Verify visibility permissions.
+  1598→
+  1599→### Phase 10 — Final engineering
+  1600→
+  1601→- Complete notifications.
+  1602→- Finish security checks.
+  1603→- Run tests.
+  1604→- Run lint and formatting checks.
+  1605→- Run production builds.
+  1606→- Fix errors.
+  1607→- Verify major workflows.
+  1608→- Complete documentation.
+  1609→- Prepare deployment configuration.
+  1610→- Report the actual final status.
+  1611→
+  1612→Do not stop at a phase boundary merely to report progress. Continue implementing whenever the available environment allows it.
+  1613→
+  1614→# 36. ACCEPTANCE CRITERIA
+  1615→
+  1616→Before declaring completion, verify the following:
+  1617→
+  1618→1. The frontend uses React, Vite and JavaScript/JSX.
+  1619→2. No TypeScript or Next.js has been introduced.
+  1620→3. The backend uses Node.js and Express.
+  1621→4. MongoDB connectivity works with valid configuration.
+  1622→5. Mongoose models and indexes are implemented.
+  1623→6. Authentication works as documented.
+  1624→7. Passwords are hashed using bcrypt.
+  1625→8. Cookie authentication and logout work.
+  1626→9. Authorization is enforced by the backend.
+  1627→10. Organization data is isolated.
+  1628→11. Authorized users can create interviews.
+  1629→12. Candidates can securely join invitations.
+  1630→13. Questions can be created and assigned.
+  1631→14. Interview dashboards use actual database data.
+  1632→15. Frontend/backend API calls are connected.
+  1633→16. Socket.IO events enforce room authorization.
+  1634→17. WebRTC is implemented and tested to the extent supported by the environment.
+  1635→18. Code synchronization is implemented and its limitations documented.
+  1636→19. Code execution uses a configured isolated provider.
+  1637→20. Hidden test cases remain private.
+  1638→21. Submission history is persisted.
+  1639→22. Scorecards and reports use actual records.
+  1640→23. AI assistance works when valid credentials are configured.
+  1641→24. AI is not treated as an autonomous hiring decision-maker.
+  1642→25. Cloudinary integration is implemented where configured.
+  1643→26. Pagination and aggregation utilities work.
+  1644→27. Centralized error handling works.
+  1645→28. Environment variables are documented.
+  1646→29. Prettier, ESLint and Git configuration exist.
+  1647→30. The required `backend/public/temp/.gitkeep` exists.
+  1648→31. The Sanchivue logo assets exist and are used by the frontend.
+  1649→32. Sanchit Singhal's personal branding is included appropriately.
+  1650→33. The landing page is responsive.
+  1651→34. Primary buttons and forms work.
+  1652→35. Tests have been run and results recorded.
+  1653→36. Production builds have been run and results recorded.
+  1654→37. No critical feature is disguised by a fake success response.
+  1655→38. No required source file is an empty placeholder.
+  1656→39. Deployment documentation is complete.
+  1657→40. Remaining external configuration steps are listed explicitly.
+  1658→
+  1659→# 37. FINAL EXECUTION RULES
+  1660→
+  1661→- Do the actual coding, not just planning.
+  1662→- Use the exact Sanchivue brand name.
+  1663→- Include Sanchit Singhal's personal branding throughout the appropriate public-facing experience.
+  1664→- Create the actual original logo assets.
+  1665→- Use JavaScript/JSX for the application.
+  1666→- Use React with Vite, not Next.js.
+  1667→- Use Node.js, Express, MongoDB and Mongoose.
+  1668→- Use Tailwind CSS and Axios.
+  1669→- Use JWT, bcrypt and secure cookies.
+  1670→- Use WebRTC and Socket.IO for the appropriate live features.
+  1671→- Use Cloudinary for supported image uploads.
+  1672→- Use the required utility modules and naming conventions.
+  1673→- Keep code readable and add useful English comments.
+  1674→- Create the actual frontend and backend files.
+  1675→- Connect the implemented frontend and backend features.
+  1676→- Configure MongoDB and all required environment variables.
+  1677→- Do not ask me to create project files manually.
+  1678→- Do not make me manually connect each API endpoint.
+  1679→- Do not silently remove useful existing code.
+  1680→- Do not leave fake integrations or fake success responses.
+  1681→- Never claim untested functionality works.
+  1682→- Never commit credentials.
+  1683→- If an external credential is needed, implement the integration and explain exactly where to paste it.
+  1684→- If an external service is unavailable, finish all possible work and report the precise blocker.
+  1685→- If an error occurs, investigate it, fix the cause and rerun the relevant checks.
+  1686→- If the task exceeds one execution window, persist the checklist and continue from the real project state.
+  1687→- Do not claim the product is fully production-ready if critical infrastructure or security verification is still outstanding.
+  1688→
+  1689→# 38. FINAL DELIVERABLES
+  1690→
+  1691→At the end, provide:
+  1692→
+  1693→1. A summary of what was actually implemented.
+  1694→2. The final folder structure.
+  1695→3. The technology stack and architecture.
+  1696→4. The commands to run frontend and backend.
+  1697→5. The exact environment variables that need configuration.
+  1698→6. MongoDB setup instructions.
+  1699→7. Cloudinary, Redis, AI, email, code-execution and TURN/STUN setup instructions as applicable.
+  1700→8. The tests actually executed and their results.
+  1701→9. The lint, formatting and build results.
+  1702→10. The implemented Sanchivue logo and branding assets.
+  1703→11. The location of the completed project files in the workspace.
+  1704→12. Production deployment instructions.
+  1705→13. Known limitations and unverified integrations.
+  1706→14. Every genuinely remaining manual step.
+  1707→15. A short summary of the research sources consulted and any brand-availability checks actually performed.
+  1708→
+  1709→**Start by inspecting the workspace. Then research, design, implement, connect, test, fix and document the complete Sanchivue application. Do not return only a plan. Build the product.**
