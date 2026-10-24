@@ -14,24 +14,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
+  title: "Sanchivue — Live Technical Interview & AI Assessment Platform",
+  description: "Run technical interviews that actually predict on-the-job performance. A real IDE, real test cases, and a real rubric — built by Sanchit Singhal.",
+  keywords: ["Sanchivue", "Sanchit Singhal", "interview platform", "collaborative coding", "AI co-pilot", "Monaco editor", "WebRTC"],
+  authors: [{ name: "Sanchit Singhal" }],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: "Sanchivue — Live Technical Interview Platform",
+    description: "Run technical interviews that actually predict on-the-job performance. Built by Sanchit Singhal.",
     url: "https://chat.z.ai",
-    siteName: "Z.ai",
+    siteName: "Sanchivue",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: "Sanchivue — Live Technical Interview Platform",
+    description: "Run technical interviews that actually predict on-the-job performance. Built by Sanchit Singhal.",
   },
 };
 

@@ -12,7 +12,7 @@ export function AppLoader() {
       </div>
       <div className="text-center">
         <p className="text-sm font-medium tracking-wide">
-          Loading Live Interview Platform
+          Loading Sanchivue
         </p>
         <p className="text-xs text-slate-400 mt-1">
           Warming up the IDE, AI co-pilot &amp; collab engine…

@@ -81,7 +81,7 @@ export function AppNavbar() {
             <Code2 className="h-4 w-4 text-white" />
           </span>
           <span className="hidden sm:inline text-slate-100">
-            LiveInterview
+            Sanchivue
           </span>
         </button>
 
