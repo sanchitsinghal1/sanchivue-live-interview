@@ -49,35 +49,40 @@ export default function CodeReplayPlayer({ snapshots = [] }) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => setIndex((i) => Math.max(0, i - 1))}
-          disabled={index === 0}
-          className="grid h-8 w-8 place-items-center rounded-md bg-slate-800 text-slate-200 hover:bg-slate-700 disabled:opacity-40"
-          aria-label="Previous frame"
-        >
-          <SkipBack className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => setPlaying((p) => !p)}
-          disabled={index >= snapshots.length - 1}
-          className="grid h-8 w-8 place-items-center rounded-md bg-brand-indigo text-white hover:bg-brand-indigo-dark disabled:opacity-40"
-          aria-label={playing ? 'Pause' : 'Play'}
-        >
-          {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-        </button>
-        <button
-          type="button"
-          onClick={() => setIndex((i) => Math.min(snapshots.length - 1, i + 1))}
-          disabled={index >= snapshots.length - 1}
-          className="grid h-8 w-8 place-items-center rounded-md bg-slate-800 text-slate-200 hover:bg-slate-700 disabled:opacity-40"
-          aria-label="Next frame"
-        >
-          <SkipForward className="h-4 w-4" />
-        </button>
-        <div className="ml-2 flex-1">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIndex((i) => Math.max(0, i - 1))}
+            disabled={index === 0}
+            className="grid h-8 w-8 place-items-center rounded-md bg-slate-800 text-slate-200 hover:bg-slate-700 disabled:opacity-40"
+            aria-label="Previous frame"
+          >
+            <SkipBack className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setPlaying((p) => !p)}
+            disabled={index >= snapshots.length - 1}
+            className="grid h-8 w-8 place-items-center rounded-md bg-brand-indigo text-white hover:bg-brand-indigo-dark disabled:opacity-40"
+            aria-label={playing ? 'Pause' : 'Play'}
+          >
+            {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setIndex((i) => Math.min(snapshots.length - 1, i + 1))}
+            disabled={index >= snapshots.length - 1}
+            className="grid h-8 w-8 place-items-center rounded-md bg-slate-800 text-slate-200 hover:bg-slate-700 disabled:opacity-40"
+            aria-label="Next frame"
+          >
+            <SkipForward className="h-4 w-4" />
+          </button>
+          <span className="font-mono text-xs text-slate-400">
+            {index + 1}/{snapshots.length}
+          </span>
+        </div>
+        <div className="min-w-[120px] flex-1">
           <input
             type="range"
             min={0}
@@ -88,11 +93,8 @@ export default function CodeReplayPlayer({ snapshots = [] }) {
             aria-label="Scrub timeline"
           />
         </div>
-        <span className="font-mono text-xs text-slate-400">
-          {index + 1}/{snapshots.length}
-        </span>
       </div>
-      <div className="flex items-center gap-2 text-xs text-slate-400">
+      <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
         <span
           className={`badge ${
             eventColors[snap.eventType] || 'bg-slate-700 text-slate-300'
@@ -100,7 +102,7 @@ export default function CodeReplayPlayer({ snapshots = [] }) {
         >
           {snap.eventType || 'frame'}
         </span>
-        <span>{formatDateTime(snap.timestamp)}</span>
+        <span className="break-all">{formatDateTime(snap.timestamp)}</span>
       </div>
       <div className="monaco-wrap h-72">
         <Editor

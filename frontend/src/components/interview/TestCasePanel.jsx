@@ -71,35 +71,37 @@ export default function TestCasePanel({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-2 border-b border-slate-800 p-2">
-        <button
-          type="button"
-          onClick={run}
-          disabled={running || !code}
-          className="btn-secondary text-xs"
-        >
-          {running ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <Play className="h-3.5 w-3.5" />
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-800 p-2">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={run}
+            disabled={running || !code}
+            className="btn-secondary text-xs"
+          >
+            {running ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Play className="h-3.5 w-3.5" />
+            )}
+            Run
+          </button>
+          <button
+            type="button"
+            onClick={submit}
+            disabled={running || !code}
+            className="btn-primary text-xs"
+          >
+            Submit
+          </button>
+          {results && total > 0 && (
+            <span className={`badge ${allPass ? 'bg-brand-emerald/15 text-brand-emerald' : 'bg-rose-500/15 text-rose-300'}`}>
+              {allPass ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+              {passed}/{total}
+            </span>
           )}
-          Run
-        </button>
-        <button
-          type="button"
-          onClick={submit}
-          disabled={running || !code}
-          className="btn-primary text-xs"
-        >
-          Submit
-        </button>
-        {results && total > 0 && (
-          <span className={`badge ${allPass ? 'bg-brand-emerald/15 text-brand-emerald' : 'bg-rose-500/15 text-rose-300'}`}>
-            {allPass ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-            {passed}/{total}
-          </span>
-        )}
-        <div className="ml-auto flex gap-1">
+        </div>
+        <div className="ml-auto flex flex-wrap gap-1">
           <button
             type="button"
             onClick={() => setTab('cases')}

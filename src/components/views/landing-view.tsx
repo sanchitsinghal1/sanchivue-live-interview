@@ -47,7 +47,7 @@ const CREATOR = "Sanchit Singhal";
 const STATS = [
   { label: "Pre-seeded DSA problems", value: "5" },
   { label: "Execution languages", value: "4" },
-  { label: "Code-sync latency", value: "<250ms" },
+  { label: "Code-sync latency", value: "<250ms*" },
   { label: "Rubric criteria", value: "8" },
 ];
 
@@ -300,7 +300,7 @@ function DeepDiveVisual({ kind }: { kind: string }) {
   for (let i = 0; i < nums.length; i++) {
     const need = target - nums[i];
     if (seen.has(need)) {
-      return [seen.get(need), i];  ◀ Alex (interviewer)
+      return [seen.get(need), i];  ◀ Sanchit (interviewer)
     }
     seen.set(nums[i], i);
   }
@@ -345,7 +345,7 @@ function DeepDiveVisual({ kind }: { kind: string }) {
         <div className="grid grid-cols-2 gap-2 p-3">
           <div className="rounded-lg bg-gradient-to-br from-indigo-500/30 to-[oklch(0.19_0.02_264)] p-4 text-center">
             <div className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-indigo-500 text-xs font-bold text-white">AI</div>
-            <p className="mt-2 text-[11px] text-slate-300">Alex · Interviewer</p>
+            <p className="mt-2 text-[11px] text-slate-300">Sanchit · Interviewer</p>
             <p className="text-[9px] text-emerald-400">mic · cam on</p>
           </div>
           <div className="rounded-lg bg-gradient-to-br from-emerald-500/30 to-[oklch(0.19_0.02_264)] p-4 text-center">

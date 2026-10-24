@@ -58,14 +58,14 @@ export default function NotificationSettingsPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-50">
             <Bell className="h-5 w-5 text-brand-indigo" /> Notifications
           </h1>
           <p className="text-sm text-slate-500">Choose which events you want to be notified about.</p>
         </div>
-        <button type="button" onClick={save} disabled={saving} className="btn-primary text-sm">
+        <button type="button" onClick={save} disabled={saving} className="btn-primary shrink-0 text-sm sm:self-auto">
           {saving ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
@@ -75,8 +75,8 @@ export default function NotificationSettingsPage() {
         </button>
       </div>
 
-      <div className="card overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="card overflow-x-auto">
+        <table className="w-full min-w-[400px] text-sm">
           <thead>
             <tr className="border-b border-slate-800 text-xs text-slate-500">
               <th className="px-4 py-2 text-left font-medium">Event</th>

@@ -50,12 +50,12 @@ export default function OrganizationSettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-50">Organization</h1>
           <p className="text-sm text-slate-500">Manage your organization, members, and invitations.</p>
         </div>
-        <button type="button" onClick={() => setCreateOpen(true)} className="btn-primary text-sm">
+        <button type="button" onClick={() => setCreateOpen(true)} className="btn-primary shrink-0 text-sm sm:self-auto">
           <Plus className="h-4 w-4" /> New organization
         </button>
       </div>
@@ -77,9 +77,9 @@ export default function OrganizationSettingsPage() {
         <div className="space-y-4">
           {organizations.map((org) => (
             <div key={org.id} className="card p-5">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-base font-semibold text-slate-100">{org.name}</h3>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <h3 className="truncate text-base font-semibold text-slate-100">{org.name}</h3>
                   <p className="text-xs text-slate-500">
                     {org.members?.length || 0} member(s)
                   </p>
@@ -87,7 +87,7 @@ export default function OrganizationSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setInviteOpen(true)}
-                  className="btn-secondary text-xs"
+                  className="btn-secondary shrink-0 text-xs"
                 >
                   <Mail className="h-3.5 w-3.5" /> Invite
                 </button>
@@ -98,7 +98,7 @@ export default function OrganizationSettingsPage() {
                   return (
                     <li key={m.id || m.email} className="flex items-center gap-3 py-2">
                       <div
-                        className={`grid h-8 w-8 place-items-center rounded-full text-xs font-bold text-white ${dot}`}
+                        className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-bold text-white ${dot}`}
                       >
                         {getInitials(m.name || m.email)}
                       </div>
@@ -106,7 +106,7 @@ export default function OrganizationSettingsPage() {
                         <p className="truncate text-sm text-slate-100">{m.name}</p>
                         <p className="truncate text-xs text-slate-500">{m.email}</p>
                       </div>
-                      <span className="badge bg-slate-800 text-slate-300">
+                      <span className="badge shrink-0 bg-slate-800 text-slate-300">
                         {ROLE_LABELS[m.role] || m.role}
                       </span>
                     </li>

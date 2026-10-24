@@ -132,8 +132,8 @@ export default function DashboardLayout() {
               onClick={() => setDrawerOpen(false)}
               aria-hidden="true"
             />
-            <aside className="absolute left-0 top-0 h-full w-72 border-r border-slate-800 bg-slate-950 p-3">
-              <div className="mb-4 flex items-center justify-between">
+            <aside className="absolute left-0 top-0 flex h-full w-72 max-w-[85vw] flex-col border-r border-slate-800 bg-slate-950 p-3">
+              <div className="mb-4 flex shrink-0 items-center justify-between">
                 <BrandLogo className="h-7" />
                 <button
                   type="button"
@@ -144,12 +144,21 @@ export default function DashboardLayout() {
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <nav className="overflow-y-auto">
+              <nav className="min-h-0 flex-1 overflow-y-auto">
                 <SidebarLinks
                   links={links}
                   location={location}
                   onClick={() => setDrawerOpen(false)}
                 />
+                {isAuthenticated && (
+                  <Link
+                    to="/interviews/new"
+                    onClick={() => setDrawerOpen(false)}
+                    className="mt-2 flex w-full items-center gap-2 rounded-md bg-brand-indigo px-3 py-2 text-sm font-medium text-white hover:bg-brand-indigo-dark"
+                  >
+                    <Plus className="h-4 w-4" /> Schedule Interview
+                  </Link>
+                )}
                 <div className="mt-4 border-t border-slate-800 pt-3">
                   <SidebarLinks
                     links={SETTINGS_LINKS}
@@ -158,7 +167,7 @@ export default function DashboardLayout() {
                   />
                 </div>
               </nav>
-              <UserPanel user={user} onLogout={handleLogout} className="mt-4" />
+              <UserPanel user={user} onLogout={handleLogout} className="mt-4 shrink-0" />
             </aside>
           </div>
         )}
@@ -166,12 +175,12 @@ export default function DashboardLayout() {
         {/* Main column */}
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Desktop topbar */}
-          <header className="sticky top-0 z-30 hidden h-14 items-center justify-between border-b border-slate-800 bg-slate-950/90 px-6 backdrop-blur lg:flex">
-            <div className="flex items-center gap-2 text-sm text-slate-400">
-              <Code2 className="h-4 w-4 text-brand-indigo" />
-              <span className="font-mono">sanchivue://{location.pathname}</span>
+          <header className="sticky top-0 z-30 hidden h-14 items-center justify-between gap-3 border-b border-slate-800 bg-slate-950/90 px-4 backdrop-blur lg:flex lg:px-6">
+            <div className="flex min-w-0 items-center gap-2 text-sm text-slate-400">
+              <Code2 className="h-4 w-4 shrink-0 text-brand-indigo" />
+              <span className="truncate font-mono">sanchivue://{location.pathname}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2">
               <Link
                 to="/settings/notifications"
                 className="relative rounded p-1.5 text-slate-300 hover:bg-slate-800"

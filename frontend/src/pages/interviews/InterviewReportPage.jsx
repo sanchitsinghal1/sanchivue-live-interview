@@ -151,7 +151,7 @@ export default function InterviewReportPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       {/* Header */}
-      <div className="no-print flex items-center justify-between">
+      <div className="no-print flex items-center justify-between gap-2">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -159,8 +159,8 @@ export default function InterviewReportPage() {
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </button>
-        <button type="button" onClick={() => window.print()} className="btn-secondary text-sm no-print">
-          <Printer className="h-4 w-4" /> Print / PDF
+        <button type="button" onClick={() => window.print()} className="btn-secondary no-print text-xs sm:text-sm">
+          <Printer className="h-4 w-4" /> <span className="hidden sm:inline">Print / PDF</span><span className="sm:hidden">Print</span>
         </button>
       </div>
 
@@ -253,7 +253,7 @@ export default function InterviewReportPage() {
 
           {/* AI evidence summary */}
           <div className="card p-5">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-100">
                 <Sparkles className="h-4 w-4 text-brand-indigo" /> AI evidence summary
               </h2>
@@ -262,7 +262,7 @@ export default function InterviewReportPage() {
                   type="button"
                   onClick={generateAiSummary}
                   disabled={aiLoading}
-                  className="btn-ghost text-xs"
+                  className="btn-ghost shrink-0 text-xs"
                 >
                   {aiLoading ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -334,13 +334,13 @@ export default function InterviewReportPage() {
                   className="input-base mt-1.5 resize-y text-sm"
                   placeholder="Write your debrief notes…"
                 />
-                <div className="mt-2 flex items-center justify-between">
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                   <span className="text-xs text-slate-500">passedRatio: {passedRatio}%</span>
                   <button
                     type="button"
                     onClick={handleSaveEvaluation}
                     disabled={saving}
-                    className="btn-primary text-xs"
+                    className="btn-primary shrink-0 text-xs"
                   >
                     {saving ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />

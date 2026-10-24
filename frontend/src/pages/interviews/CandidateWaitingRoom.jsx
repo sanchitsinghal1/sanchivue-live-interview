@@ -213,7 +213,7 @@ export default function CandidateWaitingRoom() {
 
         {/* Device checks */}
         <div className="card mb-6 p-5">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-sm font-semibold text-slate-100">Device readiness</h2>
             <button type="button" onClick={runAllChecks} className="btn-secondary text-xs">
               Run all checks
@@ -256,7 +256,7 @@ export default function CandidateWaitingRoom() {
         </div>
 
         {/* Join */}
-        <div className="flex justify-end">
+        <div className="flex flex-col items-stretch justify-end gap-2 sm:flex-row sm:items-center">
           <button
             type="button"
             onClick={join}
@@ -273,29 +273,29 @@ export default function CandidateWaitingRoom() {
 
 function CheckRow({ icon: Icon, label, check, onRun }) {
   return (
-    <li className="flex items-center justify-between rounded-md border border-slate-800 bg-slate-950 p-3">
+    <li className="flex flex-col gap-2 rounded-md border border-slate-800 bg-slate-950 p-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2">
-        <Icon className="h-4 w-4 text-slate-400" />
+        <Icon className="h-4 w-4 shrink-0 text-slate-400" />
         <span className="text-sm font-medium text-slate-200">{label}</span>
       </div>
       <div className="flex items-center gap-2">
-        {check.running && <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-400" />}
+        {check.running && <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-slate-400" />}
         {!check.running && check.msg && (
           <span
-            className={`flex items-center gap-1 text-xs ${
+            className={`flex min-w-0 items-center gap-1 text-right text-xs ${
               check.ok ? 'text-brand-emerald' : 'text-amber-300'
             }`}
           >
             {check.ok ? (
-              <CheckCircle2 className="h-3.5 w-3.5" />
+              <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
             ) : (
-              <XCircle className="h-3.5 w-3.5" />
+              <XCircle className="h-3.5 w-3.5 shrink-0" />
             )}
-            {check.msg}
+            <span className="break-words">{check.msg}</span>
           </span>
         )}
         {onRun && (
-          <button type="button" onClick={onRun} className="btn-ghost text-xs">
+          <button type="button" onClick={onRun} className="btn-ghost shrink-0 text-xs">
             Test
           </button>
         )}

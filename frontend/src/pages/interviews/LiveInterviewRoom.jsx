@@ -197,10 +197,10 @@ export default function LiveInterviewRoom() {
   const question = interview.question || interview.questions?.[0];
 
   return (
-    <div className="-m-4 sm:-m-6 lg:-m-8 flex h-[calc(100vh-3.5rem)] flex-col bg-slate-950">
+    <div className="-m-4 flex min-h-[calc(100vh-3.5rem)] flex-col bg-slate-950 sm:-m-6 lg:-m-8 lg:h-[calc(100vh-3.5rem)]">
       {/* Toolbar */}
-      <header className="flex h-14 shrink-0 items-center justify-between border-b border-slate-800 bg-slate-950 px-4">
-        <div className="flex min-w-0 items-center gap-3">
+      <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-slate-800 bg-slate-950 px-3 sm:px-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <Link
             to="/interviews"
             className="rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
@@ -210,13 +210,13 @@ export default function LiveInterviewRoom() {
           </Link>
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-slate-100">{interview.title}</p>
-            <p className="text-[10px] text-slate-500">
+            <p className="truncate text-[10px] text-slate-500">
               {interview.jobRole} · {formatDateTime(interview.scheduledAt)}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <span className="hidden items-center gap-1 text-xs text-slate-500 sm:flex">
             <span
               className={`h-2 w-2 rounded-full ${connected ? 'bg-brand-emerald' : 'bg-amber-500'}`}
@@ -241,15 +241,16 @@ export default function LiveInterviewRoom() {
             #{roomCode?.slice(0, 8)}
             <Copy className="h-3 w-3" />
           </button>
-          <ParticipantList participants={participants} max={4} />
+          <ParticipantList participants={participants} max={4} className="hidden sm:flex" />
           {isInterviewer && (
             <button
               type="button"
               onClick={() => setCopilotOpen(true)}
-              className="btn-ghost text-xs"
+              className="btn-ghost px-2 text-xs"
               title="Open AI co-pilot"
             >
-              <Bot className="h-4 w-4 text-brand-indigo" /> AI
+              <Bot className="h-4 w-4 text-brand-indigo" />
+              <span className="hidden sm:inline">AI</span>
             </button>
           )}
           {isInterviewer && (
@@ -257,21 +258,22 @@ export default function LiveInterviewRoom() {
               type="button"
               onClick={() => setEndOpen(true)}
               disabled={ended}
-              className="btn-secondary text-xs text-rose-300"
+              className="btn-secondary px-2 text-xs text-rose-300 sm:px-4"
             >
-              <LogOut className="h-3.5 w-3.5" /> End
+              <LogOut className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">End</span>
             </button>
           )}
         </div>
       </header>
 
       {/* Workspace */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-y-auto lg:overflow-hidden">
         <SplitPane storageKey="sanchivue:room:split" initialLeft={62} className="flex-1">
           {/* LEFT pane: editor/whiteboard + test panel */}
-          <div className="flex h-full flex-col">
+          <div className="flex h-full min-h-[60vh] flex-col lg:min-h-0">
             {/* Sub-tabs for editor vs whiteboard */}
-            <div className="flex items-center gap-1 border-b border-slate-800 bg-slate-950 px-2 py-1">
+            <div className="flex shrink-0 items-center gap-1 border-b border-slate-800 bg-slate-950 px-2 py-1">
               <TabButton
                 active={leftTab === 'editor'}
                 onClick={() => setLeftTab('editor')}
@@ -284,15 +286,15 @@ export default function LiveInterviewRoom() {
                 icon={PenTool}
                 label="Whiteboard"
               />
-              <div className="ml-auto pr-2">
+              <div className="ml-auto flex min-w-0 items-center gap-2 pr-2">
                 {question && (
-                  <span className="text-[10px] text-slate-500">
+                  <span className="hidden truncate text-[10px] text-slate-500 sm:inline">
                     Question: {question.title}
                   </span>
                 )}
                 {snapshots.length > 0 && (
                   <span
-                    className="ml-2 rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400"
+                    className="shrink-0 rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400"
                     title="Code snapshots captured this session"
                   >
                     {snapshots.length} snaps
@@ -303,7 +305,7 @@ export default function LiveInterviewRoom() {
 
             {/* Problem statement (compact) */}
             {question && (
-              <details className="border-b border-slate-800 bg-slate-900/40 px-3 py-2">
+              <details className="shrink-0 border-b border-slate-800 bg-slate-900/40 px-3 py-2">
                 <summary className="cursor-pointer text-xs font-semibold text-slate-200">
                   {question.title}
                 </summary>
@@ -314,7 +316,7 @@ export default function LiveInterviewRoom() {
             )}
 
             <div className="flex flex-1 flex-col overflow-hidden">
-              <div className="flex-1 overflow-hidden">
+              <div className="min-h-[280px] flex-1 overflow-hidden lg:min-h-0">
                 {leftTab === 'editor' ? (
                   <CollaborativeEditor
                     initialCode={interview.initialCode || question?.starterCode?.[language] || ''}
@@ -330,7 +332,7 @@ export default function LiveInterviewRoom() {
                   <WhiteboardCanvas on={on} emit={emit} roomCode={roomCode} />
                 )}
               </div>
-              <div className="h-72 shrink-0 border-t border-slate-800">
+              <div className="h-64 shrink-0 border-t border-slate-800 sm:h-72">
                 {question ? (
                   <TestCasePanel
                     question={question}
@@ -350,8 +352,8 @@ export default function LiveInterviewRoom() {
           </div>
 
           {/* RIGHT pane: video + tabs (chat / proctoring / rubric) */}
-          <div className="flex h-full flex-col">
-            <div className="h-64 shrink-0 border-b border-slate-800">
+          <div className="flex h-full min-h-[50vh] flex-col lg:min-h-0">
+            <div className="h-56 shrink-0 border-b border-slate-800 sm:h-64">
               <VideoCallGrid
                 participants={participants}
                 currentUser={user}
@@ -361,8 +363,8 @@ export default function LiveInterviewRoom() {
                 roomCode={roomCode}
               />
             </div>
-            <div className="flex flex-1 flex-col overflow-hidden">
-              <div className="flex items-center gap-1 border-b border-slate-800 bg-slate-950 px-2 py-1">
+            <div className="flex min-h-[300px] flex-1 flex-col overflow-hidden lg:min-h-0">
+              <div className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-slate-800 bg-slate-950 px-2 py-1">
                 <TabButton
                   active={activeTab === 'chat'}
                   onClick={() => setActiveTab('chat')}

@@ -41,7 +41,7 @@ import { BRAND } from '../../constants/index.js';
 const STATS = [
   { label: 'Pre-seeded DSA problems', value: '5' },
   { label: 'Sandboxed execution languages', value: '4' },
-  { label: 'P99 code-sync latency', value: '<250ms' },
+  { label: 'Code-sync latency', value: '<250ms*' },
   { label: 'Structured rubric criteria', value: '8' },
 ];
 
@@ -296,7 +296,7 @@ function DeepDiveVisual({ kind }) {
   for (let i = 0; i < nums.length; i++) {
     const need = target - nums[i];
     if (seen.has(need)) {
-      return [seen.get(need), i];  ◀ Alex (interviewer)
+      return [seen.get(need), i];  ◀ Sanchit (interviewer)
     }
     seen.set(nums[i], i);
   }
@@ -347,7 +347,7 @@ function DeepDiveVisual({ kind }) {
         <div className="grid grid-cols-2 gap-2 p-3">
           <div className="rounded-lg bg-gradient-to-br from-brand-indigo/30 to-slate-900 p-4 text-center">
             <div className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-brand-indigo text-xs font-bold text-white">AI</div>
-            <p className="mt-2 text-[11px] text-slate-300">Alex · Interviewer</p>
+            <p className="mt-2 text-[11px] text-slate-300">Sanchit · Interviewer</p>
             <p className="text-[9px] text-brand-emerald">mic · cam on</p>
           </div>
           <div className="rounded-lg bg-gradient-to-br from-brand-emerald/30 to-slate-900 p-4 text-center">
@@ -579,6 +579,11 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-[10px] text-slate-600">
+            * Code-sync latency target on a same-region Socket.io round-trip.
+            Actual latency depends on network conditions, TURN relay, and the
+            browser&rsquo;s event-loop saturation. Not a contractual SLA.
+          </p>
         </div>
       </section>
 

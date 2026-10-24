@@ -163,6 +163,27 @@ export default function Navbar() {
                 >
                   Dashboard
                 </Link>
+                <Link
+                  to="/settings/notifications"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+                >
+                  <span className="flex items-center gap-2">
+                    <Bell className="h-4 w-4" /> Notifications
+                  </span>
+                  {unreadCount > 0 && (
+                    <span className="grid h-4 min-w-4 place-items-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">
+                      {unreadCount}
+                    </span>
+                  )}
+                </Link>
+                <Link
+                  to="/settings/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+                >
+                  Profile &amp; settings
+                </Link>
                 <button
                   type="button"
                   onClick={() => {

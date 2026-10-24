@@ -1,0 +1,979 @@
+     1→import { useEffect, useState } from 'react';
+     2→import { useNavigate, useSearchParams } from 'react-router-dom';
+     3→import toast from 'react-hot-toast';
+     4→import {
+     5→  ArrowRight,
+     6→  ArrowLeft,
+     7→  Check,
+     8→  Sparkles,
+     9→  Loader2,
+    10→  Copy,
+    11→  Mail,
+    12→  Plus,
+    13→  X,
+    14→  Layers,
+    15→} from 'lucide-react';
+    16→import interviewApi from '../../api/interview.api.js';
+    17→import { extractItems } from '../../api/axiosInstance.js';
+    18→import questionApi from '../../api/question.api.js';
+    19→import aiApi from '../../api/ai.api.js';
+    20→import templateApi from '../../api/template.api.js';
+    21→import Input from '../../components/forms/Input.jsx';
+    22→import Select from '../../components/forms/Select.jsx';
+    23→import {
+    24→  INTERVIEW_TYPE,
+    25→  INTERVIEW_TYPE_LABELS,
+    26→  DIFFICULTY,
+    27→  DIFFICULTY_LABELS,
+    28→  LANGUAGES,
+    29→  RUBRIC_CRITERIA,
+    30→} from '../../constants/index.js';
+    31→import { useOrganization } from '../../context/OrganizationContext.jsx';
+    32→
+    33→const STEPS = [
+    34→  { id: 'details', label: 'Details' },
+    35→  { id: 'questions', label: 'Questions' },
+    36→  { id: 'rubric', label: 'Rubric' },
+    37→  { id: 'access', label: 'Access' },
+    38→  { id: 'review', label: 'Review' },
+    39→];
+    40→
+    41→// Default state — kept outside the component so it's stable across renders.
+    42→const DEFAULT_STATE = {
+    43→  title: '',
+    44→  jobRole: '',
+    45→  candidateEmail: '',
+    46→  jobDescription: '',
+    47→  requiredSkills: [],
+    48→  type: INTERVIEW_TYPE.CODING,
+    49→  difficulty: DIFFICULTY.MEDIUM,
+    50→  scheduledAt: '',
+    51→  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+    52→  durationMinutes: 60,
+    53→  interviewers: [],
+    54→  questionIds: [],
+    55→  allowedLanguages: ['javascript', 'python'],
+    56→  candidateInstructions: '',
+    57→  aiPolicy: 'restricted',
+    58→  isPublic: false,
+    59→  rubric: Object.fromEntries(RUBRIC_CRITERIA.map((c) => [c.key, 5])),
+    60→};
+    61→
+    62→export default function InterviewCreateWizard() {
+    63→  const navigate = useNavigate();
+    64→  const { activeOrg } = useOrganization();
+    65→  const orgId = activeOrg?.id || activeOrg?._id;
+    66→  const [searchParams] = useSearchParams();
+    67→  const initialStep = searchParams.get('step') === 'jd' ? 'jd' : 'details';
+    68→  const [step, setStep] = useState(initialStep === 'jd' ? 'jd' : 'details');
+    69→  const [form, setForm] = useState(DEFAULT_STATE);
+    70→  const [questions, setQuestions] = useState([]);
+    71→  const [skillInput, setSkillInput] = useState('');
+    72→  const [interviewerInput, setInterviewerInput] = useState('');
+    73→  const [jd, setJd] = useState('');
+    74→  const [jdLoading, setJdLoading] = useState(false);
+    75→  const [jdResult, setJdResult] = useState(null);
+    76→  const [saving, setSaving] = useState(false);
+    77→  const [invitation, setInvitation] = useState(null);
+    78→  const [templates, setTemplates] = useState([]);
+    79→  const [templateLoading, setTemplateLoading] = useState(false);
+    80→
+    81→  // Pick up a template seed (set by TemplatesListPage on "Apply") on mount.
+    82→  useEffect(() => {
+    83→    const seedRaw = sessionStorage.getItem('sanchivue:templateSeed');
+    84→    if (!seedRaw) return;
+    85→    try {
+    86→      const seed = JSON.parse(seedRaw);
+    87→      setForm((p) => ({
+    88→        ...p,
+    89→        title: seed.title || p.title,
+    90→        jobRole: seed.jobRole || p.jobRole,
+    91→        type: seed.type || p.type,
+    92→        difficulty: seed.difficulty || p.difficulty,
+    93→        durationMinutes: seed.durationMinutes || p.durationMinutes,
+    94→        allowedLanguages: seed.allowedLanguages || p.allowedLanguages,
+    95→        questionIds: seed.questionIds || p.questionIds,
+    96→        rubric: { ...p.rubric, ...(seed.rubric || {}) },
+    97→        templateId: seed.templateId || null,
+    98→      }));
+    99→      if (seed.templateId) toast.success('Loaded from template — review and adjust as needed.');
+   100→    } catch {
+   101→      // ignore parse errors
+   102→    }
+   103→    sessionStorage.removeItem('sanchivue:templateSeed');
+   104→  }, []);
+   105→
+   106→  // Lazy-load the question bank when the user reaches the questions step.
+   107→  const loadQuestions = async () => {
+   108→    try {
+   109→      const res = await questionApi.list({ limit: 50 });
+   110→      setQuestions(extractItems(res));
+   111→    } catch {
+   112→      // ignore — toast handled by interceptor
+   113→    }
+   114→  };
+   115→
+   116→  // Load saved templates so the user can pick one as a starting point.
+   117→  const loadTemplates = async () => {
+   118→    if (!orgId) return;
+   119→    setTemplateLoading(true);
+   120→    try {
+   121→      const res = await templateApi.list({ orgId, limit: 25 });
+   122→      setTemplates(extractItems(res));
+   123→    } catch {
+   124→      // ignore — toast handled by interceptor
+   125→    } finally {
+   126→      setTemplateLoading(false);
+   127→    }
+   128→  };
+   129→
+   130→  // Trigger the lazy load whenever the step becomes 'questions'.
+   131→  useEffect(() => {
+   132→    if (step === 'questions') loadQuestions();
+   133→  }, [step]);
+   134→
+   135→  // Load templates once on mount so the "Load from template" dropdown is ready.
+   136→  useEffect(() => {
+   137→    loadTemplates();
+   138→    // eslint-disable-next-line react-hooks/exhaustive-deps
+   139→  }, [orgId]);
+   140→
+   141→  const applyTemplate = (tplId) => {
+   142→    const tpl = templates.find((t) => (t.id || t._id) === tplId);
+   143→    if (!tpl) return;
+   144→    setForm((p) => ({
+   145→      ...p,
+   146→      title: p.title || tpl.name,
+   147→      jobRole: tpl.jobRole || p.jobRole,
+   148→      type: tpl.type || p.type,
+   149→      difficulty: tpl.difficulty || p.difficulty,
+   150→      durationMinutes: tpl.durationMin || p.durationMinutes,
+   151→      allowedLanguages: tpl.allowedLanguages || p.allowedLanguages,
+   152→      questionIds: (tpl.questionIds || []).map((q) =>
+   153→        typeof q === 'string' ? q : q.id || q._id,
+   154→      ),
+   155→      rubric: { ...p.rubric, ...(tpl.rubric || {}) },
+   156→      templateId: tpl.id || tpl._id,
+   157→    }));
+   158→    toast.success(`Loaded "${tpl.name}". Review and adjust as needed.`);
+   159→  };
+   160→
+   161→  const set = (k, v) => setForm((p) => ({ ...p, [k]: v }));
+   162→
+   163→  const addSkill = () => {
+   164→    const v = skillInput.trim();
+   165→    if (!v) return;
+   166→    if (!form.requiredSkills.includes(v)) {
+   167→      set('requiredSkills', [...form.requiredSkills, v]);
+   168→    }
+   169→    setSkillInput('');
+   170→  };
+   171→
+   172→  const addInterviewer = () => {
+   173→    const v = interviewerInput.trim();
+   174→    if (!v) return;
+   175→    if (!form.interviewers.includes(v)) {
+   176→      set('interviewers', [...form.interviewers, v]);
+   177→    }
+   178→    setInterviewerInput('');
+   179→  };
+   180→
+   181→  const toggleLanguage = (id) => {
+   182→    set(
+   183→      'allowedLanguages',
+   184→      form.allowedLanguages.includes(id)
+   185→        ? form.allowedLanguages.filter((l) => l !== id)
+   186→        : [...form.allowedLanguages, id],
+   187→    );
+   188→  };
+   189→
+   190→  const toggleQuestion = (id) => {
+   191→    set(
+   192→      'questionIds',
+   193→      form.questionIds.includes(id)
+   194→        ? form.questionIds.filter((q) => q !== id)
+   195→        : [...form.questionIds, id],
+   196→    );
+   197→  };
+   198→
+   199→  const analyzeJd = async () => {
+   200→    if (!jd || jd.length < 20) {
+   201→      toast.error('Paste a longer job description first.');
+   202→      return;
+   203→    }
+   204→    setJdLoading(true);
+   205→    try {
+   206→      const res = await aiApi.assessment({ jd });
+   207→      const data = res?.data?.data || {};
+   208→      setJdResult(data);
+   209→      // Auto-fill fields from the AI result if present.
+   210→      if (data.jobRole) set('jobRole', data.jobRole);
+   211→      if (Array.isArray(data.requiredSkills))
+   212→        set('requiredSkills', data.requiredSkills);
+   213→      if (Array.isArray(data.suggestedQuestions))
+   214→        toast.success(`AI suggested ${data.suggestedQuestions.length} focus areas.`);
+   215→    } catch {
+   216→      // toast handled by interceptor
+   217→    } finally {
+   218→      setJdLoading(false);
+   219→    }
+   220→  };
+   221→
+   222→  const next = () => {
+   223→    if (step === 'jd') {
+   224→      setStep('details');
+   225→      return;
+   226→    }
+   227→    const idx = STEPS.findIndex((s) => s.id === step);
+   228→    if (idx < STEPS.length - 1) setStep(STEPS[idx + 1].id);
+   229→  };
+   230→  const prev = () => {
+   231→    if (step === 'jd') {
+   232→      navigate('/dashboard');
+   233→      return;
+   234→    }
+   235→    const idx = STEPS.findIndex((s) => s.id === step);
+   236→    if (idx > 0) setStep(STEPS[idx - 1].id);
+   237→  };
+   238→
+   239→  const submit = async () => {
+   240→    setSaving(true);
+   241→    try {
+   242→      // Auto-attach the active org so the backend's requireOrgMember middleware
+   243→      // has the context it needs.
+   244→      const payload = { ...form, orgId };
+   245→      const res = await interviewApi.create(payload);
+   246→      const interview = res?.data?.data?.interview || res?.data?.data;
+   247→      const interviewId = interview?.id || interview?._id;
+   248→      let invitationData = null;
+   249→      // If the interviewer entered a candidate email, auto-issue the secure
+   250→      // invitation link so the "done" step has something to share.
+   251→      if (interviewId && form.candidateEmail) {
+   252→        try {
+   253→          const invRes = await interviewApi.invite(interviewId, {
+   254→            email: form.candidateEmail,
+   255→          });
+   256→          invitationData = invRes?.data?.data || null;
+   257→        } catch {
+   258→          // Non-fatal — the interviewer can share the roomCode-based link manually.
+   259→        }
+   260→      }
+   261→      setInvitation({
+   262→        id: interviewId,
+   263→        title: interview?.title || form.title,
+   264→        candidateEmail: form.candidateEmail || '',
+   265→        token: invitationData?.token || null,
+   266→        link: invitationData?.inviteUrl || null,
+   267→        emailSent: invitationData?.emailSent === true,
+   268→      });
+   269→      toast.success('Interview created!');
+   270→      setStep('done');
+   271→    } catch {
+   272→      // toast handled by interceptor
+   273→    } finally {
+   274→      setSaving(false);
+   275→    }
+   276→  };
+   277→
+   278→  const copyLink = () => {
+   279→    if (invitation?.link) {
+   280→      navigator.clipboard.writeText(invitation.link);
+   281→      toast.success('Invitation link copied!');
+   282→    }
+   283→  };
+   284→
+   285→  const emailLink = () => {
+   286→    if (!invitation?.link) return;
+   287→    const subject = encodeURIComponent(
+   288→      `Sanchivue interview invitation${invitation.title ? ` — ${invitation.title}` : ''}`,
+   289→    );
+   290→    const body = encodeURIComponent(
+   291→      `Hi,\n\nYou've been invited to a live technical interview on Sanchivue.\n\nJoin here:\n${invitation.link}\n\nThis link expires in 7 days. Use a quiet, well-lit space and allow camera + microphone access.\n\nThanks,\n${invitation.title || 'Your interviewer'}`,
+   292→    );
+   293→    window.location.href = `mailto:${invitation.candidateEmail || ''}?subject=${subject}&body=${body}`;
+   294→    toast.success('Opening your email client…');
+   295→  };
+   296→
+   297→  const generateInvitation = async (email) => {
+   298→    if (!invitation?.id) return;
+   299→    try {
+   300→      const res = await interviewApi.invite(invitation.id, { email });
+   301→      const data = res?.data?.data || {};
+   302→      setInvitation((prev) => ({
+   303→        ...prev,
+   304→        candidateEmail: email,
+   305→        token: data.token,
+   306→        link: data.inviteUrl,
+   307→        emailSent: data.emailSent === true,
+   308→      }));
+   309→      toast.success(
+   310→        data.emailSent
+   311→          ? `Invitation sent to ${email}.`
+   312→          : `Invitation link generated. SMTP not configured — copy the link to share.`,
+   313→      );
+   314→    } catch {
+   315→      // toast handled by interceptor
+   316→    }
+   317→  };
+   318→
+   319→  // --- Step renderers ---
+   320→
+   321→  if (step === 'jd') {
+   322→    return (
+   323→      <div className="mx-auto max-w-3xl space-y-6">
+   324→        <div>
+   325→          <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-50">
+   326→            <Sparkles className="h-5 w-5 text-brand-indigo" /> AI Assessment Builder
+   327→          </h1>
+   328→          <p className="mt-1 text-sm text-slate-400">
+   329→            Paste a job description. We&apos;ll suggest the role, required skills, and
+   330→            focus areas — then drop you into the wizard pre-filled.
+   331→          </p>
+   332→        </div>
+   333→        <div className="card space-y-3 p-5">
+   334→          <label htmlFor="jd" className="block text-sm font-medium text-slate-200">
+   335→            Job description
+   336→          </label>
+   337→          <textarea
+   338→            id="jd"
+   339→            value={jd}
+   340→            onChange={(e) => setJd(e.target.value)}
+   341→            rows={10}
+   342→            className="input-base resize-y"
+   343→            placeholder="Paste the full job description here…"
+   344→          />
+   345→          <button
+   346→            type="button"
+   347→            onClick={analyzeJd}
+   348→            disabled={jdLoading}
+   349→            className="btn-primary text-sm"
+   350→          >
+   351→            {jdLoading ? (
+   352→              <>
+   353→                <Loader2 className="h-4 w-4 animate-spin" /> Analyzing…
+   354→              </>
+   355→            ) : (
+   356→              <>
+   357→                <Sparkles className="h-4 w-4" /> Analyze with AI
+   358→              </>
+   359→            )}
+   360→          </button>
+   361→        </div>
+   362→        {jdResult && (
+   363→          <div className="card p-5">
+   364→            <h3 className="text-sm font-semibold text-slate-100">AI suggestions</h3>
+   365→            <dl className="mt-3 grid grid-cols-1 gap-3 text-xs sm:grid-cols-2">
+   366→              <div>
+   367→                <dt className="text-slate-500">Detected role</dt>
+   368→                <dd className="text-slate-200">{jdResult.jobRole || '—'}</dd>
+   369→              </div>
+   370→              <div>
+   371→                <dt className="text-slate-500">Suggested difficulty</dt>
+   372→                <dd className="text-slate-200">{jdResult.difficulty || 'medium'}</dd>
+   373→              </div>
+   374→              <div className="sm:col-span-2">
+   375→                <dt className="text-slate-500">Required skills</dt>
+   376→                <dd className="mt-1 flex flex-wrap gap-1">
+   377→                  {(jdResult.requiredSkills || []).map((s) => (
+   378→                    <span
+   379→                      key={s}
+   380→                      className="badge bg-brand-indigo/15 text-brand-indigo"
+   381→                    >
+   382→                      {s}
+   383→                    </span>
+   384→                  ))}
+   385→                </dd>
+   386→              </div>
+   387→              {Array.isArray(jdResult.suggestedQuestions) &&
+   388→                jdResult.suggestedQuestions.length > 0 && (
+   389→                  <div className="sm:col-span-2">
+   390→                    <dt className="text-slate-500">Focus areas</dt>
+   391→                    <dd>
+   392→                      <ul className="mt-1 list-disc space-y-0.5 pl-5 text-slate-300">
+   393→                        {jdResult.suggestedQuestions.map((q, i) => (
+   394→                          <li key={i}>{typeof q === 'string' ? q : q.text || JSON.stringify(q)}</li>
+   395→                        ))}
+   396→                      </ul>
+   397→                    </dd>
+   398→                  </div>
+   399→                )}
+   400→            </dl>
+   401→          </div>
+   402→        )}
+   403→        <div className="flex justify-between">
+   404→          <button type="button" onClick={prev} className="btn-secondary text-sm">
+   405→            <ArrowLeft className="h-4 w-4" /> Cancel
+   406→          </button>
+   407→          <button type="button" onClick={next} className="btn-primary text-sm">
+   408→            Continue to wizard <ArrowRight className="h-4 w-4" />
+   409→          </button>
+   410→        </div>
+   411→      </div>
+   412→    );
+   413→  }
+   414→
+   415→  if (step === 'done' && invitation) {
+   416→    return (
+   417→      <div className="mx-auto max-w-2xl space-y-6">
+   418→        <div className="card p-6 text-center">
+   419→          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-brand-emerald/15 text-brand-emerald">
+   420→            <Check className="h-6 w-6" />
+   421→          </div>
+   422→          <h1 className="mt-4 text-2xl font-bold text-slate-50">Interview created</h1>
+   423→          <p className="mt-2 text-sm text-slate-400">
+   424→            Share this secure invitation link with your candidate. The link
+   425→            expires in 7 days.
+   426→          </p>
+   427→
+   428→          {invitation.link ? (
+   429→            <>
+   430→              <div className="mt-4 flex flex-col items-stretch gap-2 sm:flex-row">
+   431→                <input
+   432→                  readOnly
+   433→                  value={invitation.link}
+   434→                  className="input-base flex-1 font-mono text-xs"
+   435→                  aria-label="Invitation link"
+   436→                />
+   437→                <div className="flex gap-2">
+   438→                  <button type="button" onClick={copyLink} className="btn-secondary text-sm">
+   439→                    <Copy className="h-4 w-4" /> Copy
+   440→                  </button>
+   441→                  <button type="button" onClick={emailLink} className="btn-secondary text-sm">
+   442→                    <Mail className="h-4 w-4" /> Email
+   443→                  </button>
+   444→                </div>
+   445→              </div>
+   446→              {invitation.emailSent ? (
+   447→                <p className="mt-2 text-xs text-brand-emerald">
+   448→                  An invitation email was sent to {invitation.candidateEmail}.
+   449→                </p>
+   450→              ) : invitation.candidateEmail ? (
+   451→                <p className="mt-2 text-xs text-amber-300">
+   452→                  SMTP not configured — use the Email button to open your mail client.
+   453→                </p>
+   454→              ) : (
+   455→                <p className="mt-2 text-xs text-slate-500">
+   456→                  No candidate email was set — share the link manually.
+   457→                </p>
+   458→              )}
+   459→            </>
+   460→          ) : (
+   461→            <p className="mt-4 text-xs text-slate-500">
+   462→              No candidate email was set on the interview. Add one below to
+   463→              generate a shareable invitation link.
+   464→            </p>
+   465→          )}
+   466→
+   467→          {/* Generate / refresh invitation for an email */}
+   468→          <GenerateInvitationRow
+   469→            defaultEmail={invitation.candidateEmail}
+   470→            onGenerate={generateInvitation}
+   471→          />
+   472→
+   473→          <div className="mt-6 flex flex-col items-stretch justify-center gap-2 sm:flex-row">
+   474→            <button
+   475→              type="button"
+   476→              onClick={() => navigate(`/interviews/${invitation.id}`)}
+   477→              className="btn-secondary text-sm"
+   478→            >
+   479→              View details
+   480→            </button>
+   481→            <button
+   482→              type="button"
+   483→              onClick={() => navigate(`/interviews/${invitation.id}/room`)}
+   484→              className="btn-primary text-sm"
+   485→            >
+   486→              Enter room <ArrowRight className="h-4 w-4" />
+   487→            </button>
+   488→          </div>
+   489→        </div>
+   490→      </div>
+   491→    );
+   492→  }
+   493→
+   494→  const stepIdx = STEPS.findIndex((s) => s.id === step);
+   495→
+   496→  return (
+   497→    <div className="mx-auto max-w-4xl space-y-6">
+   498→      <div>
+   499→        <h1 className="text-2xl font-bold text-slate-50">Schedule Interview</h1>
+   500→        <p className="text-sm text-slate-500">Multi-step wizard — you can save as a draft at any time.</p>
+   501→      </div>
+   502→
+   503→      {/* Stepper */}
+   504→      <ol className="flex flex-wrap gap-2">
+   505→        {STEPS.map((s, i) => (
+   506→          <li key={s.id}>
+   507→            <button
+   508→              type="button"
+   509→              onClick={() => setStep(s.id)}
+   510→              className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+   511→                step === s.id
+   512→                  ? 'bg-brand-indigo text-white'
+   513→                  : i < stepIdx
+   514→                    ? 'bg-brand-emerald/15 text-brand-emerald'
+   515→                    : 'bg-slate-800 text-slate-400'
+   516→              }`}
+   517→              aria-current={step === s.id ? 'step' : undefined}
+   518→            >
+   519→              <span
+   520→                className={`grid h-5 w-5 place-items-center rounded-full text-[10px] ${
+   521→                  step === s.id
+   522→                    ? 'bg-white/20'
+   523→                    : i < stepIdx
+   524→                      ? 'bg-brand-emerald/30'
+   525→                      : 'bg-slate-700'
+   526→                }`}
+   527→              >
+   528→                {i < stepIdx ? <Check className="h-3 w-3" /> : i + 1}
+   529→              </span>
+   530→              {s.label}
+   531→            </button>
+   532→          </li>
+   533→        ))}
+   534→      </ol>
+   535→
+   536→      {/* Step content */}
+   537→      <div className="card p-5">
+   538→        {step === 'details' && (
+   539→          <div className="space-y-4">
+   540→            {/* Load from template */}
+   541→            {templates.length > 0 && (
+   542→              <div className="rounded-md border border-slate-800 bg-slate-950 p-3">
+   543→                <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+   544→                  <Layers className="h-3.5 w-3.5 text-brand-indigo" /> Load from template
+   545→                </p>
+   546→                <p className="mt-0.5 text-[11px] text-slate-500">
+   547→                  Apply a reusable question set + rubric in one click. You can still edit everything below.
+   548→                </p>
+   549→                <div className="mt-2 flex flex-wrap gap-1.5">
+   550→                  {templates.map((tpl) => (
+   551→                    <button
+   552→                      key={tpl.id || tpl._id}
+   553→                      type="button"
+   554→                      onClick={() => applyTemplate(tpl.id || tpl._id)}
+   555→                      className="rounded border border-slate-700 bg-slate-900 px-2 py-1 text-[11px] text-slate-200 hover:border-brand-indigo hover:bg-slate-800"
+   556→                    >
+   557→                      {tpl.name}
+   558→                    </button>
+   559→                  ))}
+   560→                  {templateLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-500" />}
+   561→                </div>
+   562→                <a
+   563→                  href="/templates/new"
+   564→                  className="mt-2 inline-block text-[11px] text-brand-indigo hover:underline"
+   565→                >
+   566→                  Manage templates →
+   567→                </a>
+   568→              </div>
+   569→            )}
+   570→            <Input
+   571→              label="Title"
+   572→              value={form.title}
+   573→              onChange={(e) => set('title', e.target.value)}
+   574→              placeholder="e.g. Senior Frontend Engineer — Round 2"
+   575→              required
+   576→            />
+   577→            <div className="grid gap-4 sm:grid-cols-2">
+   578→              <Input
+   579→                label="Job role"
+   580→                value={form.jobRole}
+   581→                onChange={(e) => set('jobRole', e.target.value)}
+   582→                placeholder="e.g. Senior Frontend Engineer"
+   583→                required
+   584→              />
+   585→              <Input
+   586→                label="Candidate email"
+   587→                type="email"
+   588→                value={form.candidateEmail}
+   589→                onChange={(e) => set('candidateEmail', e.target.value)}
+   590→                placeholder="candidate@email.com"
+   591→              />
+   592→            </div>
+   593→            <div>
+   594→              <label className="block text-sm font-medium text-slate-200">
+   595→                Job description
+   596→              </label>
+   597→              <textarea
+   598→                value={form.jobDescription}
+   599→                onChange={(e) => set('jobDescription', e.target.value)}
+   600→                rows={5}
+   601→                className="input-base mt-1.5 resize-y"
+   602→                placeholder="Paste or summarize the JD…"
+   603→                required
+   604→              />
+   605→            </div>
+   606→            <div>
+   607→              <label className="block text-sm font-medium text-slate-200">
+   608→                Required skills
+   609→              </label>
+   610→              <div className="mt-1.5 flex gap-2">
+   611→                <input
+   612→                  type="text"
+   613→                  value={skillInput}
+   614→                  onChange={(e) => setSkillInput(e.target.value)}
+   615→                  onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+   616→                  placeholder="Add a skill + Enter"
+   617→                  className="input-base flex-1"
+   618→                />
+   619→                <button type="button" onClick={addSkill} className="btn-secondary text-sm">
+   620→                  <Plus className="h-4 w-4" /> Add
+   621→                </button>
+   622→              </div>
+   623→              <div className="mt-2 flex flex-wrap gap-1">
+   624→                {form.requiredSkills.map((s) => (
+   625→                  <span
+   626→                    key={s}
+   627→                    className="badge bg-slate-800 text-slate-200"
+   628→                  >
+   629→                    {s}
+   630→                    <button
+   631→                      type="button"
+   632→                      onClick={() => set('requiredSkills', form.requiredSkills.filter((x) => x !== s))}
+   633→                      className="ml-1 hover:text-rose-400"
+   634→                      aria-label={`Remove ${s}`}
+   635→                    >
+   636→                      <X className="h-3 w-3" />
+   637→                    </button>
+   638→                  </span>
+   639→                ))}
+   640→              </div>
+   641→            </div>
+   642→            <div className="grid gap-4 sm:grid-cols-2">
+   643→              <Select
+   644→                label="Interview type"
+   645→                value={form.type}
+   646→                onChange={(e) => set('type', e.target.value)}
+   647→                options={Object.entries(INTERVIEW_TYPE_LABELS).map(([value, label]) => ({
+   648→                  value,
+   649→                  label,
+   650→                }))}
+   651→              />
+   652→              <Select
+   653→                label="Difficulty"
+   654→                value={form.difficulty}
+   655→                onChange={(e) => set('difficulty', e.target.value)}
+   656→                options={Object.entries(DIFFICULTY_LABELS).map(([value, label]) => ({
+   657→                  value,
+   658→                  label,
+   659→                }))}
+   660→              />
+   661→            </div>
+   662→            <div className="grid gap-4 sm:grid-cols-2">
+   663→              <Input
+   664→                label="Scheduled date & time"
+   665→                type="datetime-local"
+   666→                value={form.scheduledAt}
+   667→                onChange={(e) => set('scheduledAt', e.target.value)}
+   668→                required
+   669→              />
+   670→              <Input
+   671→                label="Timezone"
+   672→                value={form.timezone}
+   673→                onChange={(e) => set('timezone', e.target.value)}
+   674→              />
+   675→            </div>
+   676→            <div className="grid gap-4 sm:grid-cols-2">
+   677→              <Input
+   678→                label="Duration (minutes)"
+   679→                type="number"
+   680→                min={15}
+   681→                max={240}
+   682→                value={form.durationMinutes}
+   683→                onChange={(e) => set('durationMinutes', Number(e.target.value))}
+   684→              />
+   685→              <div>
+   686→                <label className="block text-sm font-medium text-slate-200">
+   687→                  Interviewers
+   688→                </label>
+   689→                <div className="mt-1.5 flex gap-2">
+   690→                  <input
+   691→                    type="email"
+   692→                    value={interviewerInput}
+   693→                    onChange={(e) => setInterviewerInput(e.target.value)}
+   694→                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addInterviewer())}
+   695→                    placeholder="Add interviewer email + Enter"
+   696→                    className="input-base flex-1"
+   697→                  />
+   698→                  <button type="button" onClick={addInterviewer} className="btn-secondary text-sm">
+   699→                    <Plus className="h-4 w-4" /> Add
+   700→                  </button>
+   701→                </div>
+   702→                <ul className="mt-2 space-y-1">
+   703→                  {form.interviewers.map((email) => (
+   704→                    <li
+   705→                      key={email}
+   706→                      className="flex items-center justify-between rounded bg-slate-800/50 px-2 py-1 text-xs text-slate-200"
+   707→                    >
+   708→                      <span>{email}</span>
+   709→                      <button
+   710→                        type="button"
+   711→                        onClick={() => set('interviewers', form.interviewers.filter((x) => x !== email))}
+   712→                        className="hover:text-rose-400"
+   713→                        aria-label={`Remove ${email}`}
+   714→                      >
+   715→                        <X className="h-3 w-3" />
+   716→                      </button>
+   717→                    </li>
+   718→                  ))}
+   719→                </ul>
+   720→              </div>
+   721→            </div>
+   722→          </div>
+   723→        )}
+   724→
+   725→        {step === 'questions' && (
+   726→          <div className="space-y-4">
+   727→            <div>
+   728→              <h3 className="text-sm font-semibold text-slate-100">Pick questions</h3>
+   729→              <p className="text-xs text-slate-500">
+   730→                You can also pick questions later from the question bank.
+   731→              </p>
+   732→            </div>
+   733→            <div className="space-y-2">
+   734→              {questions.length === 0 && (
+   735→                <p className="text-xs text-slate-500">
+   736→                  No questions yet —{' '}
+   737→                  <a href="/questions/new" className="text-brand-indigo hover:underline">
+   738→                    create one
+   739→                  </a>
+   740→                  .
+   741→                </p>
+   742→              )}
+   743→              {questions.map((q) => {
+   744→                const checked = form.questionIds.includes(q.id);
+   745→                return (
+   746→                  <label
+   747→                    key={q.id}
+   748→                    className={`flex cursor-pointer items-start gap-3 rounded-md border p-3 text-sm transition ${
+   749→                      checked
+   750→                        ? 'border-brand-indigo bg-brand-indigo/5'
+   751→                        : 'border-slate-800 bg-slate-950 hover:border-slate-700'
+   752→                    }`}
+   753→                  >
+   754→                    <input
+   755→                      type="checkbox"
+   756→                      checked={checked}
+   757→                      onChange={() => toggleQuestion(q.id)}
+   758→                      className="mt-0.5 h-4 w-4 accent-brand-indigo"
+   759→                    />
+   760→                    <div>
+   761→                      <p className="font-medium text-slate-100">{q.title}</p>
+   762→                      <p className="text-xs text-slate-500">
+   763→                        {q.difficulty} · {q.type}
+   764→                      </p>
+   765→                    </div>
+   766→                  </label>
+   767→                );
+   768→              })}
+   769→            </div>
+   770→            <div>
+   771→              <label className="block text-sm font-medium text-slate-200">
+   772→                Allowed languages
+   773→              </label>
+   774→              <div className="mt-2 flex flex-wrap gap-1.5">
+   775→                {LANGUAGES.map((l) => {
+   776→                  const active = form.allowedLanguages.includes(l.id);
+   777→                  return (
+   778→                    <button
+   779→                      key={l.id}
+   780→                      type="button"
+   781→                      onClick={() => toggleLanguage(l.id)}
+   782→                      className={`rounded px-2 py-1 text-xs font-medium transition ${
+   783→                        active
+   784→                          ? 'bg-brand-indigo text-white'
+   785→                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+   786→                      }`}
+   787→                      aria-pressed={active}
+   788→                    >
+   789→                      {l.label}
+   790→                    </button>
+   791→                  );
+   792→                })}
+   793→              </div>
+   794→            </div>
+   795→          </div>
+   796→        )}
+   797→
+   798→        {step === 'rubric' && (
+   799→          <div className="space-y-4">
+   800→            <div>
+   801→              <h3 className="text-sm font-semibold text-slate-100">Set the rubric</h3>
+   802→              <p className="text-xs text-slate-500">
+   803→                Default scores seed the live scorecard. The interviewer can adjust during the session.
+   804→              </p>
+   805→            </div>
+   806→            <ul className="space-y-3">
+   807→              {RUBRIC_CRITERIA.map((c) => (
+   808→                <li key={c.key}>
+   809→                  <div className="flex items-center justify-between text-sm">
+   810→                    <span className="font-medium text-slate-200">{c.label}</span>
+   811→                    <span className="font-mono text-slate-400">{form.rubric[c.key]}/10</span>
+   812→                  </div>
+   813→                  <input
+   814→                    type="range"
+   815→                    min={0}
+   816→                    max={10}
+   817→                    value={form.rubric[c.key]}
+   818→                    onChange={(e) =>
+   819→                      set('rubric', { ...form.rubric, [c.key]: Number(e.target.value) })
+   820→                    }
+   821→                    className="mt-1 h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-800 accent-brand-indigo"
+   822→                    aria-label={`${c.label} score`}
+   823→                  />
+   824→                  <p className="text-[11px] text-slate-500">{c.description}</p>
+   825→                </li>
+   826→              ))}
+   827→            </ul>
+   828→            <div>
+   829→              <label className="block text-sm font-medium text-slate-200">
+   830→                Candidate instructions
+   831→              </label>
+   832→              <textarea
+   833→                value={form.candidateInstructions}
+   834→                onChange={(e) => set('candidateInstructions', e.target.value)}
+   835→                rows={4}
+   836→                className="input-base mt-1.5 resize-y"
+   837→                placeholder="Share anything the candidate should know before joining…"
+   838→              />
+   839→            </div>
+   840→          </div>
+   841→        )}
+   842→
+   843→        {step === 'access' && (
+   844→          <div className="space-y-4">
+   845→            <div>
+   846→              <h3 className="text-sm font-semibold text-slate-100">Access &amp; AI policy</h3>
+   847→            </div>
+   848→            <label className="flex items-start gap-3 rounded-md border border-slate-800 bg-slate-950 p-3">
+   849→              <input
+   850→                type="checkbox"
+   851→                checked={form.isPublic}
+   852→                onChange={(e) => set('isPublic', e.target.checked)}
+   853→                className="mt-0.5 h-4 w-4 accent-brand-indigo"
+   854→              />
+   855→              <div>
+   856→                <p className="text-sm font-medium text-slate-100">Public interview</p>
+   857→                <p className="text-xs text-slate-500">
+   858→                  Anyone with the invitation link can join as the candidate.
+   859→                </p>
+   860→              </div>
+   861→            </label>
+   862→            <Select
+   863→              label="AI policy"
+   864→              value={form.aiPolicy}
+   865→              onChange={(e) => set('aiPolicy', e.target.value)}
+   866→              options={[
+   867→                { value: 'allowed', label: 'Allowed (candidate may use AI assistants)' },
+   868→                { value: 'restricted', label: 'Restricted (no AI assistants)' },
+   869→                { value: 'disabled', label: 'Disabled (strict no-AI mode)' },
+   870→              ]}
+   871→              hint="This is surfaced to the candidate in the waiting room."
+   872→            />
+   873→          </div>
+   874→        )}
+   875→
+   876→        {step === 'review' && (
+   877→          <div className="space-y-4">
+   878→            <h3 className="text-sm font-semibold text-slate-100">Review &amp; create</h3>
+   879→            <dl className="grid grid-cols-1 gap-3 text-xs sm:grid-cols-2">
+   880→              <Review label="Title" value={form.title} />
+   881→              <Review label="Job role" value={form.jobRole} />
+   882→              <Review label="Candidate email" value={form.candidateEmail || '—'} />
+   883→              <Review label="Type" value={INTERVIEW_TYPE_LABELS[form.type]} />
+   884→              <Review label="Difficulty" value={DIFFICULTY_LABELS[form.difficulty]} />
+   885→              <Review label="Duration" value={`${form.durationMinutes} min`} />
+   886→              <Review label="Timezone" value={form.timezone} />
+   887→              <Review label="Scheduled at" value={form.scheduledAt || '—'} />
+   888→              <Review label="Required skills" value={form.requiredSkills.join(', ') || '—'} />
+   889→              <Review label="Languages" value={form.allowedLanguages.join(', ')} />
+   890→              <Review label="Questions" value={`${form.questionIds.length} selected`} />
+   891→              <Review label="Interviewers" value={form.interviewers.join(', ') || '—'} />
+   892→              <Review label="AI policy" value={form.aiPolicy} />
+   893→              <Review label="Public" value={form.isPublic ? 'Yes' : 'No'} />
+   894→            </dl>
+   895→          </div>
+   896→        )}
+   897→      </div>
+   898→
+   899→      {/* Footer */}
+   900→      <div className="flex justify-between">
+   901→        <button type="button" onClick={prev} className="btn-secondary text-sm">
+   902→          <ArrowLeft className="h-4 w-4" /> Back
+   903→        </button>
+   904→        {step === 'review' ? (
+   905→          <button type="button" onClick={submit} disabled={saving} className="btn-primary text-sm">
+   906→            {saving ? (
+   907→              <>
+   908→                <Loader2 className="h-4 w-4 animate-spin" /> Creating…
+   909→              </>
+   910→            ) : (
+   911→              <>
+   912→                <Check className="h-4 w-4" /> Create interview
+   913→              </>
+   914→            )}
+   915→          </button>
+   916→        ) : (
+   917→          <button type="button" onClick={next} className="btn-primary text-sm">
+   918→            Continue <ArrowRight className="h-4 w-4" />
+   919→          </button>
+   920→        )}
+   921→      </div>
+   922→    </div>
+   923→  );
+   924→}
+   925→
+   926→function Review({ label, value }) {
+   927→  return (
+   928→    <div className="rounded-md bg-slate-950 p-2">
+   929→      <dt className="text-[10px] uppercase tracking-wider text-slate-500">{label}</dt>
+   930→      <dd className="mt-0.5 break-words text-slate-200">{value}</dd>
+   931→    </div>
+   932→  );
+   933→}
+   934→
+   935→// GenerateInvitationRow — lets the interviewer generate (or refresh) a secure
+   936→// invitation link for an arbitrary candidate email after the interview is
+   937→// created. Visible on the "done" step of the wizard.
+   938→function GenerateInvitationRow({ defaultEmail, onGenerate }) {
+   939→  const [email, setEmail] = useState(defaultEmail || '');
+   940→  const [busy, setBusy] = useState(false);
+   941→  const submit = async (e) => {
+   942→    e?.preventDefault();
+   943→    if (!email || !email.includes('@')) {
+   944→      toast.error('Enter a valid candidate email.');
+   945→      return;
+   946→    }
+   947→    setBusy(true);
+   948→    try {
+   949→      await onGenerate(email);
+   950→    } finally {
+   951→      setBusy(false);
+   952→    }
+   953→  };
+   954→  return (
+   955→    <form onSubmit={submit} className="mt-5 rounded-md border border-slate-800 bg-slate-950 p-3 text-left">
+   956→      <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+   957→        <Mail className="h-3.5 w-3.5 text-brand-indigo" /> Generate a fresh invitation link
+   958→      </p>
+   959→      <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+   960→        <input
+   961→          type="email"
+   962→          value={email}
+   963→          onChange={(e) => setEmail(e.target.value)}
+   964→          placeholder="candidate@email.com"
+   965→          className="input-base flex-1 text-xs"
+   966→          aria-label="Candidate email"
+   967→        />
+   968→        <button type="submit" disabled={busy} className="btn-secondary text-xs">
+   969→          {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+   970→          Generate link
+   971→        </button>
+   972→      </div>
+   973→      <p className="mt-1.5 text-[10px] text-slate-500">
+   974→        Each link is a high-entropy token scoped to this interview and expires in 7 days.
+   975→      </p>
+   976→    </form>
+   977→  );
+   978→}
+   979→

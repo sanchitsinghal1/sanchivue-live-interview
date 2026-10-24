@@ -3,11 +3,14 @@ import { ROLE_LABELS } from '../../constants/index.js';
 
 // ParticipantList — small inline list used in the live room toolbar.
 // Each participant gets a colored dot (deterministic from their id).
-export default function ParticipantList({ participants = [], max = 6 }) {
+export default function ParticipantList({ participants = [], max = 6, className = '' }) {
   const visible = participants.slice(0, max);
   const overflow = participants.length - visible.length;
   return (
-    <div className="flex items-center -space-x-2" aria-label={`${participants.length} participants`}>
+    <div
+      className={`flex items-center -space-x-2 ${className}`}
+      aria-label={`${participants.length} participants`}
+    >
       {visible.map((p) => {
         const dot = colorFromString(p.id || p.userId || p.email || p.name);
         return (

@@ -51,7 +51,7 @@ export default function AiCopilotDrawer({ open, onClose, code, questionStatement
   return (
     <Modal open={open} onClose={onClose} title="AI Co-Pilot" size="lg">
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-slate-400">
             Live analysis of the candidate&apos;s current code. For interviewer use only.
           </p>
@@ -59,7 +59,7 @@ export default function AiCopilotDrawer({ open, onClose, code, questionStatement
             type="button"
             onClick={analyze}
             disabled={loading || !code}
-            className="btn-primary text-xs"
+            className="btn-primary shrink-0 text-xs"
           >
             {loading ? (
               <>

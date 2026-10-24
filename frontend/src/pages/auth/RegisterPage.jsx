@@ -135,7 +135,7 @@ export default function RegisterPage() {
           label="Full name"
           name="name"
           icon={User}
-          placeholder="Jane Doe"
+          placeholder="Sanchit Singhal"
           autoComplete="name"
           error={errors.name?.message}
           {...register('name')}
