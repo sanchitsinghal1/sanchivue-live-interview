@@ -17,9 +17,11 @@
 
 ## Symbol meaning
 
-The Sanchivue mark is an abstract "S" formed by **two interlocking chevrons**. The interlock communicates **collaboration** (interviewer + candidate working together in real time). The forward-leaning geometry communicates **clarity, precision, and forward-looking engineering**. The gradient from indigo to emerald ties to the product's accent palette.
+The Sanchivue mark is an abstract **"S" monogram** drawn as a single bold stroke with an indigo→emerald gradient. Two accent **nodes** sit where the curve bends — representing the **interviewer and the candidate**, two minds collaborating on one problem. The interlock conveys collaboration + precision; the gradient ties to the brand palette.
 
-The symbol is designed to remain recognizable at 16×16 px (favicon) and to render crisply on both dark and light backgrounds.
+The rounded-square container ensures the mark reads cleanly on **both dark and light backgrounds** (the dark tile always makes the gradient pop).
+
+The symbol is designed to remain recognizable at 16×16 px (favicon) and to render crisply at any size.
 
 ## Color palette
 

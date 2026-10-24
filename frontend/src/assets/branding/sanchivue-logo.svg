@@ -1,19 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 32" fill="none">
-  <!-- Sanchivue horizontal logo = mark + wordmark.
-       Wordmark uses geometric letterforms so the logotype is crisp at any size. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 188 40" fill="none">
+  <!-- Sanchivue horizontal lockup: mark + wordmark.
+       The wordmark uses a tight, geometric tracking so it stays crisp at any size. -->
   <defs>
-    <linearGradient id="sv-logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#6366f1"/>
+    <linearGradient id="svLogoGrad" x1="6" y1="6" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#818cf8"/>
+      <stop offset="0.5" stop-color="#6366f1"/>
       <stop offset="1" stop-color="#10b981"/>
     </linearGradient>
   </defs>
-
   <!-- Mark -->
-  <rect x="0" y="0" width="32" height="32" rx="7" fill="#020617"/>
-  <path d="M8 21.5 L16 14 L24 21.5 L24 26 L16 19 L8 26 Z" fill="url(#sv-logo-grad)"/>
-  <path d="M8 12.5 L16 5 L24 12.5 L24 17 L16 10 L8 17 Z" fill="#10b981" opacity="0.85"/>
-  <circle cx="16" cy="15.5" r="1.4" fill="#020617"/>
-
-  <!-- Wordmark: "Sanchivue" — geometric sans with a subtle indigo→emerald gradient -->
-  <text x="42" y="22" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" letter-spacing="-0.5" fill="url(#sv-logo-grad)">Sanchivue</text>
+  <rect x="1" y="1" width="38" height="38" rx="10" fill="#0b0f1a"/>
+  <rect x="1" y="1" width="38" height="38" rx="10" stroke="#1e293b" stroke-width="1"/>
+  <path
+    d="M 27 12 C 27 9 23 8 19 8 C 14 8 12 11 12 14 C 12 17 15 18.5 19 19.5 C 24 20.7 28 22 28 25.5 C 28 30 24 32 19 32 C 14 32 11 30 11 27"
+    stroke="url(#svLogoGrad)"
+    stroke-width="5.4"
+    stroke-linecap="round"
+    fill="none"
+  />
+  <circle cx="12" cy="14" r="2.4" fill="#818cf8"/>
+  <circle cx="28" cy="25.5" r="2.4" fill="#10b981"/>
+  <!-- Wordmark -->
+  <text x="48" y="27" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" letter-spacing="-0.6" fill="#e2e8f0">Sanchivue</text>
 </svg>
