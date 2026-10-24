@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import organizationApi from '../api/organization.api.js';
+import { extractItems } from '../api/axiosInstance.js';
 import { useAuth } from './AuthContext.jsx';
 
 // OrganizationContext exposes the user's active org + members. We refetch on
@@ -17,7 +18,7 @@ export function OrganizationProvider({ children }) {
     setLoading(true);
     try {
       const res = await organizationApi.list();
-      const list = res?.data?.data || [];
+      const list = extractItems(res);
       setOrganizations(list);
       setActiveOrg((prev) => prev || list[0] || null);
     } catch {

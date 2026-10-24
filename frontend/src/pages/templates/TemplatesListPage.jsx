@@ -57,8 +57,9 @@ export default function TemplatesListPage() {
         q: search || undefined,
         limit: DEFAULT_PAGE_SIZE * 2,
       });
-      const data = res?.data?.data || [];
-      setItems(Array.isArray(data) ? data : data?.items || []);
+      const payload = res?.data?.data;
+      const data = Array.isArray(payload) ? payload : payload?.items || [];
+      setItems(data);
     } catch {
       // toast handled by interceptor
     } finally {

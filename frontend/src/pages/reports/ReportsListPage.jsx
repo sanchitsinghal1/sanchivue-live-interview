@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Loader2, FileText, Search } from 'lucide-react';
 import interviewApi from '../../api/interview.api.js';
+import { extractItems } from '../../api/axiosInstance.js';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import { INTERVIEW_STATUS } from '../../constants/index.js';
 import { formatDateTime, truncate } from '../../utils/formatters.js';
@@ -21,7 +22,7 @@ export default function ReportsListPage() {
         status: INTERVIEW_STATUS.COMPLETED,
         search: search || undefined,
       });
-      setItems(res?.data?.data || []);
+      setItems(extractItems(res));
     } catch {
       // toast handled by interceptor
     } finally {

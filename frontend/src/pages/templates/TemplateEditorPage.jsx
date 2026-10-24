@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import templateApi from '../../api/template.api.js';
+import { extractItems } from '../../api/axiosInstance.js';
 import questionApi from '../../api/question.api.js';
 import Input from '../../components/forms/Input.jsx';
 import Select from '../../components/forms/Select.jsx';
@@ -111,8 +112,7 @@ export default function TemplateEditorPage() {
   const loadQuestions = async () => {
     try {
       const res = await questionApi.list({ limit: 50, search: search || undefined });
-      const data = res?.data?.data || [];
-      setQuestions(Array.isArray(data) ? data : data?.items || []);
+      setQuestions(extractItems(res));
     } catch {
       // ignore
     }

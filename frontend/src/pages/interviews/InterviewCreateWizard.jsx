@@ -14,6 +14,7 @@ import {
   Layers,
 } from 'lucide-react';
 import interviewApi from '../../api/interview.api.js';
+import { extractItems } from '../../api/axiosInstance.js';
 import questionApi from '../../api/question.api.js';
 import aiApi from '../../api/ai.api.js';
 import templateApi from '../../api/template.api.js';
@@ -106,7 +107,7 @@ export default function InterviewCreateWizard() {
   const loadQuestions = async () => {
     try {
       const res = await questionApi.list({ limit: 50 });
-      setQuestions(res?.data?.data || []);
+      setQuestions(extractItems(res));
     } catch {
       // ignore — toast handled by interceptor
     }
@@ -118,8 +119,7 @@ export default function InterviewCreateWizard() {
     setTemplateLoading(true);
     try {
       const res = await templateApi.list({ orgId, limit: 25 });
-      const data = res?.data?.data || [];
-      setTemplates(Array.isArray(data) ? data : data?.items || []);
+      setTemplates(extractItems(res));
     } catch {
       // ignore — toast handled by interceptor
     } finally {

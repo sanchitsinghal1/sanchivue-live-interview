@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import notificationApi from '../api/notification.api.js';
+import { extractItems } from '../api/axiosInstance.js';
 import { useAuth } from './AuthContext.jsx';
 import { getSocket } from '../services/socket.js';
 
@@ -17,7 +18,7 @@ export function NotificationProvider({ children }) {
     if (!isAuthenticated) return;
     try {
       const res = await notificationApi.list({ limit: 20 });
-      const data = res?.data?.data || [];
+      const data = extractItems(res);
       setItems(data);
       setUnreadCount(data.filter((n) => !n.read).length);
     } catch {

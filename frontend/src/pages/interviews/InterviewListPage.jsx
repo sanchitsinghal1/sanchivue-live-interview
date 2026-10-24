@@ -37,9 +37,10 @@ export default function InterviewListPage() {
         status: status || undefined,
         search: search || undefined,
       });
-      const data = res?.data?.data || [];
-      setItems(Array.isArray(data) ? data : data?.items || []);
-      setTotalPages(res?.data?.pagination?.totalPages || 1);
+      const payload = res?.data?.data;
+      const data = Array.isArray(payload) ? payload : payload?.items || [];
+      setItems(data);
+      setTotalPages(payload?.totalPages || 1);
     } catch {
       // toast handled by interceptor
     } finally {

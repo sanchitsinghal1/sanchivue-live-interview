@@ -160,4 +160,14 @@ function redirectToLogin() {
   }
 }
 
+// Convenience: extract the paginated items array from a standardized
+// `{success, data: {items, total, page, limit, totalPages}}` response.
+// Falls back gracefully if `data` is already a bare array (older endpoints).
+export function extractItems(res) {
+  const payload = res?.data?.data;
+  if (Array.isArray(payload)) return payload;
+  if (payload && Array.isArray(payload.items)) return payload.items;
+  return [];
+}
+
 export default axiosInstance;

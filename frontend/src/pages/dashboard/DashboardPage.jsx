@@ -38,12 +38,21 @@ export default function DashboardPage() {
       setLoading(true);
       try {
         const res = await interviewApi.list({ limit: 50 });
-        const list = res?.data?.data || [];
+        // Backend returns { items, total, page, limit, totalPages } (aggregate
+        // pagination). Extract the items array defensively.
+        const payload = res?.data?.data;
+        const list = Array.isArray(payload)
+          ? payload
+          : payload?.items || [];
         if (active) setInterviews(list);
         if (isCandidate) {
           try {
             const subRes = await submissionApi.history({ limit: 10 });
-            if (active) setSubmissions(subRes?.data?.data || []);
+            const subPayload = subRes?.data?.data;
+            const subs = Array.isArray(subPayload)
+              ? subPayload
+              : subPayload?.items || [];
+            if (active) setSubmissions(subs);
           } catch {
             // ignore — candidate may have no submissions yet
           }

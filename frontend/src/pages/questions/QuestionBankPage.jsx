@@ -43,9 +43,10 @@ export default function QuestionBankPage() {
         tag: tag || undefined,
         search: search || undefined,
       });
-      const data = res?.data?.data || [];
-      setItems(Array.isArray(data) ? data : data?.items || []);
-      setTotalPages(res?.data?.pagination?.totalPages || 1);
+      const data = res?.data?.data;
+      const list = Array.isArray(data) ? data : data?.items || [];
+      setItems(list);
+      setTotalPages(data?.totalPages || 1);
     } catch {
       // toast handled by interceptor
     } finally {

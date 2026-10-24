@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Loader2, Mail, User } from 'lucide-react';
 import interviewApi from '../../api/interview.api.js';
+import { extractItems } from '../../api/axiosInstance.js';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import { getInitials, colorFromString, formatDate } from '../../utils/formatters.js';
 
@@ -16,7 +17,7 @@ export default function CandidatesListPage() {
     setLoading(true);
     try {
       const res = await interviewApi.list({ limit: 100, search: search || undefined });
-      const list = res?.data?.data || [];
+      const list = extractItems(res);
       // Group interviews by candidate email.
       const map = new Map();
       list.forEach((iv) => {
