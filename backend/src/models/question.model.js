@@ -56,6 +56,9 @@ const questionSchema = new mongoose.Schema(
     hiddenTests: { type: [testCaseSchema], default: [] },
     optimalTime: { type: String, default: '' }, // e.g. "O(N)"
     optimalSpace: { type: String, default: '' }, // e.g. "O(N)"
+    // Progressive hints shown to candidates (NOT secret — visible to candidates
+    // who want a nudge). Default empty so existing questions behave as before.
+    hints: { type: [String], default: [] },
     timeLimitMs: { type: Number, default: DEFAULT_TIME_LIMIT_MS },
     memoryLimitMb: { type: Number, default: DEFAULT_MEMORY_LIMIT_MB },
     allowedLanguages: { type: [String], enum: SUPPORTED_LANGUAGES, default: ['javascript'] },

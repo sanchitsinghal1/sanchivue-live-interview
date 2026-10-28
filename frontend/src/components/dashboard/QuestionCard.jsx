@@ -1,15 +1,38 @@
 import { Link } from 'react-router-dom';
-import { Code2 } from 'lucide-react';
+import { Code2, Bookmark, BookmarkCheck } from 'lucide-react';
 import { DIFFICULTY_LABELS, DIFFICULTY_COLORS } from '../../constants/index.js';
 import { truncate } from '../../utils/formatters.js';
 
 // QuestionCard — used in the question bank list.
-export default function QuestionCard({ question }) {
+// Optional `bookmarked` (boolean) controls the icon state; if
+// `onToggleBookmark` is supplied, an absolutely-positioned bookmark button is
+// rendered in the top-right corner of the card. The button stops propagation
+// so the surrounding Link doesn't navigate on click.
+export default function QuestionCard({ question, bookmarked = false, onToggleBookmark }) {
   return (
     <Link
       to={`/questions/${question.id}/edit`}
-      className="card flex h-full flex-col p-4 transition hover:border-slate-700"
+      className="card relative flex h-full flex-col p-4 transition hover:border-slate-700"
     >
+      {onToggleBookmark && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onToggleBookmark(question);
+          }}
+          className="absolute right-2 top-2 rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-amber-300"
+          aria-label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+          aria-pressed={bookmarked}
+        >
+          {bookmarked ? (
+            <BookmarkCheck className="h-4 w-4 text-amber-300" />
+          ) : (
+            <Bookmark className="h-4 w-4" />
+          )}
+        </button>
+      )}
       <div className="mb-2 flex items-center gap-2">
         <span className={`badge ${DIFFICULTY_COLORS[question.difficulty]}`}>
           {DIFFICULTY_LABELS[question.difficulty]}

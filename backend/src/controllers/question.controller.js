@@ -6,7 +6,7 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { aggregatePaginate } from '../utils/aggregationPagination.js';
 import { getPagination } from '../utils/pagination.js';
-import { generateAssessmentFromJD } from '../services/ai.service.js';
+import { generateAssessmentFromJD, generateQuestion } from '../services/ai.service.js';
 
 // POST /api/v1/questions
 export const createQuestion = asyncHandler(async (req, res) => {
@@ -49,6 +49,7 @@ export const listQuestions = asyncHandler(async (req, res) => {
       timeLimitMs: 1,
       memoryLimitMb: 1,
       allowedLanguages: 1,
+      hints: 1,
       createdBy: 1,
       orgId: 1,
       createdAt: 1,
@@ -96,6 +97,7 @@ export const updateQuestion = asyncHandler(async (req, res) => {
     'memoryLimitMb',
     'allowedLanguages',
     'isArchived',
+    'hints',
   ];
   for (const k of allowed) {
     if (req.body[k] !== undefined) update[k] = req.body[k];
@@ -114,6 +116,40 @@ export const deleteQuestion = asyncHandler(async (req, res) => {
   );
   if (!question) throw new ApiError(404, 'Question not found.');
   return res.status(200).json(new ApiResponse(200, { question }, 'Question archived'));
+});
+
+// POST /api/v1/questions/ai-generate-question — single-question AI generator.
+// Returns a question preview (NOT persisted) matching the Question schema.
+// The user reviews the preview in the editor and clicks Save, which calls the
+// normal createQuestion. The `aiLimiter` rate-limit is applied at the route
+// layer (see question.routes.js) so this controller can assume the request is
+// under the per-window cap.
+export const aiGenerateQuestion = asyncHandler(async (req, res) => {
+  const { topic, difficulty, type } = req.body || {};
+  if (!topic || typeof topic !== 'string' || topic.trim().length < 2) {
+    throw new ApiError(400, 'topic is required (min 2 chars).');
+  }
+  const orgId = req.body.orgId || req.orgId;
+  // We don't strictly require an orgId to GENERATE (the AI doesn't need it),
+  // but we DO need it to dedupe the slug against the org. If absent, we skip
+  // the duplicate check — the controller just returns the slug as-is and the
+  // createQuestion endpoint will reject on save if it collides.
+  const question = await generateQuestion(
+    { topic: topic.trim(), difficulty, type },
+    { userId: req.user._id, orgId },
+  );
+  // Duplicate detection: if the slug is taken in this org, append a short
+  // random suffix so the user can save without a conflict.
+  if (orgId && question.slug) {
+    const exists = await Question.exists({ orgId, slug: question.slug });
+    if (exists) {
+      const suffix = Math.random().toString(36).slice(2, 6);
+      question.slug = `${question.slug}-${suffix}`.slice(0, 80);
+    }
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { question }, 'AI-generated question preview'));
 });
 
 // POST /api/v1/questions/ai-generate — JD → blueprint (preview; doesn't persist).

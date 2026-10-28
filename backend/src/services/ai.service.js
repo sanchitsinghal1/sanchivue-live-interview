@@ -6,7 +6,7 @@
 //   no API key. So every public method below tries the SDK first, then falls back
 //   to a heuristic that returns the same shape the LLM would have returned.
 import { env } from '../config/env.js';
-import { APP_NAME } from '../config/constants.js';
+import { APP_NAME, DIFFICULTY_VALUES } from '../config/constants.js';
 import AIInteraction from '../models/aiInteraction.model.js';
 import { getDbState } from '../db/index.js';
 
@@ -193,6 +193,62 @@ Do not include any text outside the JSON.`;
     durationMs: Date.now() - startedAt,
     success: !!raw,
     interviewId: ctx.interviewId,
+    orgId: ctx.orgId,
+  });
+  return parsed;
+}
+
+// ---------------------------------------------------------------------------
+// PUBLIC: generateQuestion — used by the AI Question Generator in QuestionBank
+// ---------------------------------------------------------------------------
+// Returns a single-question preview matching the Question schema:
+//   { title, slug, difficulty, tags[], statement, constraints, examples[],
+//     starterCode{javascript}, publicTests[], hiddenTests[],
+//     optimalTime, optimalSpace, hints[] }
+// Falls back to a deterministic local question picked from a small built-in bank
+// indexed by topic+difficulty — so the AI Generate button ALWAYS returns rich
+// output, even without an API key. The slug is made unique by the controller
+// (which appends a random suffix if it collides with an existing question in
+// the org).
+export async function generateQuestion({ topic, difficulty, type } = {}, ctx = {}) {
+  const startedAt = Date.now();
+  const safeTopic = (topic || 'general').toString().slice(0, 120);
+  const safeDifficulty = DIFFICULTY_VALUES.includes(difficulty) ? difficulty : 'Medium';
+  const safeType = (type || 'coding').toString().toLowerCase();
+  const fallback = localGenerateQuestion({ topic: safeTopic, difficulty: safeDifficulty, type: safeType });
+  const systemPrompt = `You are a Sanchivue interview-question author. Return STRICT JSON only — no prose, no markdown fences — describing a single interview question.
+Required shape:
+{
+  "title": string (<=200 chars),
+  "slug": string (lowercase, dash-separated, [a-z0-9-]+, <=80 chars),
+  "difficulty": "${DIFFICULTY_VALUES.join('" | "')}",
+  "tags": string[] (1-5 short tags like "Arrays", "Hashing", "Sliding Window"),
+  "statement": string (markdown — describe the problem; include input/output expectations; >=50 chars),
+  "constraints": string (markdown — list of constraints, e.g. "1 <= n <= 10^5"),
+  "examples": [{ "input": string, "output": string, "explanation": string }],
+  "starterCode": { "javascript": string },
+  "publicTests": [{ "input": string, "expectedOutput": string, "explanation": string }],
+  "hiddenTests": [{ "input": string, "expectedOutput": string, "explanation": string }],
+  "optimalTime": string (e.g. "O(N)"),
+  "optimalSpace": string (e.g. "O(1)"),
+  "hints": string[] (0-3 progressive hints, no spoilers)
+}
+The "input" / "expectedOutput" fields MUST be valid JSON strings (JSON.stringify-able). For function-style problems, use a JSON array for input args and a JSON scalar/array for expectedOutput. Include 1-2 publicTests and 2-3 hiddenTests. Do not include any text outside the JSON object.`;
+  const userPrompt = `Topic: ${safeTopic}\nDifficulty: ${safeDifficulty}\nType: ${safeType}`;
+  const raw = await callZai(systemPrompt, userPrompt);
+  let parsed = parseJsonLenient(raw, fallback);
+  // Defensive: coerce / validate the LLM output into the Question schema. If
+  // validation fails we surface the local fallback rather than a raw LLM error
+  // (per the spec — the user should never see "raw LLM error").
+  parsed = coerceQuestion(parsed, { topic: safeTopic, difficulty: safeDifficulty, type: safeType, fallback });
+  await logInteraction({
+    userId: ctx.userId,
+    kind: 'question',
+    prompt: userPrompt,
+    response: raw || JSON.stringify(fallback),
+    model: raw ? env.AI_MODEL || env.AI_PROVIDER || 'z-ai' : 'local-fallback',
+    durationMs: Date.now() - startedAt,
+    success: !!raw,
     orgId: ctx.orgId,
   });
   return parsed;
@@ -456,9 +512,350 @@ function localGenerateFollowups(topic) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// LOCAL FALLBACK QUESTION BANK (used by generateQuestion when the LLM is down).
+// ---------------------------------------------------------------------------
+// A small but reasonable bank of DSA questions tagged by topic + difficulty.
+// The topic string the user picks is matched loosely (substring) so the
+// generator returns the closest match.
+const QUESTION_BANK = [
+  {
+    topic: 'arrays',
+    difficulty: 'Easy',
+    question: {
+      title: 'Two Sum',
+      slug: 'two-sum',
+      difficulty: 'Easy',
+      tags: ['Arrays', 'Hashing'],
+      statement:
+        'Given an array of integers `nums` and an integer `target`, return the indices of the two numbers that add up to `target`. Each input has exactly one solution, and you may not use the same element twice. Return the answer in any order.',
+      constraints: '2 <= nums.length <= 10^4\n-10^9 <= nums[i] <= 10^9\nOnly one valid answer exists.',
+      examples: [
+        {
+          input: 'nums = [2,7,11,15], target = 9',
+          output: '[0,1]',
+          explanation: 'nums[0] + nums[1] == 9, so we return [0, 1].',
+        },
+      ],
+      starterCode: {
+        javascript:
+          '/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number[]}\n */\nvar twoSum = function(nums, target) {\n  // your code here\n};\n',
+      },
+      publicTests: [
+        { input: '[2,7,11,15]\n9', expectedOutput: '[0,1]', explanation: 'Two-sum pair at indices 0 and 1.' },
+      ],
+      hiddenTests: [
+        { input: '[3,2,4]\n6', expectedOutput: '[1,2]', explanation: '' },
+        { input: '[3,3]\n6', expectedOutput: '[0,1]', explanation: 'Two distinct indices with the same value.' },
+      ],
+      optimalTime: 'O(N)',
+      optimalSpace: 'O(N)',
+      hints: [
+        'A brute-force O(N^2) check works but is too slow. Can you remember the value you have already seen?',
+        'Use a hash map from value to index — for each nums[i], check if target - nums[i] is already in the map.',
+      ],
+    },
+  },
+  {
+    topic: 'strings',
+    difficulty: 'Easy',
+    question: {
+      title: 'Valid Parentheses',
+      slug: 'valid-parentheses',
+      difficulty: 'Easy',
+      tags: ['Stack', 'Strings'],
+      statement:
+        'Given a string `s` containing just the characters `(`, `)`, `{`, `}`, `[` and `]`, determine if the input string is valid. An input string is valid if open brackets are closed by the same type of brackets, in the correct order, and every close bracket has a corresponding open bracket of the same type.',
+      constraints: '1 <= s.length <= 10^4\ns consists of parentheses only.',
+      examples: [
+        { input: 's = "()"', output: 'true', explanation: 'Open then close of the same type.' },
+        { input: 's = "()[]{}"', output: 'true', explanation: '' },
+        { input: 's = "(]"', output: 'false', explanation: 'Mismatched bracket type.' },
+      ],
+      starterCode: {
+        javascript:
+          '/**\n * @param {string} s\n * @return {boolean}\n */\nvar isValid = function(s) {\n  // your code here\n};\n',
+      },
+      publicTests: [
+        { input: '"()"', expectedOutput: 'true', explanation: '' },
+        { input: '"(]"', expectedOutput: 'false', explanation: '' },
+      ],
+      hiddenTests: [
+        { input: '"([)]"', expectedOutput: 'false', explanation: 'Brackets interleave incorrectly.' },
+        { input: '"{[]}"', expectedOutput: 'true', explanation: '' },
+      ],
+      optimalTime: 'O(N)',
+      optimalSpace: 'O(N)',
+      hints: [
+        'Use a stack: push openers, pop on closers and verify the match.',
+        'At the end, the stack must be empty.',
+      ],
+    },
+  },
+  {
+    topic: 'arrays',
+    difficulty: 'Medium',
+    question: {
+      title: 'Merge Intervals',
+      slug: 'merge-intervals',
+      difficulty: 'Medium',
+      tags: ['Arrays', 'Sorting'],
+      statement:
+        'Given an array of `intervals` where `intervals[i] = [start_i, end_i]`, merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the input intervals.',
+      constraints: '1 <= intervals.length <= 10^4\nintervals[i].length == 2\n0 <= start_i <= end_i <= 10^4',
+      examples: [
+        { input: 'intervals = [[1,3],[2,6],[8,10],[15,18]]', output: '[[1,6],[8,10],[15,18]]', explanation: 'Intervals [1,3] and [2,6] overlap, merged into [1,6].' },
+      ],
+      starterCode: {
+        javascript:
+          '/**\n * @param {number[][]} intervals\n * @return {number[][]}\n */\nvar merge = function(intervals) {\n  // your code here\n};\n',
+      },
+      publicTests: [
+        { input: '[[1,3],[2,6],[8,10],[15,18]]', expectedOutput: '[[1,6],[8,10],[15,18]]', explanation: '' },
+      ],
+      hiddenTests: [
+        { input: '[[1,4],[4,5]]', expectedOutput: '[[1,5]]', explanation: 'Touching intervals are merged.' },
+        { input: '[[1,4],[0,4]]', expectedOutput: '[[0,4]]', explanation: '' },
+      ],
+      optimalTime: 'O(N log N)',
+      optimalSpace: 'O(N)',
+      hints: [
+        'Sort by start time first.',
+        'Iterate, and merge when the next interval starts before the current one ends.',
+      ],
+    },
+  },
+  {
+    topic: 'design',
+    difficulty: 'Medium',
+    question: {
+      title: 'LRU Cache',
+      slug: 'lru-cache',
+      difficulty: 'Medium',
+      tags: ['Design', 'Hashing', 'Linked List'],
+      statement:
+        'Design a data structure that follows the constraints of a **Least Recently Used (LRU) cache**. Implement the `LRUCache` class with `get(key)` returning the value if it exists (else -1) and marking it as recently used, and `put(key, value)` updating or inserting the value. When the cache reaches its capacity, it should evict the least recently used key. Both operations must run in **O(1)** average time.',
+      constraints: '1 <= capacity <= 3000\n0 <= key <= 10^4\n0 <= value <= 10^5\nAt most 2 * 10^5 calls will be made to get and put.',
+      examples: [
+        {
+          input: 'capacity = 2; put(1,1); put(2,2); get(1); put(3,3); get(2); put(4,4); get(1); get(3); get(4)',
+          output: '[1,-1,-1,3,4]',
+          explanation: 'Eviction order shows the LRU policy at each step.',
+        },
+      ],
+      starterCode: {
+        javascript:
+          '/**\n * @param {number} capacity\n */\nvar LRUCache = function(capacity) {\n  // your code here\n};\n\n/** \n * @param {number} key\n * @return {number}\n */\nLRUCache.prototype.get = function(key) {\n  // your code here\n};\n\n/** \n * @param {number} key \n * @param {number} value\n * @return {void}\n */\nLRUCache.prototype.put = function(key, value) {\n  // your code here\n};\n',
+      },
+      publicTests: [
+        { input: '2|put(1,1)|put(2,2)|get(1)|put(3,3)|get(2)', expectedOutput: '1|-1', explanation: '' },
+      ],
+      hiddenTests: [
+        { input: '1|put(2,1)|get(2)|put(3,2)|get(2)|get(3)', expectedOutput: '1|-1|2', explanation: '' },
+      ],
+      optimalTime: 'O(1)',
+      optimalSpace: 'O(capacity)',
+      hints: [
+        'A Map in JavaScript already preserves insertion order — use it for the O(1) get/put operations.',
+        'On get/put, delete + re-set the key so it becomes the most recently used.',
+      ],
+    },
+  },
+  {
+    topic: 'strings',
+    difficulty: 'Medium',
+    question: {
+      title: 'Longest Substring Without Repeating Characters',
+      slug: 'longest-substring-without-repeating',
+      difficulty: 'Medium',
+      tags: ['Sliding Window', 'Strings', 'Hashing'],
+      statement:
+        'Given a string `s`, find the length of the **longest substring** without repeating characters.',
+      constraints: '0 <= s.length <= 5 * 10^4\ns consists of English letters, digits, symbols, and spaces.',
+      examples: [
+        { input: 's = "abcabcbb"', output: '3', explanation: 'The answer is "abc" with length 3.' },
+        { input: 's = "bbbbb"', output: '1', explanation: 'The answer is "b" with length 1.' },
+      ],
+      starterCode: {
+        javascript:
+          '/**\n * @param {string} s\n * @return {number}\n */\nvar lengthOfLongestSubstring = function(s) {\n  // your code here\n};\n',
+      },
+      publicTests: [
+        { input: '"abcabcbb"', expectedOutput: '3', explanation: '' },
+        { input: '"bbbbb"', expectedOutput: '1', explanation: '' },
+      ],
+      hiddenTests: [
+        { input: '"pwwkew"', expectedOutput: '3', explanation: 'Answer is "wke" (or "kew").' },
+        { input: '""', expectedOutput: '0', explanation: '' },
+      ],
+      optimalTime: 'O(N)',
+      optimalSpace: 'O(min(N, alphabet))',
+      hints: [
+        'Maintain a sliding window with two pointers + a Set of in-window characters.',
+        'When a duplicate is encountered, shrink the window from the left until the duplicate is gone.',
+      ],
+    },
+  },
+  {
+    topic: 'graphs',
+    difficulty: 'Hard',
+    question: {
+      title: 'Word Ladder',
+      slug: 'word-ladder',
+      difficulty: 'Hard',
+      tags: ['BFS', 'Graphs', 'Strings'],
+      statement:
+        'Given two words `beginWord` and `endWord`, and a dictionary `wordList`, return the **number of words** in the shortest transformation sequence from `beginWord` to `endWord` where each transformed word must exist in `wordList`, and only one letter can be changed at a time. Return `0` if no such sequence exists.',
+      constraints: '1 <= beginWord.length <= 10\nendWord.length == beginWord.length\n1 <= wordList.length <= 5000\nAll words consist of lowercase English letters.',
+      examples: [
+        { input: 'beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]', output: '5', explanation: 'Shortest: hit -> hot -> dot -> dog -> cog.' },
+      ],
+      starterCode: {
+        javascript:
+          '/**\n * @param {string} beginWord\n * @param {string} endWord\n * @param {string[]} wordList\n * @return {number}\n */\nvar ladderLength = function(beginWord, endWord, wordList) {\n  // your code here\n};\n',
+      },
+      publicTests: [
+        { input: '"hit"|"cog"|["hot","dot","dog","lot","log","cog"]', expectedOutput: '5', explanation: '' },
+      ],
+      hiddenTests: [
+        { input: '"hit"|"cog"|["hot","dot","dog","lot","log"]', expectedOutput: '0', explanation: 'endWord not in wordList.' },
+      ],
+      optimalTime: 'O(N * M^2)',
+      optimalSpace: 'O(N * M^2)',
+      hints: [
+        'BFS from beginWord gives the shortest path in this unweighted graph.',
+        'Generate intermediate wildcard words ("h*t") to precompute adjacency in O(M) per word.',
+      ],
+    },
+  },
+];
+
+// Pick the closest matching local question by topic keyword + difficulty.
+// Falls back to a generic "Arrays / Easy" entry if nothing matches.
+function localGenerateQuestion({ topic, difficulty, type }) {
+  const t = (topic || '').toLowerCase();
+  // Score each bank entry by how well it matches topic + difficulty.
+  let best = null;
+  let bestScore = -1;
+  for (const entry of QUESTION_BANK) {
+    let score = 0;
+    if (t.includes(entry.topic)) score += 2;
+    if (entry.difficulty === difficulty) score += 3;
+    else if (entry.difficulty === 'Medium') score += 1;
+    if (score > bestScore) {
+      bestScore = score;
+      best = entry;
+    }
+  }
+  // If nothing matched at all, default to Two Sum.
+  if (!best) best = QUESTION_BANK[0];
+  const q = best.question;
+  // If the requested difficulty differs, override it (but keep everything else).
+  if (difficulty && q.difficulty !== difficulty) {
+    q.difficulty = difficulty;
+  }
+  // Stash the requested type as a hint (the Question model doesn't have a `type`
+  // field — we keep it in tags for now).
+  if (type && type !== 'coding' && !q.tags.includes(type)) {
+    q.tags = [...q.tags, type];
+  }
+  // Deep clone so the bank entry isn't mutated across calls.
+  return JSON.parse(JSON.stringify(q));
+}
+
+// Coerce an LLM-generated question object into the strict Question schema.
+// Returns the fallback if any structural validation fails — never throws.
+function coerceQuestion(input, { topic, difficulty, type, fallback }) {
+  if (!input || typeof input !== 'object') return fallback;
+  const out = { ...fallback, ...input };
+  // Title
+  if (typeof out.title !== 'string' || out.title.trim().length < 3) {
+    out.title = fallback.title;
+  } else {
+    out.title = out.title.trim().slice(0, 200);
+  }
+  // Slug — slug-safe lowercase + dashes only. We DON'T add a random suffix
+  // here; the controller does that after a duplicate check against the org.
+  let slug = typeof out.slug === 'string' ? out.slug.toLowerCase().trim() : fallback.slug;
+  slug = slug.replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+  if (!/^[a-z0-9-]+$/.test(slug) || slug.length < 1) slug = fallback.slug;
+  out.slug = slug.slice(0, 80);
+  // Difficulty — must be one of DIFFICULTY_VALUES.
+  if (!DIFFICULTY_VALUES.includes(out.difficulty)) out.difficulty = difficulty || 'Medium';
+  // Tags
+  if (!Array.isArray(out.tags)) out.tags = fallback.tags;
+  else out.tags = out.tags.filter((t) => typeof t === 'string' && t.length).slice(0, 20);
+  // Statement
+  if (typeof out.statement !== 'string' || out.statement.trim().length < 10) {
+    out.statement = fallback.statement;
+  }
+  // Constraints
+  if (typeof out.constraints !== 'string') out.constraints = '';
+  // Examples
+  if (!Array.isArray(out.examples)) out.examples = fallback.examples;
+  else
+    out.examples = out.examples
+      .filter((e) => e && typeof e === 'object')
+      .map((e) => ({
+        input: String(e.input ?? ''),
+        output: String(e.output ?? ''),
+        explanation: String(e.explanation ?? ''),
+      }))
+      .filter((e) => e.input && e.output)
+      .slice(0, 8);
+  // Starter code
+  if (!out.starterCode || typeof out.starterCode !== 'object') {
+    out.starterCode = fallback.starterCode;
+  } else {
+    // Ensure each starter-code language is a string.
+    const sc = {};
+    for (const lang of ['javascript', 'python', 'java', 'cpp']) {
+      if (typeof out.starterCode[lang] === 'string') sc[lang] = out.starterCode[lang];
+    }
+    if (!sc.javascript) sc.javascript = fallback.starterCode.javascript || '';
+    out.starterCode = sc;
+  }
+  // Validate tests: input + expectedOutput must each be a parseable JSON string.
+  // If they aren't, we drop that test rather than failing the whole response.
+  function cleanTests(list) {
+    if (!Array.isArray(list)) return [];
+    return list
+      .filter((t) => t && typeof t === 'object')
+      .map((t) => ({
+        input: String(t.input ?? ''),
+        expectedOutput: String(t.expectedOutput ?? ''),
+        explanation: String(t.explanation ?? ''),
+      }))
+      .filter((t) => t.input && t.expectedOutput)
+      .slice(0, 20);
+  }
+  out.publicTests = cleanTests(out.publicTests);
+  out.hiddenTests = cleanTests(out.hiddenTests);
+  if (out.publicTests.length === 0) out.publicTests = fallback.publicTests;
+  if (out.hiddenTests.length === 0) out.hiddenTests = fallback.hiddenTests;
+  // Optimal complexity strings
+  if (typeof out.optimalTime !== 'string') out.optimalTime = fallback.optimalTime;
+  if (typeof out.optimalSpace !== 'string') out.optimalSpace = fallback.optimalSpace;
+  // Hints — non-secret progressive hints.
+  if (!Array.isArray(out.hints)) out.hints = fallback.hints;
+  else out.hints = out.hints.filter((h) => typeof h === 'string' && h.length).slice(0, 5);
+  // Allowed languages — default to javascript.
+  if (!Array.isArray(out.allowedLanguages) || out.allowedLanguages.length === 0) {
+    out.allowedLanguages = ['javascript'];
+  }
+  // Time / memory limits
+  if (typeof out.timeLimitMs !== 'number' || out.timeLimitMs < 50) out.timeLimitMs = 2000;
+  if (typeof out.memoryLimitMb !== 'number' || out.memoryLimitMb < 8) out.memoryLimitMb = 256;
+  // Stash the requested topic/type for debugging (NOT persisted to the model —
+  // only kept on the preview object so the controller can audit / log).
+  out._aiMeta = { topic, type, difficulty: out.difficulty };
+  return out;
+}
+
 export default {
   analyzeCandidateCode,
   generateAssessmentFromJD,
   generateEvaluationSummary,
   generateFollowupQuestions,
+  generateQuestion,
 };

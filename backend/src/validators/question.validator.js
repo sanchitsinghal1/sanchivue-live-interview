@@ -40,6 +40,8 @@ export const createQuestionSchema = z.object({
   hiddenTests: z.array(testCaseSchema).default([]),
   optimalTime: z.string().max(40).optional(),
   optimalSpace: z.string().max(40).optional(),
+  // Progressive hints shown to candidates (NOT secret).
+  hints: z.array(z.string().max(500)).max(10).default([]),
   timeLimitMs: z.number().int().min(50).max(30000).optional(),
   memoryLimitMb: z.number().int().min(8).max(2048).optional(),
   allowedLanguages: z.array(z.enum(SUPPORTED_LANGUAGES)).optional(),
